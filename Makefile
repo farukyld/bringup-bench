@@ -71,12 +71,14 @@ TARGET_CLEAN = *.d ibex_simple_system_pcount.csv
 TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort cipher dhrystone distinctness fft-int flood-fill frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler knapsack life longdiv mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal primal-test qsort-demo rabinkarp-search regex-parser shortest-path sieve simple-grep skeleton strange topo-sort totient weekday
 TARGET_CONFIGURED = 1
 else ifeq ($(TARGET), spike)
-TARGET_CC = riscv32-unknown-elf-gcc
+TARGET_CC = riscv64-unknown-elf-gcc
 #TARGET_CC = riscv32-unknown-elf-clang
-TARGET_AR = riscv32-unknown-elf-ar
-TARGET_CFLAGS = -DTARGET_SPIKE -march=rv32imc -mabi=ilp32 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany 
+TARGET_AR = riscv64-unknown-elf-ar
+# TARGET_CFLAGS = -DTARGET_SPIKE -march=rv64imac_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany 
+TARGET_CFLAGS = -DTARGET_SPIKE -march=rv64imadc_zicsr -mabi=lp64d -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany 
 TARGET_LIBS = -lgcc
-TARGET_SIM = ../../../riscv-isa-sim/build/spike --isa=RV32IMC --extlib=../target/simple_mmio_plugin.so -m0x100000:0x40000 --device=simple_mmio_plugin,0x20000,x
+TARGET_SIM = $(SPIKE_TODDMAUSTIN)/build/spike --isa=RV64IMC --extlib=../target/simple_mmio_plugin.so -m0x100000:0x40000 --device=simple_mmio_plugin,0x20000,x
+# TARGET_SIM = $(SPIKE_TODDMAUSTIN)/build/spike --isa=RV64IMFDC --extlib=../target/simple_mmio_plugin.so -m0x100000:0x40000 --device=simple_mmio_plugin,0x20000,x # bunu yapinca cok daha erken patladi. ilkinde :r 55500'de patliyordu.
 TARGET_DIFF = diff
 TARGET_EXE = $(PROG).elf
 TARGET_CLEAN = *.d ibex_simple_system_pcount.csv
