@@ -55,7 +55,10 @@ main(int argc, char **argv)
 
 		case 'v':
 			libmin_printf("[satomi] Version: 2.0\n");
-			libmin_success();
+			
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 
 		case 'h':
 			satomi_usage(EXIT_SUCCESS);

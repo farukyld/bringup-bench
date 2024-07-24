@@ -50,7 +50,10 @@ main(void)
 
   libmin_free(a);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

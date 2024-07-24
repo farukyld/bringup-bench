@@ -348,7 +348,10 @@ main(void)
     libmin_printf("\n");
   }
 
-  libmin_success();	
+
+#ifndef TARGET_SPIKE
+  libmin_success();
+#endif	
   return 0;
 }
 

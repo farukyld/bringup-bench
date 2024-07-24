@@ -76,7 +76,10 @@ main(void)
   p = 1;
   SIEVE(j,p);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

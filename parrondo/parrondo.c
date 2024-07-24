@@ -174,12 +174,18 @@ main(void)
 				case 'v':
 				case 'V':
 					libmin_printf("%s\n", VERSION);
-					libmin_success();
+					
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 				case '?':
 				case 'h':
 				case 'H':
 					libmin_printf("%s\n",HELP);
-					libmin_success();
+					
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 				case '1':
 					game_select = 0.0;
 					break;
@@ -255,7 +261,10 @@ main(void)
 		100.0*((double)site_visits[2])/n_tot
 	);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
 	return 0;
 }
 

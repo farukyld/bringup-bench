@@ -134,6 +134,9 @@ main(void)
   topologicalSort(g); 
   libmin_printf("\n");
   
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0; 
 }

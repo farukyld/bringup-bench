@@ -59,6 +59,9 @@ main(void)
   lcsAlgo();
   libmin_printf("\n");
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

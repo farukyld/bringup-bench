@@ -80,7 +80,10 @@ main(void)
   }
   libmin_printf("Total weight: %d\n", W - w);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

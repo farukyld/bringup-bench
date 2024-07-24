@@ -425,7 +425,10 @@ main(void)
   for (i=0; i<N; i++)
     libmin_printf("%d: %d, %d\n", i, real[i], imag[i]);
 
-  libmin_success();;
+
+#ifndef TARGET_SPIKE
+  libmin_success();
+#endif;
   return 0;
 }
 

@@ -170,6 +170,9 @@ main(void)
       libmin_printf("Value %u is `likely prime' with failure probability (1 in %.0lf)\n", q[i].val, libmin_pow(4.0, K));
   }
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

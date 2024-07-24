@@ -18,7 +18,10 @@ main(int argc, char** argv)
   libmin_printf("%02d/%02d/%04d was a `%s'\n", 1, 1, 1975, days[dayOfWeek(1975, 1, 1)]);
   libmin_printf("%02d/%02d/%04d was a `%s'\n", 2, 7, 1964, days[dayOfWeek(1964, 2, 7)]);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

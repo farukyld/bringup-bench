@@ -152,7 +152,10 @@ main()
   // print the colors after replacement
   libmin_printf("\nAFTER:\n"); printMatrix(mat);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

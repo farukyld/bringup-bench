@@ -53,7 +53,10 @@ main(void)
       running = FALSE;
   }
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

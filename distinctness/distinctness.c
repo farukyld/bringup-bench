@@ -182,7 +182,10 @@ main(void)
 	else
 		libmin_printf("The elements of `elements2' are not distinct (e.g., %d is duplicated)\n", dup2);
 
-	libmin_success();
+	
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
   return 0;
 }
 

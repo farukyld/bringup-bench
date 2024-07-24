@@ -79,8 +79,16 @@ main_entry:
   /* jump to main program entry point (argc = argv = 0) */
   addi x10, x0, 0
   addi x11, x0, 0
+  csrr s0,mcycle
+  sd s0, -8(sp)
+  c.addi sp, -8
   jal x1, main
-
+  c.addi sp, 8
+  csrr s1,mcycle
+  ld s0, -8(sp)
+  sub a1, s1, s0
+  la a0, fmt_string
+  call libmin_printf
   /* Halt simulation */
   call libmin_success
 
@@ -108,3 +116,6 @@ sleep_loop:
   // reset vector
   .org 0x80
   jal x0, reset_handler
+
+.section .data
+fmt_string:  .string "mcycle difference: %d\n"

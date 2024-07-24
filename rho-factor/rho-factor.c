@@ -96,6 +96,9 @@ int main(void)
     libmin_free(factors);
 
     // proper exit
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
 }
 

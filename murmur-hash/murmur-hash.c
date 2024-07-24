@@ -106,6 +106,9 @@ main(void)
       libmin_printf("murmurhash(\"%s\") = 0x%x\n", key, hash);
     }
 
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
     return 0;
 }

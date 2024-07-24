@@ -51,6 +51,9 @@ main(void)
       if (disk == 10) break;
     }
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

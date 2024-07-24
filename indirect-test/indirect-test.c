@@ -54,7 +54,10 @@ main(void)
   (*pbar)(pfoo);
   libmin_printf("aglobal = %d\n", aglobal);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

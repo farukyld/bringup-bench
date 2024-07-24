@@ -39,6 +39,9 @@ main(void)
 
   libmin_printf("INFO: found (at least) %d occurrences of the word `%s'.\n", count, av[2]);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

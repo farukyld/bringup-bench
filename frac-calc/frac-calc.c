@@ -216,7 +216,10 @@ int main(int argc, char *argv[])
         repi = libmin_atoi(rep);
     }while(repi == 1);
 
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
     return 0;
 }
 

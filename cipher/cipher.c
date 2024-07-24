@@ -60,7 +60,10 @@ main(void)
   libmin_printf("  newplain:   0x%08lx 0x%08lx\n",
 	       newplain[0], newplain[1]);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

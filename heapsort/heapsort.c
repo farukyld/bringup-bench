@@ -121,6 +121,9 @@ main(void)
   p = 1;
   HSORT(j,p);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

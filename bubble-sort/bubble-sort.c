@@ -66,6 +66,9 @@ main(void)
   libmin_printf("INFO: %lu swaps executed.\n", swaps);
   libmin_printf("INFO: data is properly sorted.\n");
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

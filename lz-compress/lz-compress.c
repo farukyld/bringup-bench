@@ -120,6 +120,9 @@ int main (int argc, char const *argv[])
     for (unsigned cnt=0; cnt < uncompressed_size; cnt++)
       libmin_putc(uncompressed_text[cnt]);
 
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
 }
 

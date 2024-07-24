@@ -675,7 +675,10 @@ int main()
     if (nfailed != 0)
       return nfailed; /* 0 if all tests passed */
     else
+
+#ifndef TARGET_SPIKE
       libmin_success();
+#endif
     return 0;
 }
 

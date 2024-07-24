@@ -112,7 +112,10 @@ main(void)
   // Print the shortest distance matrix
   printSolution(dist);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

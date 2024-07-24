@@ -86,6 +86,9 @@ main(void)
     libmin_printf("sqrt(%lf) == %lf (converged:%c)\n", sqrt_value, root, converged ? 't' : 'f');
   }
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

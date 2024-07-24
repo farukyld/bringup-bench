@@ -145,12 +145,18 @@ main(void)
 				case 'v':
 				case 'V':
 					libmin_printf("%s\n",VERSION);
-					libmin_success();
+					
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 				case '?':
 				case 'h':
 				case 'H':
 					libmin_printf("%s\n",HELP);
-					libmin_success();
+					
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 				default:
 					libmin_printf("totient: unkown option %s\n", argv[j]);
 					libmin_printf("%s\n",USAGE);
@@ -174,7 +180,10 @@ main(void)
 
 	libmin_printf("phi(%d) = %d\n",n,phi(n));
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
 	return 0;
 }
 

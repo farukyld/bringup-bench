@@ -1395,6 +1395,9 @@ int main(int argc, char **argv)
 
     (void)eval();
 
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
     return 9;
 }

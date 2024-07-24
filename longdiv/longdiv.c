@@ -418,7 +418,10 @@ main(void)
 		libmin_printf("%s\n",ddnds[i+1]);
 	}	
 		
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
 	return 0;
 }	
 

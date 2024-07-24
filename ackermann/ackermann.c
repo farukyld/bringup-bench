@@ -166,7 +166,10 @@ main(void)
 	}
   libmin_printf("Max recursive depth = %u\n", max_depth);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

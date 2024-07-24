@@ -114,7 +114,10 @@ int main(void)
 	if(nrows == 0){ 
 		if(cols_option)
 		  libmin_printf("0\n");
-		libmin_success(); /* nothing to do */
+		
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif /* nothing to do */
 	}
 	if(nrows < 0){
 		libmin_printf("%s: %d is an invalid number of rows\n", PROGRAM_NAME,nrows);
@@ -151,7 +154,10 @@ int main(void)
 
 	if(cols_option){
 			libmin_printf("%d\n",(max_width + 2)*nrows);
-			libmin_success();
+			
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 	}
 	   
 	/* Now print everything out */ 
@@ -181,7 +187,10 @@ int main(void)
 		libmin_printf("\n");
 	}
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
 	return 0;
 }
 

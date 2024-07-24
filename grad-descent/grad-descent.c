@@ -83,7 +83,10 @@ main(void)
 	gradientDescent(&weight, &bias);
 	libmin_printf("The function is: %.4lfx + %.4lf\n", weight, bias);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

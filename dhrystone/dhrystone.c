@@ -278,7 +278,10 @@ main(void)
   libmin_printf("        should be:   DHRYSTONE PROGRAM, 2'ND STRING\n");
   libmin_printf("\n");
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

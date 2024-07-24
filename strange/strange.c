@@ -21,7 +21,10 @@ in() {
     i = 5i;
     libmin_printf("\n %d", i);
 
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
     goto https;
 }
 

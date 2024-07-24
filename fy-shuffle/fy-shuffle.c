@@ -62,6 +62,9 @@ main(void)
     print("B (after):  ", b, SZ_B);
   }
   
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }

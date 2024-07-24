@@ -215,7 +215,10 @@ main()
 	// displayGraph1(graph, path);
 	displayTree(graph, path);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

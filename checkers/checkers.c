@@ -105,11 +105,17 @@ main(int argc, char *argv[])
 		if (level_0_node->children_count == 0) {
 			if (black_action) {
 				libmin_printf("%s WIN!\n", WHITE);
+
+#ifndef TARGET_SPIKE
         libmin_success();
+#endif
 			}
 			else {
 				libmin_printf("%s WIN!\n", BLACK);
+
+#ifndef TARGET_SPIKE
         libmin_success();
+#endif
 			}
 		}
 		
@@ -151,7 +157,10 @@ main(int argc, char *argv[])
 	}
 	
 	libmin_free(board);
-  libmin_success(); // exit program with the success code
+
+#ifndef TARGET_SPIKE
+  libmin_success();
+#endif // exit program with the success code
 }
 // algorithms are fun
 

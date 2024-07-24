@@ -165,6 +165,9 @@ main(void)
     sort_cstrings_example();
     sort_structs_example();
 
+
+#ifndef TARGET_SPIKE
     libmin_success();
+#endif
     return 0;
 }

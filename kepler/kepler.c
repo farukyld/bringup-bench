@@ -283,11 +283,17 @@ main(void)
 	while(argv[i][0] == '-'){
 		  if(libmin_strcmp(argv[i],"-h")==0){
 			libmin_printf("%s\n", HELP);
-			libmin_success();
+			
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 		  }
 		  if(libmin_strcmp(argv[i],"-v")==0){
 			libmin_printf("%s\n",VERSION);
-			libmin_success();
+			
+#ifndef TARGET_SPIKE
+libmin_success();
+#endif
 		  }
 		  if(libmin_strcmp(argv[i],"-a")==0){
 			derror = libmin_atof(argv[i+1]);
@@ -344,7 +350,10 @@ main(void)
 		libmin_printf("n = %d\tE = %f\n",n++,sign*E);
 	}
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
 	return 0;
 }
 #endif /* NO_MAIN */

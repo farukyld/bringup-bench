@@ -72,7 +72,10 @@ main(void)
 
   libmin_printf("The maximum sum of a contiguous subarray is %d (ending at index %d)\n", max_sum, ends_at);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 

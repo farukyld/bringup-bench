@@ -17,7 +17,10 @@ main(void)
 
   libmin_printf("natlog: e=%f\n", x);
 
+
+#ifndef TARGET_SPIKE
   libmin_success();
+#endif
   return 0;
 }
 
