@@ -10,7 +10,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX_SPIN  10000     /* make this larger for a real hardware platform */
-#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#elif defined(TARGET_SPIKE)
+
+void *
+memcpy(void *dest, const void *src, size_t len)
+{
+  return libmin_memcpy(dest, src, len);
+}
+
+
+int uart_putchar(char c){
+  // spike'in uart'ina karakter basacak.
+  __asm__ volatile (
+    "li a1, 0x10000000\n"
+    "sb a0, 0(a1)\n"
+  );
+  return c;
+}
+
+volatile static long long int magic_mem[8]; // ismi onemli degil.
+
+volatile static long long int* tohost __attribute__((used));// bunlarin ismi onemli
+volatile static long long int* fromhost __attribute__((used));// 
+
+
+void baremetal_exit(long long int exit_code){
+  magic_mem[1] = exit_code;
+  magic_mem[0] = 93; // 93: exit 
+  // see riscv-isa-sim/fesvr/syscall.cc }}
+  // syscall_t::syscall_t
+  for (int i = 2; i < 8; i++)
+    magic_mem[i] = 0;
+
+  tohost = magic_mem;
+
+  while (!fromhost);
+  fromhost = 0;
+  while (1);
+}
+
+#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
 #include <stdlib.h>
 
 /* simple system MMAP'ed registers */
@@ -121,7 +160,9 @@ SPIN_SUCCESS_ADDR:
 
   /* exit if we ever get here */
   exit(0);
-#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#elif defined(TARGET_SPIKE)
+  baremetal_exit(0);
+#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
   // libmin_printf("EXIT: success\n");
   simple_halt();
 #else
@@ -144,7 +185,9 @@ SPIN_FAIL_ADDR:
     goto SPIN_FAIL_ADDR;
   /* exit if we ever get here */
   exit(code);
-#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#elif defined(TARGET_SPIKE)
+  baremetal_exit(code);
+#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
   // libmin_printf("EXIT: fail code = %d\n", code);
   simple_halt();
 #else
@@ -163,24 +206,27 @@ libtarg_putc(char c)
   if (__outbuf_ptr >= MAX_OUTBUF)
     libtarg_fail(1);
   __outbuf[__outbuf_ptr++] = c;
-#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#elif defined(TARGET_SPIKE)
+  uart_putchar(c);
+#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
   simple_putchar(c);
 #else
 #error Co-simulation platform not defined, define TARGET_HOST or a target-dependent definition.
 #endif
 }
 
-#ifdef TARGET_SA
+// (linker; bss, RAM'e sigmiyor hatasi verdigi icin buraya  yazamadim)
+#if defined(TARGET_SA) /* || defined(TARGET_SPIKE)*/
 #define MAX_HEAP    (8*1024*1024)
 static uint8_t __heap[MAX_HEAP];
 static uint32_t __heap_ptr = 0;
 #endif /* TARGET_SA */
 
-#if defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#if defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN) || defined(TARGET_SPIKE)
 #define MAX_HEAP    (32*1024)
 static uint8_t __heap[MAX_HEAP];
 static uint32_t __heap_ptr = 0;
-#endif /* TARGET_SIMPLE || TARGET_SPIKE */
+#endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN || TARGET_SPIKE */
 
 /* get some memory */
 void *
@@ -191,7 +237,7 @@ libtarg_sbrk(size_t inc)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif /* __clang__ */
   return sbrk(inc);
-#elif defined(TARGET_SA) || defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#elif defined(TARGET_SA) || defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN) || defined(TARGET_SPIKE)
   uint8_t *ptr = &__heap[__heap_ptr];
   if (inc == 0)
     return ptr;

@@ -1,6 +1,7 @@
 #ifndef LIBTARG_H
 #define LIBTARG_H
 
+
 /* define support for vararg functions */
 #if defined(TARGET_HOST)
 #include <stdarg.h>
@@ -10,7 +11,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
-#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE)
+#elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN) || defined(TARGET_SPIKE)
 #include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
