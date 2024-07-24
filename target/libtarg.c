@@ -20,7 +20,9 @@ memcpy(void *dest, const void *src, size_t len)
 
 
 int uart_putchar(char c){
-  // spike'in uart'ina karakter basacak.
+  // TODO NS16550_BASE spike'tan alinacak. riscv/platform.h
+  // TODO [NS16550_BASE + UART_LSR][UART_LSR_THRE] == 0 degilse bekle
+  // TODO assembly yerine c ile yaz.
   __asm__ volatile (
     "li a1, 0x10000000\n"
     "sb a0, 0(a1)\n"
