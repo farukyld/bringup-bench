@@ -82,9 +82,7 @@ main_entry:
   jal x1, main
 
   /* Halt simulation */
-  li x5, SIM_CTRL_BASE + SIM_CTRL_CTRL
-  li x6, 1
-  sw x6, 0(x5)
+  call libmin_success
 
   /* If execution ends up here just put the core to sleep */
 sleep_loop:
