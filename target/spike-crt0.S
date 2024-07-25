@@ -118,4 +118,4 @@ sleep_loop:
   jal x0, reset_handler
 
 .section .data
-fmt_string:  .string "mcycle difference: %d\n"
+fmt_string:  .string "\nmcycle difference: %d\n"
