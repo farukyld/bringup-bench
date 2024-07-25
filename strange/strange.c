@@ -24,6 +24,8 @@ in() {
 
 #ifndef TARGET_SPIKE
     libmin_success();
+#else
+return 0;
 #endif
     goto https;
 }

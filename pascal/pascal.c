@@ -117,6 +117,8 @@ int main(void)
 		
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif /* nothing to do */
 	}
 	if(nrows < 0){
@@ -157,6 +159,8 @@ libmin_success();
 			
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 	}
 	   
@@ -190,6 +194,8 @@ libmin_success();
 
 #ifndef TARGET_SPIKE
   libmin_success();
+#else
+return 0;
 #endif
 	return 0;
 }

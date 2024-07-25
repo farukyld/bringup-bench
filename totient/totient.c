@@ -148,6 +148,8 @@ main(void)
 					
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 				case '?':
 				case 'h':
@@ -156,6 +158,8 @@ libmin_success();
 					
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 				default:
 					libmin_printf("totient: unkown option %s\n", argv[j]);
@@ -183,6 +187,8 @@ libmin_success();
 
 #ifndef TARGET_SPIKE
   libmin_success();
+#else
+return 0;
 #endif
 	return 0;
 }

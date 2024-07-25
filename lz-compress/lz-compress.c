@@ -123,6 +123,8 @@ int main (int argc, char const *argv[])
 
 #ifndef TARGET_SPIKE
     libmin_success();
+#else
+return 0;
 #endif
 }
 

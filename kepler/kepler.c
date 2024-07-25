@@ -286,6 +286,8 @@ main(void)
 			
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 		  }
 		  if(libmin_strcmp(argv[i],"-v")==0){
@@ -293,6 +295,8 @@ libmin_success();
 			
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 		  }
 		  if(libmin_strcmp(argv[i],"-a")==0){
@@ -353,6 +357,8 @@ libmin_success();
 
 #ifndef TARGET_SPIKE
   libmin_success();
+#else
+return 0;
 #endif
 	return 0;
 }

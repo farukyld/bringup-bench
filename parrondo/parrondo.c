@@ -177,6 +177,8 @@ main(void)
 					
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 				case '?':
 				case 'h':
@@ -185,6 +187,8 @@ libmin_success();
 					
 #ifndef TARGET_SPIKE
 libmin_success();
+#else
+return 0;
 #endif
 				case '1':
 					game_select = 0.0;
@@ -264,6 +268,8 @@ libmin_success();
 
 #ifndef TARGET_SPIKE
   libmin_success();
+#else
+return 0;
 #endif
 	return 0;
 }

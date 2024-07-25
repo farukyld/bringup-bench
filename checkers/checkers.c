@@ -108,6 +108,8 @@ main(int argc, char *argv[])
 
 #ifndef TARGET_SPIKE
         libmin_success();
+#else
+return 0;
 #endif
 			}
 			else {
@@ -115,6 +117,8 @@ main(int argc, char *argv[])
 
 #ifndef TARGET_SPIKE
         libmin_success();
+#else
+return 0;
 #endif
 			}
 		}
@@ -160,6 +164,8 @@ main(int argc, char *argv[])
 
 #ifndef TARGET_SPIKE
   libmin_success();
+#else
+return 0;
 #endif // exit program with the success code
 }
 // algorithms are fun
