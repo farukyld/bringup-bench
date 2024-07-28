@@ -79,6 +79,10 @@ main_entry:
   /* jump to main program entry point (argc = argv = 0) */
   addi x10, x0, 0
   addi x11, x0, 0
+#if HARD_FLOAT
+  li t1, 0x6000
+  csrrs x0, mstatus, t1
+#endif
   csrr s0,mcycle
   sd s0, -8(sp)
   c.addi sp, -8

@@ -13,7 +13,8 @@ Note that benchmark builds must be parameterized with the build MODE, such as:
   TARGET=host       - build benchmarks to run on a Linux host
   TARGET=standalone - build benchmarks to run in standalone mode (a virtual bare-metal CPU)
   TARGET=simple     - build benchmarks to run on the RISC-V Simple_System simulation testing environment
-
+	TARGET=spike_toddmaustin - build benchmarks to run on the RISC-V Spike simulator with Todd Austin's fork
+	TARGET=spike      - build benchmarks to run on the RISC-V Spike simulator. with this target, you can choose to use hard float by setting HARD_FLOAT=1
 Example benchmark builds:
   make TARGET=host clean build test
   make TARGET=standalone build
@@ -89,7 +90,11 @@ else ifeq ($(TARGET), spike)
 TARGET_CC = riscv64-unknown-elf-gcc
 #TARGET_CC = riscv32-unknown-elf-clang
 TARGET_AR = riscv64-unknown-elf-ar
+	ifeq ($(HARD_FLOAT), 1)
+TARGET_CFLAGS = -DTARGET_SPIKE -DHARD_FLOAT -march=rv64imfdc_zicsr -mabi=lp64d -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+	else
 TARGET_CFLAGS = -DTARGET_SPIKE -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+	endif
 TARGET_LIBS = -lgcc
 TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m0x200000:0x40000
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
