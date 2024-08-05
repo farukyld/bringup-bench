@@ -15,7 +15,11 @@ Note that benchmark builds must be parameterized with the build MODE, such as:
   TARGET=simple     - build benchmarks to run on the RISC-V Simple_System simulation testing environment
 	TARGET=spike_toddmaustin - build benchmarks to run on the RISC-V Spike simulator with Todd Austin's fork
 	TARGET=spike      - build benchmarks to run on the RISC-V Spike simulator. with this target, you can choose to use hard float by setting HARD_FLOAT=1
+Also there is the variable ALIAS_RM_LIBMIN (default: 1) available for TARGETs "spike", "spike_toddmaustin" and "simple" that enables aliasing of libmin functions without the libmin_ prefix.
+
 Example benchmark builds:
+  make TARGET=spike HARD_FLOAT=1 ALIAS_RM_LIBMIN=0 run-tests
+  make TARGET=spike run-tests # soft float is used, aliasing is enabled.
   make TARGET=host clean build test
   make TARGET=standalone build
   make TARGET=simple clean
@@ -63,7 +67,9 @@ else ifeq ($(TARGET), simple)
 TARGET_CC = riscv32-unknown-elf-gcc
 #TARGET_CC = riscv32-unknown-elf-clang
 TARGET_AR = riscv32-unknown-elf-ar
-TARGET_CFLAGS = -DTARGET_SIMPLE -march=rv32imc -mabi=ilp32 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+# TODO: HARD_FLOAT secenegini spike_toddmaustin ve simple icin de ekle
+ALIAS_RM_LIBMIN = 1
+TARGET_CFLAGS = -DTARGET_SIMPLE -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv32imc -mabi=ilp32 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
 TARGET_LIBS = -lgcc
 TARGET_SIM = ../target/simple_sim.sh ../../../ibex/build/lowrisc_ibex_ibex_simple_system_0/sim-verilator/Vibex_simple_system
 TARGET_DIFF = mv ibex_simple_system.log FOO; diff
@@ -76,7 +82,9 @@ else ifeq ($(TARGET), spike_toddmaustin)
 TARGET_CC = riscv64-unknown-elf-gcc
 #TARGET_CC = riscv32-unknown-elf-clang
 TARGET_AR = riscv64-unknown-elf-ar
-TARGET_CFLAGS = -DTARGET_SPIKE_TODDMAUSTIN -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+# TODO: HARD_FLOAT secenegini spike_toddmaustin ve simple icin de ekle
+ALIAS_RM_LIBMIN = 1
+TARGET_CFLAGS = -DTARGET_SPIKE_TODDMAUSTIN -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
 TARGET_LIBS = -lgcc
 TARGET_SIM = $(SPIKE_TODDMAUSTIN)/build/spike --isa=RV64IMAFDC --extlib=../target/simple_mmio_plugin.so -m0x100000:0x40000 --device=simple_mmio_plugin,0x20000,x
 TARGET_DIFF = diff
@@ -90,11 +98,14 @@ else ifeq ($(TARGET), spike)
 TARGET_CC = riscv64-unknown-elf-gcc
 #TARGET_CC = riscv32-unknown-elf-clang
 TARGET_AR = riscv64-unknown-elf-ar
+# libmin_function_name'ler icin function_name isimli bir alias olustur.
+ALIAS_RM_LIBMIN = 1
 	ifeq ($(HARD_FLOAT), 1)
-TARGET_CFLAGS = -DTARGET_SPIKE -DHARD_FLOAT -march=rv64imfdc_zicsr -mabi=lp64d -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+TARGET_CFLAGS = -DTARGET_SPIKE -DHARD_FLOAT -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv64imfdc_zicsr -mabi=lp64d -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
 	else
-TARGET_CFLAGS = -DTARGET_SPIKE -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+TARGET_CFLAGS = -DTARGET_SPIKE -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
 	endif
+#  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
 TARGET_LIBS = -lgcc
 TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m0x200000:0x40000
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
