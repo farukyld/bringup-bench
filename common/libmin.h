@@ -184,6 +184,12 @@ void libmin_fail(int code);
 #define fail libmin_fail
 #endif
 
+void libmin_exit(int status);
+#if ALIAS_RM_LIBMIN
+#define exit libmin_exit
+#endif
+
+
 /* largest random number, must be power-of-two-minus-one! */
 #define RAND_MAX (0x7fffffff)
 
