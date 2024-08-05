@@ -287,6 +287,13 @@ int libmin_mgetc(MFILE *mfile);
 #define mgetc libmin_mgetc
 #endif
 
+typedef uint64_t time_t;
+time_t libmin_time(time_t *timer);
+#if ALIAS_RM_LIBMIN
+#define time libmin_time
+#endif
+
+
 /* sort an array */
 typedef int (*cmpfun)(const void *, const void *);
 void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);

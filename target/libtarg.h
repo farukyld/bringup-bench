@@ -106,6 +106,7 @@ typedef uint64_t              uintptr_t;
 /* floating point */
 typedef float                 float_t;
 typedef double                double_t;
+typedef uint64_t              time_t;
 
 /* benchmark completed successfully */
 void libtarg_success(void);
@@ -118,5 +119,8 @@ void libtarg_putc(char c);
 
 /* get some memory */
 void *libtarg_sbrk(size_t inc);
+
+/* islemci cevrim sayisini dondur */
+time_t libtarg_get_cycles();
 
 #endif /* LIBTARG_H */

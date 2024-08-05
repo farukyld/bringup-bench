@@ -12,6 +12,12 @@
 #define MAX_SPIN  10000     /* make this larger for a real hardware platform */
 #elif defined(TARGET_SPIKE)
 
+time_t libtarg_get_cycles(){
+  time_t result;
+  __asm__ volatile("csrr %0, mcycle" : "=r"(result));
+  return result;
+}
+
 void *
 memcpy(void *dest, const void *src, size_t len)
 {
