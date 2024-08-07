@@ -9,7 +9,7 @@ libmin_mopen(MFILE *mfile, const char *mode)
 {
   if (libmin_strcmp(mode, "r") != 0)
   {
-    libmin_printf("ERROR: libmin only support file reads\n");
+    libmin_printf("ERROR: libmin MFILE only support file reads\n");
     libmin_fail(1);
   }
 
