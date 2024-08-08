@@ -71,11 +71,11 @@ typedef enum sfile_mode_e
   // FMODE_ABP
 } sfile_mode_e;
 
-typedef struct serial_output_file_t
+struct serial_output_file_t
 {
   int64_t file_desc;
 
-  const char file_name[MAX_NAME_LEN];
+  char file_name[MAX_NAME_LEN];
 
   // butun file'lar tek kanaldan bosaltilacagindan
   // uart vasitasiyla terminale yayinlanan
@@ -95,20 +95,23 @@ typedef struct serial_output_file_t
   sfile_mode_e file_mode;
 
   struct serial_output_file_t *next;
-  struct libmin_fprintf_sfile_t *prev;
+  struct serial_output_file_t *prev;
 };
 
-SFILE *find_file(char *file_name);
+SFILE *find_file(const char *file_name);
 
-SFILE* create_sfile(char *file_name, char escape, sfile_mode_e mode);
+SFILE* create_sfile(const char *file_name,const char *escape, sfile_mode_e mode);
 
-sfile_mode_e get_file_mode(char *mode);
+sfile_mode_e get_file_mode(const char *mode_str);
 
 void serial_output_init();
 
-char* request_escape_sequence();
+const char* request_escape_sequence();
 
-void release_escape_sequence(char *esc_seq);
+void sflush_safe(SFILE *file);
+
+void release_escape_sequence(const char *esc_seq);
+
 
 // NOT: bu komponentin (libmin_sfile.c ve libmin_sfile.h) public arayuzu, libmin.h'da tanimli.
 #endif // LIBMIN_SFILE_H

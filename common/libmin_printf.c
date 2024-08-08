@@ -770,7 +770,7 @@ libmin_printf(char *fmt, ...)
 
 int libmin_sfprintf(SFILE *file, const char *fmt, ...)
 {
-  char buf[1024], *s; // TODO: tek seferde yazilan seyin 1024 karakteri gecmeyecegini varsaymak dogru bir sey mi?
+  char buf[1024]; // TODO: tek seferde yazilan seyin 1024 karakteri gecmeyecegini varsaymak dogru bir sey mi?
   va_list ap;
 
   va_start(ap, fmt);

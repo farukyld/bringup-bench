@@ -3,7 +3,7 @@
 #include "libtarg.h"
 #include <stdarg.h>
 
-static char *escape_sequences[MAX_OUT_FILES] = {
+static const char *const escape_sequences[MAX_OUT_FILES] = {
     ESC_DEFAULT,
     ESC_RED,
     ESC_GREEN,
@@ -59,7 +59,7 @@ int libmin_sfputc(int c, SFILE *file)
   return c;
 }
 
-SFILE *create_sfile(char *file_name, char escape, sfile_mode_e mode)
+SFILE *create_sfile(const char *file_name,const char *escape, sfile_mode_e mode)
 {
   if (!libmin_strfits(file_name, MAX_NAME_LEN))
   {
@@ -73,7 +73,7 @@ SFILE *create_sfile(char *file_name, char escape, sfile_mode_e mode)
     return NULL;
   }
 
-  if (__libmin_file_exists(file_name))
+  if (find_file(file_name) != NULL)
   {
     libmin_printf("cannot create two files with same name.\n");
     return NULL;
@@ -112,7 +112,7 @@ SFILE *create_sfile(char *file_name, char escape, sfile_mode_e mode)
   return fp;
 }
 
-char *request_escape_sequence()
+const char *request_escape_sequence()
 {
   for (size_t i = 0; i < MAX_OUT_FILES; i++)
   {
@@ -125,7 +125,7 @@ char *request_escape_sequence()
   return NULL;
 }
 
-SFILE *find_file(char *file_name)
+SFILE *find_file(const char *file_name)
 {
   SFILE *file = live_files_head;
   while (file != NULL)
@@ -173,14 +173,14 @@ int libmin_sfflush(SFILE *file)
   return 0;
 }
 
-SFILE *libmin_sfopen(const char *fname, const char *mode)
+SFILE *libmin_sfopen(const char *fname, const char *mode_str)
 {
-  sfile_mode_e mode = get_file_mode(mode);
-  char *esc_seq = request_escape_sequence();
+  sfile_mode_e mode = get_file_mode(mode_str);
+  const char *esc_seq = request_escape_sequence();
   return create_sfile((char *)fname, esc_seq, mode);
 }
 
-sfile_mode_e get_file_mode(char *mode)
+sfile_mode_e get_file_mode(const char *mode)
 {
   if (libmin_strncmp(mode, "w", 2) == 0)
   {
