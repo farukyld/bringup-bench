@@ -20,6 +20,12 @@ time_t libtarg_get_cycles()
 }
 
 void *
+memset(void *dest, int val, size_t len)
+{
+  return libmin_memset(dest, val, len);
+}
+
+void *
 memcpy(void *dest, const void *src, size_t len)
 {
   return libmin_memcpy(dest, src, len);
@@ -234,9 +240,15 @@ void libtarg_putc(char c)
 #define MAX_HEAP (8 * 1024 * 1024)
 #endif /* TARGET_SA */
 
-#if defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN) || defined(TARGET_SPIKE)
-#define MAX_HEAP    (32*1024)
-static uint8_t __heap[MAX_HEAP];
+#if defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
+#define MAX_HEAP (32 * 1024)
+#endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN */
+
+#if defined(TARGET_SPIKE)
+#define MAX_HEAP (32 * 1024 * 1024)
+#endif
+
+static uint8_t __heap[MAX_HEAP] __attribute__((section(".heap")));
 static uint32_t __heap_ptr = 0;
 /* get some memory */
 void *
