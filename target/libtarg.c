@@ -9,10 +9,11 @@
 /* standalone */
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX_SPIN  10000     /* make this larger for a real hardware platform */
+#define MAX_SPIN 10000 /* make this larger for a real hardware platform */
 #elif defined(TARGET_SPIKE)
 
-time_t libtarg_get_cycles(){
+time_t libtarg_get_cycles()
+{
   time_t result;
   __asm__ volatile("csrr %0, mcycle" : "=r"(result));
   return result;
@@ -24,27 +25,34 @@ memcpy(void *dest, const void *src, size_t len)
   return libmin_memcpy(dest, src, len);
 }
 
-
-int uart_putchar(char c){
+int uart_putchar(char c)
+{
   // TODO NS16550_BASE spike'tan alinacak. riscv/platform.h
   // TODO [NS16550_BASE + UART_LSR][UART_LSR_THRE] == 0 degilse bekle
   // TODO assembly yerine c ile yaz.
-  __asm__ volatile (
-    "li a1, 0x10000000\n"
-    "sb a0, 0(a1)\n"
-  );
+  __asm__ volatile(
+      "li a1, 0x10000000\n"
+      "sb a0, 0(a1)\n");
   return c;
 }
 
 volatile static long long int magic_mem[8]; // ismi onemli degil.
 
-volatile static long long int* tohost __attribute__((used));// bunlarin ismi onemli
-volatile static long long int* fromhost __attribute__((used));// 
+volatile static long long int *tohost __attribute__((used));   // bunlarin ismi onemli
+volatile static long long int *fromhost __attribute__((used)); //
 
+#ifdef PRINT_CYCLES_ON_EXIT
+extern uint64_t start_cycles;
+#endif
 
-void baremetal_exit(long long int exit_code){
+void baremetal_exit(long long int exit_code)
+{
+#ifdef PRINT_CYCLES_ON_EXIT
+  uint64_t current_cycles = libtarg_get_cycles();
+  libmin_printf("mcyle difference (from baremetal_exit): %d", current_cycles - start_cycles);
+#endif
   magic_mem[1] = exit_code;
-  magic_mem[0] = 93; // 93: exit 
+  magic_mem[0] = 93; // 93: exit
   // see riscv-isa-sim/fesvr/syscall.cc }}
   // syscall_t::syscall_t
   for (int i = 2; i < 8; i++)
@@ -52,9 +60,11 @@ void baremetal_exit(long long int exit_code){
 
   tohost = magic_mem;
 
-  while (!fromhost);
+  while (!fromhost)
+    ;
   fromhost = 0;
-  while (1);
+  while (1)
+    ;
 }
 
 #elif defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
@@ -118,24 +128,24 @@ simple_get_mtval(void)
   return result;
 }
 
-void
-simple_exc_handler(void)
+void simple_exc_handler(void)
 {
   libmin_printf("EXCEPTION!!!\n");
   libmin_printf("============\n");
   libmin_printf("MEPC:0x%08x, CAUSE:0x%08x, MTVAL:0x%08x\n", simple_get_mepc(), simple_get_mcause(), simple_get_mtval());
 
   simple_halt();
-  while(1);
+  while (1)
+    ;
 }
 
-void
-simple_timer_handler(void)
+void simple_timer_handler(void)
 {
   libmin_printf("TIMER EXCEPTION!!!\n");
 
   simple_halt();
-  while(1);
+  while (1)
+    ;
 }
 
 #else /* undefined target */
@@ -143,14 +153,13 @@ simple_timer_handler(void)
 #endif
 
 #ifdef TARGET_SA
-#define MAX_OUTBUF    (128*1024)
+#define MAX_OUTBUF (128 * 1024)
 static uint8_t __outbuf[MAX_OUTBUF];
 static uint32_t __outbuf_ptr = 0;
 #endif /* TARGET_SA */
 
 /* benchmark completed successfully */
-void
-libtarg_success(void)
+void libtarg_success(void)
 {
 #if defined(TARGET_HOST)
   exit(0);
@@ -163,7 +172,7 @@ SPIN_SUCCESS_ADDR:
     goto SPIN_SUCCESS_ADDR;
 
   /* output any outbuf data */
-  for (uint32_t i=0; i < __outbuf_ptr; i++)
+  for (uint32_t i = 0; i < __outbuf_ptr; i++)
     fputc(__outbuf[i], stdout);
 
   /* exit if we ever get here */
@@ -179,8 +188,7 @@ SPIN_SUCCESS_ADDR:
 }
 
 /* benchmark completed with error CODE */
-void
-libtarg_fail(int code)
+void libtarg_fail(int code)
 {
 #ifdef TARGET_HOST
   exit(code);
@@ -204,8 +212,7 @@ SPIN_FAIL_ADDR:
 }
 
 /* output a single character, to wherever the target wants to send it... */
-void
-libtarg_putc(char c)
+void libtarg_putc(char c)
 {
 #if defined(TARGET_HOST)
   fputc(c, stdout);
@@ -223,19 +230,14 @@ libtarg_putc(char c)
 #endif
 }
 
-// (linker; bss, RAM'e sigmiyor hatasi verdigi icin buraya  yazamadim)
-#if defined(TARGET_SA) /* || defined(TARGET_SPIKE)*/
-#define MAX_HEAP    (8*1024*1024)
-static uint8_t __heap[MAX_HEAP];
-static uint32_t __heap_ptr = 0;
+#if defined(TARGET_SA)
+#define MAX_HEAP (8 * 1024 * 1024)
 #endif /* TARGET_SA */
 
 #if defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN) || defined(TARGET_SPIKE)
 #define MAX_HEAP    (32*1024)
 static uint8_t __heap[MAX_HEAP];
 static uint32_t __heap_ptr = 0;
-#endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN || TARGET_SPIKE */
-
 /* get some memory */
 void *
 libtarg_sbrk(size_t inc)
@@ -249,14 +251,15 @@ libtarg_sbrk(size_t inc)
   uint8_t *ptr = &__heap[__heap_ptr];
   if (inc == 0)
     return ptr;
-  
+
   __heap_ptr += inc;
   if (__heap_ptr >= MAX_HEAP)
+  {
     libtarg_fail(1);
+  }
 
   return ptr;
 #else
 #error Co-simulation platform not defined, define TARGET_HOST or a target-dependent definition.
 #endif
 }
-

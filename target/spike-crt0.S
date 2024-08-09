@@ -24,6 +24,13 @@ timer_handler:
 
 reset_handler:
   /* set all registers to zero */
+  la t0, default_exc_handler
+  csrw mtvec,t0
+#ifdef PRINT_CYCLES_ON_EXIT
+  csrr t0, mcycle
+  la t1, start_cycles
+  sd t0, 0(t1)
+#endif
   mv  x1, x0
   mv  x2, x1
   mv  x3, x1
@@ -77,22 +84,24 @@ zero_loop_end:
 
 main_entry:
   /* jump to main program entry point (argc = argv = 0) */
+  # csrr s0,mcycle
+  # sd s0, -8(sp)
+  # c.addi sp, -8
+
   addi x10, x0, 0
   addi x11, x0, 0
 #if HARD_FLOAT
   li t1, 0x6000
   csrrs x0, mstatus, t1
 #endif
-  csrr s0,mcycle
-  sd s0, -8(sp)
-  c.addi sp, -8
+
   jal x1, main
-  c.addi sp, 8
-  csrr s1,mcycle
-  ld s0, -8(sp)
-  sub a1, s1, s0
-  la a0, fmt_string
-  call libmin_printf
+  # c.addi sp, 8
+  # csrr s1,mcycle
+  # ld s0, -8(sp)
+  # sub a1, s1, s0
+  # la a0, fmt_string
+  # call libmin_printf
   /* Halt simulation */
   call libmin_success
 
@@ -123,3 +132,6 @@ sleep_loop:
 
 .section .data
 fmt_string:  .string "\nmcycle difference: %d\n"
+.global start_cycles
+.balign 8
+start_cycles: .dword 0x0000000000000000
