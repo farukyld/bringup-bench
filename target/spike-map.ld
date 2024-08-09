@@ -82,6 +82,11 @@ SECTIONS
         *(COMMON)
         _bss_end = .;
     } > ram
+    
+    .heap :
+    {
+        *(.heap)
+    } > ram
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
