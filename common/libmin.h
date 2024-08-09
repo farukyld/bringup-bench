@@ -120,6 +120,7 @@ int libmin_strncasecmp(const char *_l, const char *_r, size_t n);
 
 /* set a block of memory to a value */
 void *libmin_memset(void *dest, int c, size_t n);
+void *memset(void *dest, int c, size_t n);
 // bu hataya sebep oluyor, memset ismi zaten baska bir dosyada kullaniliyor.
 // #if ALIAS_RM_LIBMIN 
 // #define memset libmin_memset
@@ -480,6 +481,9 @@ int __rem_pio2(double x, double *y);
 
 /* libmin assertions */
 #define libmin_assert(P)    ((P) ? (void)0 : (void)libmin_fail(1))
+#if ALIAS_RM_LIBMIN
+#define assert libmin_assert
+#endif
 
 /* MIN/MAX functions */
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
