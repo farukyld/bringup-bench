@@ -89,6 +89,7 @@ main_entry:
 
   addi x10, x0, 0
   addi x11, x0, 0
+  call serial_output_init
 #if HARD_FLOAT
   li t1, 0x6000
   csrrs x0, mstatus, t1

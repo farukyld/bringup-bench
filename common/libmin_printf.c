@@ -1,6 +1,6 @@
 #include "libmin.h"
 #include "libtarg.h"
-
+#include <stdarg.h>
 /*
  * Copyright Patrick Powell 1995
  * This code is based on code written by Patrick Powell (papowell@astart.com)
@@ -766,4 +766,43 @@ libmin_printf(char *fmt, ...)
     cnt++;
   }
   return cnt;
+}
+
+int libmin_sfprintf(SFILE *file, const char *fmt, ...)
+{
+  char buf[1024]; // TODO: tek seferde yazilan seyin 1024 karakteri gecmeyecegini varsaymak dogru bir sey mi?
+  va_list ap;
+
+  va_start(ap, fmt);
+  size_t len = dopr(buf, 1024, fmt, ap);
+  /* make sure the output string is terminated */
+  buf[1023] = '\0';
+  va_end(ap);
+
+  libmin_sfputs(buf, file);
+  return len;
+}
+
+int libmin_sprintf(char *buffer, const char *format, ...)
+{
+  va_list args;
+  size_t len;
+
+  va_start(args, format);
+  len = dopr(buffer, (size_t)-1, format, args);
+  va_end(args);
+
+  return (int)len;
+}
+
+int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...)
+{
+  va_list args;
+  size_t len;
+
+  va_start(args, format);
+  len = dopr(buffer, maxlen, format, args);
+  va_end(args);
+
+  return (int)len;
 }

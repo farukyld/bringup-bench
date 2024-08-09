@@ -3,8 +3,9 @@
 
 #include "libtarg.h"
 
-#define TRUE  1
-#define FALSE 0
+#include <stdbool.h>
+#define TRUE true
+#define FALSE false
 
 /* Build parameters:
 
@@ -60,6 +61,16 @@ char *libmin_strncpy(char *dst, const char *src, size_t n);
 char *libmin_strncat(char *d, const char *s, size_t n);
 #if ALIAS_RM_LIBMIN
 #define strncat libmin_strncat
+#endif
+
+bool libmin_strncontains(const char *str,char c, size_t n);
+#if ALIAS_RM_LIBMIN
+#define strncontains libmin_strncontains
+#endif
+
+bool libmin_strfits(const char *str, size_t n);
+#if ALIAS_RM_LIBMIN
+#define strfits libmin_strfits
 #endif
 
 /* return string length */
@@ -150,6 +161,17 @@ int libmin_printf(char *fmt, ...);
 /* run silent */
 #define libmin_printf(FMT, ARGS...)	do { ; } while (0)
 #endif /* TARGET_SILENT */
+
+int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...);
+#if ALIAS_RM_LIBMIN
+#define snprintf libmin_snprintf
+#endif
+
+int libmin_sprintf(char *buffer, const char *format, ...);
+#if ALIAS_RM_LIBMIN
+#define sprintf libmin_sprintf
+#endif
+
 
 /* print one character */
 void libmin_putc(char c);
@@ -287,6 +309,45 @@ int libmin_mgetc(MFILE *mfile);
 #if ALIAS_RM_LIBMIN
 #define mgetc libmin_mgetc
 #endif
+
+struct serial_output_file_t;
+typedef struct serial_output_file_t SFILE;
+
+extern SFILE *stderr;
+extern SFILE *stdout;
+#define stderr stderr
+#define stdout stdout
+
+SFILE *libmin_sfopen(const char *fname, const char *mode);
+#if ALIAS_RM_LIBMIN
+#define sfopen libmin_sfopen
+#endif
+
+int libmin_sfclose(SFILE *file);
+#if ALIAS_RM_LIBMIN
+#define sfclose libmin_sfclose
+#endif
+
+int libmin_sfputc(int c, SFILE *file);
+#if ALIAS_RM_LIBMIN
+#define sfputc libmin_sfputc
+#endif
+
+int libmin_sfputs(const char *str, SFILE *file);
+#if ALIAS_RM_LIBMIN
+#define sfputs libmin_sfputs
+#endif
+
+int libmin_sfprintf(SFILE *file, const char *fmt, ...);
+#if ALIAS_RM_LIBMIN
+#define sfprintf libmin_sfprintf
+#endif
+
+int libmin_sfflush(SFILE *file);
+#if ALIAS_RM_LIBMIN
+#define sfflush libmin_sfflush
+#endif
+
 
 typedef uint64_t time_t;
 time_t libmin_time(time_t *timer);
