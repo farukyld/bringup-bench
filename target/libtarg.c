@@ -53,9 +53,9 @@ extern uint64_t start_cycles;
 
 void baremetal_exit(long long int exit_code)
 {
-#ifdef PRINT_CYCLES_ON_EXIT
+#if PRINT_CYCLES_ON_EXIT
   uint64_t current_cycles = libtarg_get_cycles();
-  libmin_printf("mcyle difference (from baremetal_exit): %d", current_cycles - start_cycles);
+  libmin_printf("\nmcycle difference: %d\n", current_cycles - start_cycles);
 #endif
   magic_mem[1] = exit_code;
   magic_mem[0] = 93; // 93: exit
@@ -242,14 +242,17 @@ void libtarg_putc(char c)
 
 #if defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN)
 #define MAX_HEAP (32 * 1024)
+
+static uint8_t __heap[MAX_HEAP];
+static uint32_t __heap_ptr = 0;
 #endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN */
 
 #if defined(TARGET_SPIKE)
 #define MAX_HEAP (32 * 1024 * 1024)
-#endif
-
 static uint8_t __heap[MAX_HEAP] __attribute__((section(".heap")));
 static uint32_t __heap_ptr = 0;
+#endif
+
 /* get some memory */
 void *
 libtarg_sbrk(size_t inc)

@@ -25,7 +25,7 @@ reset_handler:
   /* set all registers to zero */
   la t0, default_exc_handler
   csrw mtvec,t0
-#ifdef PRINT_CYCLES_ON_EXIT
+#if PRINT_CYCLES_ON_EXIT
   csrr t0, mcycle
   la t1, start_cycles
   sd t0, 0(t1)
@@ -133,7 +133,7 @@ sleep_loop:
   jal x0, reset_handler
 
 .section .data
-fmt_string:  .string "\nmcycle difference: %d\n"
+# fmt_string:  .string "\nmcycle difference: %d\n"
 .global start_cycles
 .balign 8
 start_cycles: .dword 0x0000000000000000

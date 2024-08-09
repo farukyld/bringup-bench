@@ -39,6 +39,19 @@ BMARKS = ackermann anagram banner blake2b boyer-moore-search bubble-sort c-inter
 
 OPT_CFLAGS = -O3 -g
 
+RAM_START          = 0x04000000
+RAM_LENGTH         = 0x03000000
+RAM_START_DEC      = $(shell printf "%d" $(RAM_START))
+RAM_LENGTH_DEC     = $(shell printf "%d" $(RAM_LENGTH))
+STACK_START_DEC    = $(shell expr $(RAM_START_DEC) + $(RAM_LENGTH_DEC))
+STACK_START        = $(shell printf "0x%X" $(STACK_START_DEC))
+STACK_LENGTH       = 0x8000
+STACK_LENGTH_DEC   = $(shell printf "%d" $(STACK_LENGTH))
+PROGRAM_LENGTH_DEC = $(shell expr $(RAM_LENGTH_DEC) + $(STACK_LENGTH_DEC))
+PROGRAM_START      = $(RAM_START)
+PROGRAM_LENGTH     = $(shell printf "0x%X" $(PROGRAM_LENGTH_DEC))
+
+
 ifeq ($(TARGET), host)
 TARGET_CC = gcc
 #TARGET_CC = clang
@@ -104,15 +117,20 @@ TARGET_CC = riscv64-unknown-elf-gcc
 TARGET_AR = riscv64-unknown-elf-ar
 # libmin_function_name'ler icin function_name isimli bir alias olustur.
 ALIAS_RM_LIBMIN = 1
+PRINT_CYCLES_ON_EXIT = 0
 	ifeq ($(HARD_FLOAT), 1)
-TARGET_CFLAGS = -DTARGET_SPIKE -DHARD_FLOAT -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv64imfdc_zicsr -mabi=lp64d -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+TARGET_CFLAGS = -DTARGET_SPIKE -DHARD_FLOAT -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -DPRINT_CYCLES_ON_EXIT=$(PRINT_CYCLES_ON_EXIT) -march=rv64imfdc_zicsr -mabi=lp64d -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
 	else
-TARGET_CFLAGS = -DTARGET_SPIKE -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
+TARGET_CFLAGS = -DTARGET_SPIKE -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -DPRINT_CYCLES_ON_EXIT=$(PRINT_CYCLES_ON_EXIT) -march=rv64imc_zicsr -mabi=lp64 -static -mcmodel=medlow -Wall -g -Os -fvisibility=hidden -nostdlib -nostartfiles -ffreestanding # -MMD -mcmodel=medany
 	endif
 #  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
 TARGET_LIBS = -lgcc
-TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m0x200000:0x40000
+TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m$(PROGRAM_START):$(PROGRAM_LENGTH)
+	ifeq ($(PRINT_CYCLES_ON_EXIT), 1)
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
+	else
+TARGET_DIFF =diff
+	endif
 TARGET_EXE = $(PROG).elf
 TARGET_EXTRA_DEPS = ../target/spike-map-prep.ld ../target/spike-crt0.S
 # bu alt satirdaki ne?
@@ -154,17 +172,6 @@ build: $(TARGET_EXE)
 
 
 
-RAM_START          = 0x04000000
-RAM_LENGTH         = 0x03000000
-RAM_START_DEC      = $(shell printf "%d" $(RAM_START))
-RAM_LENGTH_DEC     = $(shell printf "%d" $(RAM_LENGTH))
-STACK_START_DEC    = $(shell expr $(RAM_START_DEC) + $(RAM_LENGTH_DEC))
-STACK_START        = $(shell printf "0x%X" $(STACK_START_DEC))
-STACK_LENGTH       = 0x8000
-STACK_LENGTH_DEC   = $(shell printf "%d" $(STACK_LENGTH))
-PROGRAM_LENGTH_DEC = $(shell expr $(RAM_LENGTH_DEC) + $(STACK_LENGTH_DEC))
-PROGRAM_START      = $(RAM_START)
-PROGRAM_LENGTH     = $(shell printf "0x%X" $(PROGRAM_LENGTH_DEC))
 
 
 LINKER_MACROS = -DRAM_START=$(RAM_START) -DRAM_LENGTH=$(RAM_LENGTH) -DSTACK_START=$(STACK_START) -DSTACK_LENGTH=$(STACK_LENGTH)
@@ -183,7 +190,7 @@ else ifeq ($(TARGET), simple)
 else ifeq ($(TARGET), spike_toddmaustin)
 	$(TARGET_CC) $(CFLAGS) -T ../target/simple-map.ld $(OBJS) ../target/simple-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 else ifeq ($(TARGET), spike)
-	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map.ld $(OBJS) ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map-prep.ld $(OBJS) ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 else
 	$(error MODE is not defined (add: TARGET={host|sa}).)
 endif

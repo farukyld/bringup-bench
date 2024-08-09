@@ -141,6 +141,8 @@ SFILE *find_file(const char *file_name)
 
 void sflush_safe(SFILE *file)
 {
+  if (file->write_idx==0)
+    return;
   char *s = file->out_buff;
   for (; *s; s++)
     libtarg_putc(*s);
