@@ -15,11 +15,10 @@
 .section .text
 
 default_exc_handler:
-#warning default_exc_handler gerceklenmedi
+  call libtarg_fail
   jal x0, default_exc_handler
 
 timer_handler:
-#warning timer_handler gerceklenmedi
   jal x0, timer_handler
 
 reset_handler:
@@ -65,7 +64,7 @@ reset_handler:
 
   /* stack initilization */
   la   x2, _stack_start
-
+  
 _start:
   .global _start
 
