@@ -267,6 +267,7 @@ libtarg_sbrk(size_t inc)
   __heap_ptr += inc;
   if (__heap_ptr >= MAX_HEAP)
   {
+    libmin_printf("sbrk failed\n");
     libtarg_fail(1);
   }
 
