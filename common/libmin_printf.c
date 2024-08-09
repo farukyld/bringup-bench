@@ -783,7 +783,7 @@ int libmin_sfprintf(SFILE *file, const char *fmt, ...)
   return len;
 }
 
-int sprintf(char *buffer, const char *format, ...)
+int libmin_sprintf(char *buffer, const char *format, ...)
 {
   va_list args;
   size_t len;
@@ -795,7 +795,7 @@ int sprintf(char *buffer, const char *format, ...)
   return (int)len;
 }
 
-int snprintf(char *buffer, size_t maxlen, const char *format, ...)
+int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...)
 {
   va_list args;
   size_t len;

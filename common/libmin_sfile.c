@@ -59,7 +59,7 @@ int libmin_sfputc(int c, SFILE *file)
   return c;
 }
 
-SFILE *create_sfile(const char *file_name,const char *escape, sfile_mode_e mode)
+SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode)
 {
   if (!libmin_strfits(file_name, MAX_NAME_LEN))
   {
@@ -209,4 +209,10 @@ void serial_output_init()
       esc_seq_in_use[i] = true;
     }
   }
+}
+
+int libmin_sfclose(SFILE *file)
+{
+#warning not implemented
+  return 0;
 }

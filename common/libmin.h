@@ -161,6 +161,17 @@ int libmin_printf(char *fmt, ...);
 #define libmin_printf(FMT, ARGS...)	do { ; } while (0)
 #endif /* TARGET_SILENT */
 
+int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...);
+#if ALIAS_RM_LIBMIN
+#define snprintf libmin_snprintf
+#endif
+
+int libmin_sprintf(char *buffer, const char *format, ...);
+#if ALIAS_RM_LIBMIN
+#define sprintf libmin_sprintf
+#endif
+
+
 /* print one character */
 void libmin_putc(char c);
 #if ALIAS_RM_LIBMIN
