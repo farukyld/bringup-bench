@@ -11,3 +11,4 @@ FOO
 *.log
 ibex_simple_system_pcount.csv
 target/simple_mmio_plugin.so
+target/spike-map-prep.ld

@@ -48,6 +48,7 @@ TARGET_LIBS =
 TARGET_SIM =
 TARGET_DIFF = diff
 TARGET_EXE = $(PROG).host
+TARGET_EXTRA_DEPS = 
 TARGET_CLEAN =
 TARGET_BMARKS = $(BMARKS)
 TARGET_CONFIGURED = 1
@@ -60,6 +61,7 @@ TARGET_LIBS =
 TARGET_SIM =
 TARGET_DIFF = diff
 TARGET_EXE = $(PROG).sa
+TARGET_EXTRA_DEPS =
 TARGET_CLEAN =
 TARGET_BMARKS = $(BMARKS)
 TARGET_CONFIGURED = 1
@@ -73,6 +75,7 @@ TARGET_CFLAGS = -DTARGET_SIMPLE -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN) -march=rv32
 TARGET_LIBS = -lgcc
 TARGET_SIM = ../target/simple_sim.sh ../../../ibex/build/lowrisc_ibex_ibex_simple_system_0/sim-verilator/Vibex_simple_system
 TARGET_DIFF = mv ibex_simple_system.log FOO; diff
+TARGET_EXTRA_DEPS = ../target/simple-map.ld ../target/simple-crt0.S
 TARGET_EXE = $(PROG).elf
 TARGET_CLEAN = *.d ibex_simple_system_pcount.csv
 TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort cipher dhrystone distinctness fft-int flood-fill frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler knapsack life longdiv mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal primal-test qsort-demo rabinkarp-search regex-parser shortest-path sieve simple-grep skeleton strange topo-sort totient weekday
@@ -89,6 +92,7 @@ TARGET_LIBS = -lgcc
 TARGET_SIM = $(SPIKE_TODDMAUSTIN)/build/spike --isa=RV64IMAFDC --extlib=../target/simple_mmio_plugin.so -m0x100000:0x40000 --device=simple_mmio_plugin,0x20000,x
 TARGET_DIFF = diff
 TARGET_EXE = $(PROG).elf
+TARGET_EXTRA_DEPS = ../target/simple-map.ld ../target/simple-crt0.S
 TARGET_CLEAN = *.d ibex_simple_system_pcount.csv
 # TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort cipher dhrystone distinctness fft-int flood-fill frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler knapsack life longdiv mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal primal-test qsort-demo rabinkarp-search regex-parser shortest-path sieve simple-grep skeleton strange topo-sort totient weekday
 TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort dhrystone distinctness fft-int flood-fill frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler knapsack life mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal primal-test qsort-demo regex-parser shortest-path sieve simple-grep skeleton strange topo-sort totient weekday
@@ -110,6 +114,7 @@ TARGET_LIBS = -lgcc
 TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m0x200000:0x40000
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
 TARGET_EXE = $(PROG).elf
+TARGET_EXTRA_DEPS = ../target/spike-map-prep.ld ../target/spike-crt0.S
 # bu alt satirdaki ne?
 TARGET_CLEAN = *.d ibex_simple_system_pcount.csv
 # TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort cipher dhrystone distinctness fft-int flood-fill frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler knapsack life longdiv mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal primal-test qsort-demo rabinkarp-search regex-parser shortest-path sieve simple-grep skeleton strange topo-sort totient weekday
@@ -147,20 +152,42 @@ build: $(TARGET_EXE)
 ../common/libmin.a: $(LIBMIN_OBJS)
 	$(TARGET_AR) rcs ../common/libmin.a $(LIBMIN_OBJS)
 
-$(TARGET_EXE): $(OBJS) $(LIBS)
+
+
+RAM_START          = 0x04000000
+RAM_LENGTH         = 0x03000000
+RAM_START_DEC      = $(shell printf "%d" $(RAM_START))
+RAM_LENGTH_DEC     = $(shell printf "%d" $(RAM_LENGTH))
+STACK_START_DEC    = $(shell expr $(RAM_START_DEC) + $(RAM_LENGTH_DEC))
+STACK_START        = $(shell printf "0x%X" $(STACK_START_DEC))
+STACK_LENGTH       = 0x8000
+STACK_LENGTH_DEC   = $(shell printf "%d" $(STACK_LENGTH))
+PROGRAM_LENGTH_DEC = $(shell expr $(RAM_LENGTH_DEC) + $(STACK_LENGTH_DEC))
+PROGRAM_START      = $(RAM_START)
+PROGRAM_LENGTH     = $(shell printf "0x%X" $(PROGRAM_LENGTH_DEC))
+
+
+LINKER_MACROS = -DRAM_START=$(RAM_START) -DRAM_LENGTH=$(RAM_LENGTH) -DSTACK_START=$(STACK_START) -DSTACK_LENGTH=$(STACK_LENGTH)
+
+../target/spike-map-prep.ld: ../target/spike-map.ld
+	riscv64-unknown-elf-cpp $(LINKER_MACROS) -P $< > $@
+
+
+$(TARGET_EXE): $(OBJS) $(LIBS) $(TARGET_EXTRA_DEPS)
 ifeq ($(TARGET), host)
-	$(TARGET_CC) $(CFLAGS) -o $@ $^ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS) $(TARGET_LIBS)
 else ifeq ($(TARGET), standalone)
-	$(TARGET_CC) $(CFLAGS) -o $@ $^ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS) $(TARGET_LIBS)
 else ifeq ($(TARGET), simple)
-	$(TARGET_CC) $(CFLAGS) -T ../target/simple-map.ld $^ ../target/simple-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -T ../target/simple-map.ld $(OBJS) ../target/simple-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 else ifeq ($(TARGET), spike_toddmaustin)
-	$(TARGET_CC) $(CFLAGS) -T ../target/simple-map.ld $^ ../target/simple-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -T ../target/simple-map.ld $(OBJS) ../target/simple-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 else ifeq ($(TARGET), spike)
-	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map.ld $^ ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map.ld $(OBJS) ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 else
 	$(error MODE is not defined (add: TARGET={host|sa}).)
 endif
+
 
 clean:
 	rm -f $(PROG).host $(PROG).sa $(PROG).elf *.o ../common/*.o ../target/*.o ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) $(TARGET_CLEAN)
