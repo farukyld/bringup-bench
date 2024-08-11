@@ -122,7 +122,7 @@ extern inline uint32_t
 simple_get_mepc(void)
 {
   uint32_t result;
-  __asm__ volatile("csrr %0, mepc;" : "=r"(result));
+  __asm__ volatile("csrr %0, mepc" : " = r "(result));
   return result;
 }
 
@@ -130,7 +130,7 @@ extern inline uint32_t
 simple_get_mcause(void)
 {
   uint32_t result;
-  __asm__ volatile("csrr %0, mcause;" : "=r"(result));
+  __asm__ volatile("csrr %0, mcause" : "=r"(result));
   return result;
 }
 
@@ -138,7 +138,7 @@ extern inline uint32_t
 simple_get_mtval(void)
 {
   uint32_t result;
-  __asm__ volatile("csrr %0, mtval;" : "=r"(result));
+  __asm__ volatile("csrr %0, mtval" : "=r"(result));
   return result;
 }
 
@@ -280,7 +280,7 @@ libtarg_sbrk(size_t inc)
   __heap_ptr += inc;
   if (__heap_ptr >= MAX_HEAP)
   {
-    libmin_printf("sbrk failed, requested inc: %d\n",inc);
+    libmin_printf("sbrk failed, requested inc: %d\n", inc);
     libtarg_fail(1);
   }
 

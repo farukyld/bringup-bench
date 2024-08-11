@@ -86,10 +86,6 @@ zero_loop_end:
 
 main_entry:
   /* jump to main program entry point (argc = argv = 0) */
-  # csrr s0,mcycle
-  # sd s0, -8(sp)
-  # c.addi sp, -8
-
   addi x10, x0, 0
   addi x11, x0, 0
   call serial_output_init
@@ -99,12 +95,6 @@ main_entry:
 #endif
 
   jal x1, main
-  # c.addi sp, 8
-  # csrr s1,mcycle
-  # ld s0, -8(sp)
-  # sub a1, s1, s0
-  # la a0, fmt_string
-  # call libmin_printf
   /* Halt simulation */
   li a0, 0 # sfflush null arguman ile cagrildiginda butun dosyalari flush'lar.
   call libmin_sfflush
