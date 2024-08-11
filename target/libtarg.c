@@ -248,7 +248,9 @@ static uint32_t __heap_ptr = 0;
 #endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN */
 
 #if defined(TARGET_SPIKE)
-#define MAX_HEAP (32 * 1024 * 1024)
+// 28 MiB yetiyor
+// 27 MiB yetmiyor
+#define MAX_HEAP (28 * 1024 * 1024)
 static uint8_t __heap[MAX_HEAP] __attribute__((section(".heap")));
 static uint32_t __heap_ptr = 0;
 #endif
@@ -270,7 +272,7 @@ libtarg_sbrk(size_t inc)
   __heap_ptr += inc;
   if (__heap_ptr >= MAX_HEAP)
   {
-    libmin_printf("sbrk failed\n");
+    libmin_printf("sbrk failed, requested inc: %d\n",inc);
     libtarg_fail(1);
   }
 

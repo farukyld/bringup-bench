@@ -40,7 +40,7 @@ BMARKS = ackermann anagram banner blake2b boyer-moore-search bubble-sort c-inter
 OPT_CFLAGS = -O3 -g
 
 RAM_START          = 0x04000000
-RAM_LENGTH         = 0x03000000
+RAM_LENGTH         = 0x01dee000
 RAM_START_DEC      = $(shell printf "%d" $(RAM_START))
 RAM_LENGTH_DEC     = $(shell printf "%d" $(RAM_LENGTH))
 STACK_START_DEC    = $(shell expr $(RAM_START_DEC) + $(RAM_LENGTH_DEC))
