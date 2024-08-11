@@ -40,7 +40,7 @@ BMARKS = ackermann anagram banner blake2b boyer-moore-search bubble-sort c-inter
 OPT_CFLAGS = -O3 -g
 
 RAM_START          = 0x04000000
-RAM_LENGTH         = 0x01dee000
+RAM_LENGTH         = 0x01def000
 RAM_START_DEC      = $(shell printf "%d" $(RAM_START))
 RAM_LENGTH_DEC     = $(shell printf "%d" $(RAM_LENGTH))
 STACK_START_DEC    = $(shell expr $(RAM_START_DEC) + $(RAM_LENGTH_DEC))
@@ -197,7 +197,7 @@ endif
 
 
 clean:
-	rm -f $(PROG).host $(PROG).sa $(PROG).elf *.o ../common/*.o ../target/*.o ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) $(TARGET_CLEAN)
+	rm -f $(PROG).host $(PROG).sa $(PROG).elf *.o ../common/*.o ../target/*.o ../target/spike-map-prep.ld ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) $(TARGET_CLEAN)
 
 
 #

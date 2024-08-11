@@ -22,6 +22,9 @@ timer_handler:
   jal x0, timer_handler
 
 reset_handler:
+#if GDB_DEBUG
+  call libtarg_debug_wait_loop
+#endif
   /* set all registers to zero */
   la t0, default_exc_handler
   csrw mtvec,t0

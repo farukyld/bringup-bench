@@ -12,6 +12,14 @@
 #define MAX_SPIN 10000 /* make this larger for a real hardware platform */
 #elif defined(TARGET_SPIKE)
 
+// bu fonksiyon, gdb ile birlikte kullanilmak uzere tasarlandi
+volatile int wait = 1;
+void libtarg_debug_wait_loop()
+{
+  while (wait)
+    ;
+}
+
 time_t libtarg_get_cycles()
 {
   time_t result;
