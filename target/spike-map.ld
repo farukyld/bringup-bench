@@ -18,17 +18,18 @@ _stack_len     = LENGTH(stack);
 _stack_start   = ORIGIN(stack) + LENGTH(stack);
 _heap_start    = ORIGIN(heap); /* stack goes top to bottom, heap goes bottom to top */
 
-_entry_point = _vectors_start + 0x80;
-ENTRY(_entry_point)
+ENTRY(_entry_start)
 
 SECTIONS
 {
     .vectors :
-    {
+    {   
+        _entry_start = .;
         . = ALIGN(4);
-		_vectors_start = .;
+        KEEP(*(.entry))
+        _vectors_start = .;
         KEEP(*(.vectors))
-		_vectors_end = .;
+        _vectors_end = .;
     } > program
 
     .text : {

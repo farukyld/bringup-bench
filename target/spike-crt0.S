@@ -130,12 +130,13 @@ sleep_loop:
 
 /* =================================================== [ exceptions ] === */
 /* This section has to be down here, since we have to disable rvc for it  */
-
-  .section .vectors, "ax"
   .option norvc;
+  .section .entry
+  .org 0x00
+    jal x0, reset_handler
+  .section .vectors, "ax"
 
   // All unimplemented interrupts/exceptions go to the default_exc_handler.
-  .org 0x00
   .rept 7
   jal x0, default_exc_handler
   .endr
@@ -145,7 +146,7 @@ sleep_loop:
   .endr
 
   // reset vector
-  .org 0x80
+  .org 0x84
   jal x0, reset_handler
 
 .section .data
