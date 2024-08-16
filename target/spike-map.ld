@@ -6,13 +6,10 @@ OUTPUT_ARCH(riscv)
 
 MEMORY
 {
-/* Change this if you'd like different sizes. Arty A7-100(35) has a maximum of 607.5KB(225KB)
-   BRAM space. Configuration below is for maximum BRAM capacity with Artya A7-35 while letting
-   CoreMark run (.vmem of 152.8KB).
-*/
+
     ram         : ORIGIN = RAM_START, LENGTH = RAM_LENGTH
-    heap        : ORIGIN = HEAP_START, LENGTH = HEAP_LENGTH
     stack       : ORIGIN = STACK_START, LENGTH = STACK_LENGTH
+    heap        : ORIGIN = HEAP_START, LENGTH = HEAP_LENGTH
 }
 
 /* Stack information variables */
@@ -23,20 +20,6 @@ _heap_start    = ORIGIN(heap); /* stack goes top to bottom, heap goes bottom to 
 
 _entry_point = _vectors_start + 0x80;
 ENTRY(_entry_point)
-
-/* The tohost address is used by Spike for a magic "stop me now" message. This
-   is set to equal SIM_CTRL_CTRL (see simple_system_regs.h), which has that
-   effect in simple_system simulations. Note that it must be 8-byte aligned.
-
-   We don't read data back from Spike, so fromhost is set to some dummy value:
-   we place it just above the top of the stack.
- */
-/*
-    guncel spike icin olan vesiyonunda tohost ve fromhost'u kodun icinde tanimlamak isiyorum.
-    tohost ve fromhost burada tanimlanmayacak.
-tohost   = 0x20008;
-fromhost = _stack_start + 0x10;
-*/
 
 SECTIONS
 {
@@ -84,13 +67,6 @@ SECTIONS
         *(COMMON)
         _bss_end = .;
     } > ram
-    
-    .heap (NOLOAD):
-    {
-        . = ALIGN(4);
-        . = . + HEAP_LENGTH;
-        . = ALIGN(4);
-    } > heap
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
@@ -100,4 +76,11 @@ SECTIONS
         stack = . ;
         _stack = . ;
     } > stack
+
+    .heap (NOLOAD):
+    {
+        . = ALIGN(4);
+        . = . + HEAP_LENGTH;
+        . = ALIGN(4);
+    } > heap
 }

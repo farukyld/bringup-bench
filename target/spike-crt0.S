@@ -15,47 +15,18 @@
 .section .text
 
 default_exc_handler:
-  # addi sp, sp, -256
-  # sd x1,    0(sp)
-  # sd x2,    8(sp)
-  # sd x3,   16(sp)
-  # sd x4,   24(sp)
-  # sd x5,   32(sp)
-  # sd x6,   40(sp)
-  # sd x7,   48(sp)
-  # sd x8,   56(sp)
-  # sd x9,   64(sp)
-  # sd x10,  72(sp)
-  # sd x11,  80(sp)
-  # sd x12,  88(sp)
-  # sd x13,  96(sp)
-  # sd x14, 104(sp)
-  # sd x15, 112(sp)
-  # sd x16, 120(sp)
-  # sd x17, 128(sp)
-  # sd x18, 136(sp)
-  # sd x19, 144(sp)
-  # sd x20, 152(sp)
-  # sd x21, 160(sp)
-  # sd x22, 168(sp)
-  # sd x23, 176(sp)
-  # sd x24, 184(sp)
-  # sd x25, 192(sp)
-  # sd x26, 200(sp)
-  # sd x27, 208(sp)
-  # sd x28, 216(sp)
-  # sd x29, 224(sp)
-  # sd x30, 232(sp)
-  # sd x31, 240(sp)
   csrr t0, mepc
   sd t0, -8(sp)
-  
+
+#if GDB_DEBUG
   # sd t0, 248(sp)
   la t0, wait
   li t1, 0x1
   sw t1, 0(t0)
   call libtarg_debug_wait_loop
-  # call libtarg_fail
+#else
+  call libtarg_fail
+#endif
 
 timer_handler:
   jal x0, timer_handler
@@ -67,6 +38,15 @@ reset_handler:
   /* set all registers to zero */
   la t0, _vectors_start
   csrw mtvec,t0
+  csrr t1,mtvec
+  beq t1,t0,mtvec_set_successfull
+  la   sp, _stack_start
+  # sp'yi 8 byte hizala
+  li t0, 7
+  xori t0, t0, -1
+  and sp, sp, t0
+  call libtarg_fail
+mtvec_set_successfull:
 #if PRINT_CYCLES_ON_EXIT
   csrr t0, mcycle
   la t1, start_cycles
@@ -105,8 +85,6 @@ reset_handler:
   mv x31, x1
 
   /* stack initilization */
-  # l1: lui x2, %pcrel_hi(_stack_start)
-  # addi x2, x2, %lo(l1)
   la   sp, _stack_start
   # sp'yi 8 byte hizala
   li t0, 7
