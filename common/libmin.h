@@ -360,7 +360,8 @@ time_t libmin_time(time_t *timer);
 typedef int (*cmpfun)(const void *, const void *);
 void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
 #if ALIAS_RM_LIBMIN
-#define qsort libmin_qsort
+// qsort is buggy. 
+// #define qsort libmin_qsort
 #endif
 
 
