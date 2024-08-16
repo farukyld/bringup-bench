@@ -2,8 +2,8 @@ ALIAS_RM_LIBMIN = 1
 PRINT_CYCLES_ON_EXIT = 0
 
 HEAP_LENGTH        = 0x5000
-RAM_START          = 0x80000000
-RAM_LENGTH         = 0x600000
+PROGRAM_START      = 0x80000000
+PROGRAM_LENGTH     = 0x600000
 STACK_LENGTH       = 0x8000
 
 
@@ -35,10 +35,10 @@ error:
 
 OPT_CFLAGS = -O3 -g
 
-STACK_START        = $(shell printf "0x%X\n" $$(($(RAM_START) + $(RAM_LENGTH))))
+STACK_START        = $(shell printf "0x%X\n" $$(($(PROGRAM_START) + $(PROGRAM_LENGTH))))
 HEAP_START         = $(shell printf "0x%X\n" $$(($(STACK_START) + $(STACK_LENGTH))))
-PROGRAM_START      = $(RAM_START)
-PROGRAM_LENGTH     = $(shell printf "0x%X\n" $$(($(RAM_LENGTH) + $(HEAP_LENGTH) + $(STACK_LENGTH))))
+MEM_START          = $(PROGRAM_START)
+MEM_LENGTH         = $(shell printf "0x%X\n" $$(($(PROGRAM_LENGTH) + $(STACK_LENGTH) + $(HEAP_LENGTH) )))
 
 
 TARGET_CC = riscv64-unknown-elf-gcc
@@ -60,7 +60,7 @@ endif
 TARGET_CFLAGS = $(HARD_FLOAT_MARCH_MABI) $(COMMON_CFLAGS)
 #  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
 TARGET_LIBS = -lgcc
-TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m$(PROGRAM_START):$(PROGRAM_LENGTH)
+TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m$(MEM_START):$(MEM_LENGTH)
 
 ifeq ($(PRINT_CYCLES_ON_EXIT), 1)
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
@@ -107,7 +107,7 @@ build: $(TARGET_EXE)
 
 
 
-LINKER_MACROS = -DRAM_START=$(RAM_START) -DRAM_LENGTH=$(RAM_LENGTH)\
+LINKER_MACROS = -DPROGRAM_START=$(PROGRAM_START) -DPROGRAM_LENGTH=$(PROGRAM_LENGTH)\
   -DHEAP_START=$(HEAP_START) -DHEAP_LENGTH=$(HEAP_LENGTH)\
 	-DSTACK_START=$(STACK_START) -DSTACK_LENGTH=$(STACK_LENGTH)\
 

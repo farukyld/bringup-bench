@@ -7,7 +7,7 @@ OUTPUT_ARCH(riscv)
 MEMORY
 {
 
-    ram         : ORIGIN = RAM_START, LENGTH = RAM_LENGTH
+    program     : ORIGIN = PROGRAM_START, LENGTH = PROGRAM_LENGTH
     stack       : ORIGIN = STACK_START, LENGTH = STACK_LENGTH
     heap        : ORIGIN = HEAP_START, LENGTH = HEAP_LENGTH
 }
@@ -29,13 +29,13 @@ SECTIONS
 		_vectors_start = .;
         KEEP(*(.vectors))
 		_vectors_end = .;
-    } > ram
+    } > program
 
     .text : {
         . = ALIGN(4);
         *(.text)
         *(.text.*)
-    }  > ram
+    }  > program
 
     .rodata : {
         . = ALIGN(4);
@@ -44,7 +44,7 @@ SECTIONS
         *(.srodata.*)
         *(.rodata);
         *(.rodata.*)
-    } > ram
+    } > program
 
     .data : {
         . = ALIGN(4);
@@ -53,7 +53,7 @@ SECTIONS
         *(.sdata.*)
         *(.data);
         *(.data.*)
-    } > ram
+    } > program
 
     .bss :
     {
@@ -66,7 +66,7 @@ SECTIONS
         *(.bss.*)
         *(COMMON)
         _bss_end = .;
-    } > ram
+    } > program
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
