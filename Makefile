@@ -1,6 +1,6 @@
 ALIAS_RM_LIBMIN = 1
 PRINT_CYCLES_ON_EXIT = 0
-
+SPIKE_INTERAC = 0
 HEAP_LENGTH        = 0x5000
 PROGRAM_START      = 0x80000000
 PROGRAM_LENGTH     = 0x600000
@@ -44,7 +44,11 @@ MEM_LENGTH         = $(shell printf "0x%X\n" $$(($(PROGRAM_LENGTH) + $(STACK_LEN
 TARGET_CC = riscv64-unknown-elf-gcc
 TARGET_AR = riscv64-unknown-elf-ar
 # libmin_function_name'ler icin function_name isimli bir alias olustur.
-
+ifeq ($(SPIKE_INTERAC), 1)
+SPK_DBG=-d
+else
+SPK_DBG=
+endif
 COMMON_CFLAGS = -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN)\
   -DPRINT_CYCLES_ON_EXIT=$(PRINT_CYCLES_ON_EXIT)\
   -DHEAP_LENGTH=$(HEAP_LENGTH) \
@@ -60,7 +64,7 @@ endif
 TARGET_CFLAGS = $(HARD_FLOAT_MARCH_MABI) $(COMMON_CFLAGS)
 #  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
 TARGET_LIBS = -lgcc
-TARGET_SIM = $(SPIKE_ORIG)/build/spike --isa=RV64IMAFDC -m$(MEM_START):$(MEM_LENGTH)
+TARGET_SIM = $(SPIKE_ORIG)/build/spike $(SPK_DBG) --isa=RV64IMAFDC -m$(MEM_START):$(MEM_LENGTH)
 
 ifeq ($(PRINT_CYCLES_ON_EXIT), 1)
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
