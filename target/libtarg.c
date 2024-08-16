@@ -59,11 +59,18 @@ volatile static long long int *fromhost __attribute__((used)); //
 extern uint64_t start_cycles;
 #endif
 
+#ifdef PRINT_MAX_HEAP_ON_EXIT
+static uint64_t max_heap_pointer;
+#endif
+
 void baremetal_exit(long long int exit_code)
 {
 #if PRINT_CYCLES_ON_EXIT
   uint64_t current_cycles = libtarg_get_cycles();
-  libmin_printf("\nmcycle difference: %d\n", current_cycles - start_cycles);
+  libmin_printf("\nmcycle difference: %llu\n", current_cycles - start_cycles);
+#endif
+#ifdef PRINT_MAX_HEAP_ON_EXIT
+  libmin_printf("\nmax heap_ptr: %llu\n", max_heap_pointer);
 #endif
   magic_mem[1] = exit_code;
   magic_mem[0] = 93; // 93: exit
@@ -256,10 +263,11 @@ static uint32_t __heap_ptr = 0;
 #endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN */
 
 #if defined(TARGET_SPIKE)
-// 28 MiB yetiyor
-// 27 MiB yetmiyor
-#define MAX_HEAP (28 * 1024 * 1024)
+#define MAX_HEAP (4llu * 1024llu * 1024llu * 1024llu)
 static uint8_t __heap[MAX_HEAP] __attribute__((section(".heap")));
+// extern uint8_t _heap_start;
+// extern uint8_t _heap_end;
+// static uint8_t *__heap = &_heap_start;
 static uint32_t __heap_ptr = 0;
 #endif
 
@@ -278,6 +286,13 @@ libtarg_sbrk(size_t inc)
     return ptr;
 
   __heap_ptr += inc;
+#ifdef PRINT_MAX_HEAP_ON_EXIT
+  if (__heap_ptr > max_heap_pointer)
+  {
+    max_heap_pointer = __heap_ptr;
+  }
+#endif
+
   if (__heap_ptr >= MAX_HEAP)
   {
     libmin_printf("sbrk failed, requested inc: %d\n", inc);
