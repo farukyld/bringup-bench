@@ -263,12 +263,14 @@ static uint32_t __heap_ptr = 0;
 #endif /* TARGET_SIMPLE || TARGET_SPIKE_TODDMAUSTIN */
 
 #if defined(TARGET_SPIKE)
+#ifndef HEAP_LENGTH
 #define MAX_HEAP (4llu * 1024llu * 1024llu * 1024llu)
 static uint8_t __heap[MAX_HEAP] __attribute__((section(".heap")));
-// extern uint8_t _heap_start;
-// extern uint8_t _heap_end;
-// static uint8_t *__heap = &_heap_start;
+#else
+#define MAX_HEAP HEAP_LENGTH
+extern uint8_t _heap_start;
 static uint32_t __heap_ptr = 0;
+#endif
 #endif
 
 /* get some memory */
@@ -281,6 +283,7 @@ libtarg_sbrk(size_t inc)
 #endif /* __clang__ */
   return sbrk(inc);
 #elif defined(TARGET_SA) || defined(TARGET_SIMPLE) || defined(TARGET_SPIKE_TODDMAUSTIN) || defined(TARGET_SPIKE)
+  static uint8_t *__heap = &_heap_start;
   uint8_t *ptr = &__heap[__heap_ptr];
   if (inc == 0)
     return ptr;

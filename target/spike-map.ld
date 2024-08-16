@@ -11,6 +11,7 @@ MEMORY
    CoreMark run (.vmem of 152.8KB).
 */
     ram         : ORIGIN = RAM_START, LENGTH = RAM_LENGTH
+    heap        : ORIGIN = HEAP_START, LENGTH = HEAP_LENGTH
     stack       : ORIGIN = STACK_START, LENGTH = STACK_LENGTH
 }
 
@@ -18,6 +19,7 @@ MEMORY
 _min_stack      = 0x2000;   /* 8K - minimum stack space to reserve */
 _stack_len     = LENGTH(stack);
 _stack_start   = ORIGIN(stack) + LENGTH(stack);
+_heap_start    = ORIGIN(heap); /* stack goes top to bottom, heap goes bottom to top */
 
 _entry_point = _vectors_start + 0x80;
 ENTRY(_entry_point)
@@ -83,10 +85,12 @@ SECTIONS
         _bss_end = .;
     } > ram
     
-    .heap :
+    .heap (NOLOAD):
     {
-        *(.heap)
-    } > ram
+        . = ALIGN(4);
+        . = . + HEAP_LENGTH;
+        . = ALIGN(4);
+    } > heap
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
