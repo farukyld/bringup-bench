@@ -45,8 +45,8 @@ int uart_putchar(char c)
   // TODO [NS16550_BASE + UART_LSR][UART_LSR_THRE] == 0 degilse bekle
   // TODO assembly yerine c ile yaz.
   __asm__ volatile(
-      "li a1, 0x10000000\n"
-      "sb a0, 0(a1)\n");
+      "li t0, 0x10000000\n"
+      "sb a0, 0(t0)\n");
   return c;
 }
 
