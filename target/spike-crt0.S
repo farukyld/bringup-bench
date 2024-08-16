@@ -105,7 +105,13 @@ reset_handler:
   mv x31, x1
 
   /* stack initilization */
-  la   x2, _stack_start
+  # l1: lui x2, %pcrel_hi(_stack_start)
+  # addi x2, x2, %lo(l1)
+  la   sp, _stack_start
+  # sp'yi 8 byte hizala
+  li t0, 7
+  xori t0, t0, -1
+  and sp, sp, t0
   
 _start:
   .global _start
