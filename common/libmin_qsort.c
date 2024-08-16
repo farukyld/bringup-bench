@@ -9,38 +9,41 @@ static inline int
 a_ctz_l(unsigned long x)
 {
 	static const char debruijn32[32] = {
-		0, 1, 23, 2, 29, 24, 19, 3, 30, 27, 25, 11, 20, 8, 4, 13,
-		31, 22, 28, 18, 26, 10, 7, 12, 21, 17, 9, 6, 16, 5, 15, 14
-	};
-	return debruijn32[(x&-x)*0x076be629 >> 27];
+			0, 1, 23, 2, 29, 24, 19, 3, 30, 27, 25, 11, 20, 8, 4, 13,
+			31, 22, 28, 18, 26, 10, 7, 12, 21, 17, 9, 6, 16, 5, 15, 14};
+	return debruijn32[(x & -x) * 0x076be629 >> 27];
 }
 
 static inline int
 pntz(size_t p[2])
 {
 	int r = ntz(p[0] - 1);
-	if(r != 0 || (r = 8*sizeof(size_t) + ntz(p[1])) != 8*sizeof(size_t)) {
+	if (r != 0 || (r = 8 * sizeof(size_t) + ntz(p[1])) != 8 * sizeof(size_t))
+	{
 		return r;
 	}
 	return 0;
 }
 
 static void
-cycle(size_t width, unsigned char* ar[], int n)
+cycle(size_t width, unsigned char *ar[], int n)
 {
 	unsigned char tmp[256];
 	size_t l;
 	int i;
 
-	if(n < 2) {
+	if (n < 2)
+	{
 		return;
 	}
 
 	ar[n] = tmp;
-	while(width) {
+	while (width)
+	{
 		l = sizeof(tmp) < width ? sizeof(tmp) : width;
 		libmin_memcpy(ar[n], ar[0], l);
-		for(i = 0; i < n; i++) {
+		for (i = 0; i < n; i++)
+		{
 			libmin_memcpy(ar[i], ar[i + 1], l);
 			ar[i] += l;
 		}
@@ -52,7 +55,8 @@ cycle(size_t width, unsigned char* ar[], int n)
 static inline void
 shl(size_t p[2], int n)
 {
-	if(n >= 8 * sizeof(size_t)) {
+	if (n >= 8 * sizeof(size_t))
+	{
 		n -= 8 * sizeof(size_t);
 		p[1] = p[0];
 		p[0] = 0;
@@ -65,7 +69,8 @@ shl(size_t p[2], int n)
 static inline void
 shr(size_t p[2], int n)
 {
-	if(n >= 8 * sizeof(size_t)) {
+	if (n >= 8 * sizeof(size_t))
+	{
 		n -= 8 * sizeof(size_t);
 		p[0] = p[1];
 		p[1] = 0;
@@ -83,18 +88,23 @@ sift(unsigned char *head, size_t width, cmpfun cmp, int pshift, size_t lp[])
 	int i = 1;
 
 	ar[0] = head;
-	while(pshift > 1) {
+	while (pshift > 1)
+	{
 		rt = head - width;
 		lf = head - width - lp[pshift - 2];
 
-		if((*cmp)(ar[0], lf) >= 0 && (*cmp)(ar[0], rt) >= 0) {
+		if ((*cmp)(ar[0], lf) >= 0 && (*cmp)(ar[0], rt) >= 0)
+		{
 			break;
 		}
-		if((*cmp)(lf, rt) >= 0) {
+		if ((*cmp)(lf, rt) >= 0)
+		{
 			ar[i++] = lf;
 			head = lf;
 			pshift -= 1;
-		} else {
+		}
+		else
+		{
 			ar[i++] = rt;
 			head = rt;
 			pshift -= 2;
@@ -107,7 +117,7 @@ static void
 trinkle(unsigned char *head, size_t width, cmpfun cmp, size_t pp[2], int pshift, int trusty, size_t lp[])
 {
 	unsigned char *stepson,
-	              *rt, *lf;
+			*rt, *lf;
 	size_t p[2];
 	unsigned char *ar[14 * sizeof(size_t) + 1];
 	int i = 1;
@@ -117,15 +127,19 @@ trinkle(unsigned char *head, size_t width, cmpfun cmp, size_t pp[2], int pshift,
 	p[1] = pp[1];
 
 	ar[0] = head;
-	while(p[0] != 1 || p[1] != 0) {
+	while (p[0] != 1 || p[1] != 0)
+	{
 		stepson = head - lp[pshift];
-		if((*cmp)(stepson, ar[0]) <= 0) {
+		if ((*cmp)(stepson, ar[0]) <= 0)
+		{
 			break;
 		}
-		if(!trusty && pshift > 1) {
+		if (!trusty && pshift > 1)
+		{
 			rt = head - width;
 			lf = head - width - lp[pshift - 2];
-			if((*cmp)(rt, stepson) >= 0 || (*cmp)(lf, stepson) >= 0) {
+			if ((*cmp)(rt, stepson) >= 0 || (*cmp)(lf, stepson) >= 0)
+			{
 				break;
 			}
 		}
@@ -137,63 +151,77 @@ trinkle(unsigned char *head, size_t width, cmpfun cmp, size_t pp[2], int pshift,
 		pshift += trail;
 		trusty = 0;
 	}
-	if(!trusty) {
+	if (!trusty)
+	{
 		cycle(width, ar, i);
 		sift(head, width, cmp, pshift, lp);
 	}
 }
 
-void
-libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp)
+void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp)
 {
-	size_t lp[12*sizeof(size_t)];
+	size_t lp[12 * sizeof(size_t)];
 	size_t i, size = width * nel;
 	unsigned char *head, *high;
 	size_t p[2] = {1, 0};
 	int pshift = 1;
 	int trail;
 
-	if (!size) return;
+	if (!size)
+		return;
 
 	head = base;
 	high = head + size - width;
 
 	/* Precompute Leonardo numbers, scaled by element width */
-	for(lp[0]=lp[1]=width, i=2; (lp[i]=lp[i-2]+lp[i-1]+width) < size; i++);
+	for (lp[0] = lp[1] = width, i = 2; (lp[i] = lp[i - 2] + lp[i - 1] + width) < size; i++)
+		;
 
-	while(head < high) {
-		if((p[0] & 3) == 3) {
+	while (head < high)
+	{
+		if ((p[0] & 3) == 3)
+		{
 			sift(head, width, cmp, pshift, lp);
 			shr(p, 2);
 			pshift += 2;
-		} else {
-			if(lp[pshift - 1] >= high - head) {
+		}
+		else
+		{
+			if (lp[pshift - 1] >= high - head)
+			{
 				trinkle(head, width, cmp, p, pshift, 0, lp);
-			} else {
+			}
+			else
+			{
 				sift(head, width, cmp, pshift, lp);
 			}
-			
-			if(pshift == 1) {
+			if (pshift == 1)
+			{
 				shl(p, 1);
 				pshift = 0;
-			} else {
+			}
+			else
+			{
 				shl(p, pshift - 1);
 				pshift = 1;
 			}
 		}
-		
 		p[0] |= 1;
 		head += width;
 	}
 
 	trinkle(head, width, cmp, p, pshift, 0, lp);
 
-	while(pshift != 1 || p[0] != 1 || p[1] != 0) {
-		if(pshift <= 1) {
+	while (pshift != 1 || p[0] != 1 || p[1] != 0)
+	{
+		if (pshift <= 1)
+		{
 			trail = pntz(p);
 			shr(p, trail);
 			pshift += trail;
-		} else {
+		}
+		else
+		{
 			shl(p, 2);
 			pshift -= 2;
 			p[0] ^= 7;
