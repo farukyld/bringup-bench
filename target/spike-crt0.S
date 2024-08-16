@@ -26,7 +26,7 @@ reset_handler:
   call libtarg_debug_wait_loop
 #endif
   /* set all registers to zero */
-  la t0, default_exc_handler
+  la t0, _vectors_start
   csrw mtvec,t0
 #if PRINT_CYCLES_ON_EXIT
   csrr t0, mcycle
