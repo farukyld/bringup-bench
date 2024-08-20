@@ -159,7 +159,7 @@ run-tests:
 
 
 clean-all all-clean:
-	@for _BMARK in $(BMARKS) ; do \
+	@for _BMARK in $(TARGET_BMARKS) ; do \
 		cd $$_BMARK ; \
 		echo "--------------------------------" ; \
 		echo "Cleaning "$$_BMARK"             " ; \
