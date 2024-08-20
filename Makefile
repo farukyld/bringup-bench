@@ -1,6 +1,8 @@
 ALIAS_RM_LIBMIN = 1
 PRINT_CYCLES_ON_EXIT = 0
 SPIKE_INTERAC = 0
+HARD_FLOAT = 0
+GDB_DEBUG = 0
 HEAP_LENGTH        = 0x5000
 PROGRAM_START      = 0x80000000
 PROGRAM_LENGTH     = 0x600000
@@ -43,15 +45,16 @@ MEM_LENGTH         = $(shell printf "0x%X\n" $$(($(PROGRAM_LENGTH) + $(STACK_LEN
 
 TARGET_CC = riscv64-unknown-elf-gcc
 TARGET_AR = riscv64-unknown-elf-ar
-# libmin_function_name'ler icin function_name isimli bir alias olustur.
-ifeq ($(SPIKE_INTERAC), 1)
-SPK_DBG=-d
+
+ifeq ($(GDB_DEBUG), 1)
+CC_GDB_FLAGS = -g -Og -DGDB_DEBUG=1
 else
-SPK_DBG=
+CC_GDB_FLAGS = -DGDB_DEBUG=0
 endif
+
 COMMON_CFLAGS = -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN)\
   -DPRINT_CYCLES_ON_EXIT=$(PRINT_CYCLES_ON_EXIT)\
-  -DHEAP_LENGTH=$(HEAP_LENGTH) \
+  -DHEAP_LENGTH=$(HEAP_LENGTH) $(CC_GDB_FLAGS)\
 	-static -mcmodel=medlow -Wall -g -Os \
 	-fvisibility=hidden -nostdlib -nostartfiles -ffreestanding -fPIC # -MMD -mcmodel=medany
 
@@ -60,11 +63,23 @@ HARD_FLOAT_MARCH_MABI = -DHARD_FLOAT -march=rv64imfdc_zicsr -mabi=lp64d
 else
 HARD_FLOAT_MARCH_MABI = -march=rv64imc_zicsr -mabi=lp64
 endif
-
 TARGET_CFLAGS = $(HARD_FLOAT_MARCH_MABI) $(COMMON_CFLAGS)
-#  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
+
 TARGET_LIBS = -lgcc
-TARGET_SIM = $(SPIKE_ORIG)/build/spike $(SPK_DBG) --isa=RV64IMAFDC -m$(MEM_START):$(MEM_LENGTH)
+
+ifeq ($(SPIKE_INTERAC), 1)
+SPK_DBG=-d
+else
+SPK_DBG=
+endif
+
+ifeq ($(GDB_DEBUG), 1)
+RBB_PORT= --rbb-port=9824
+else
+RBB_PORT=
+endif
+#  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
+TARGET_SIM = $(SPIKE_ORIG)/build/spike $(SPK_DBG) $(RBB_PORT) --isa=RV64IMAFDC -m$(MEM_START):$(MEM_LENGTH)
 
 ifeq ($(PRINT_CYCLES_ON_EXIT), 1)
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
@@ -80,7 +95,7 @@ TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort dhrystone distinct
   frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler \
 	knapsack life mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal \
 	primal-test qsort-demo regex-parser shortest-path sieve simple-grep skeleton strange topo-sort \
-	totient weekday
+	totient weekday health_check
 
 
 
@@ -152,3 +167,7 @@ clean-all all-clean:
 		$(MAKE) TARGET=$$_TARGET clean ; \
 		cd .. ; \
 	done
+
+
+openocd:
+	openocd -f $(CURDIR)/openocd.cfg
