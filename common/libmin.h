@@ -359,9 +359,8 @@ time_t libmin_time(time_t *timer);
 /* sort an array */
 typedef int (*cmpfun)(const void *, const void *);
 void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
-#if ALIAS_RM_LIBMIN
-// qsort is buggy. 
-// #define qsort libmin_qsort
+#if ALIAS_RM_LIBMIN && !(USE_EXTERNAL_QSORT)
+#define qsort libmin_qsort
 #endif
 
 
