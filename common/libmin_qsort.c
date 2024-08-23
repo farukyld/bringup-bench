@@ -245,7 +245,15 @@ static void quicksort(void *const pbase, size_t total_elems, size_t size,
 	}
 }
 
+
+// wrapper from musl implementation: https://git.musl-libc.org/cgit/musl/commit/?id=b76f37fd5625d038141b52184956fb4b7838e9a5
+static int cmp_wrapper(const void *v1, const void *v2, void *cmp)
+{
+	return ((cmpfun)cmp)(v1, v2);
+}
+
+
 void libmin_qsort(void *b, size_t n, size_t s, cmpfun cmp)
 {
-	return quicksort(b, n, s, (__compar_d_fn_t)cmp, NULL);
+	return quicksort(b, n, s, (__compar_d_fn_t)cmp_wrapper, cmp);
 }
