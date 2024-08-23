@@ -18,6 +18,7 @@ Within individual directories, the following Makefile targets are also available
   clean          - delete all generated files
   build          - build the binary
   test           - run the standard test on the binary
+  run-sim        - run the binary in the Spike simulator, output to stdout
 Options available:
 	ALIAS_RM_LIBMIN=0 - disable aliasing of libmin functions
 	HARD_FLOAT=1 - enable hard float ABI
@@ -26,7 +27,8 @@ Options available:
 
 Example benchmark builds:
   make  HARD_FLOAT=1 ALIAS_RM_LIBMIN=0 run-tests
-  make  run-tests # soft float is used, aliasing is enabled.
+  make  run-tests # soft float is used, aliasing is enabled. run simulations and diff check
+  make  run-sims # run all benchmarks in Spike simulator. output to stdout.
 endef
 
 export HELP_TEXT
@@ -118,6 +120,12 @@ LIBS = ../common/libmin.a
 
 build: $(TARGET_EXE)
 
+
+run-sim: $(TARGET_EXE)
+	@echo "\033[0;34m"
+	$(TARGET_SIM) ./$(TARGET_EXE)
+	@echo "\033[0m"
+
 %.o: %.c
 	$(TARGET_CC) $(CFLAGS) -I../common/ -I../target/ -o $@ -c $<
 
@@ -155,6 +163,26 @@ run-tests:
 	  echo "--------------------------------" ; \
 	  $(MAKE) clean build test || exit 1; \
 	  cd .. ; \
+	done
+
+build-all:
+	@for _BMARK in $(TARGET_BMARKS) ; do \
+		cd $$_BMARK ; \
+		echo "--------------------------------" ; \
+		echo "Building "$$_BMARK"             " ; \
+		echo "--------------------------------" ; \
+		$(MAKE) build ; \
+		cd .. ; \
+	done
+
+run-sims:
+	@for _BMARK in $(TARGET_BMARKS) ; do \
+		cd $$_BMARK ; \
+		echo "--------------------------------" ; \
+		echo "Running "$$_BMARK"              " ; \
+		echo "--------------------------------" ; \
+		$(MAKE) clean build run-sim; \
+		cd .. ; \
 	done
 
 
