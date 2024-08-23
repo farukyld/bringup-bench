@@ -1,14 +1,15 @@
 #include "libmin.h"
-#include "hello-c.h"
+// #include "hello-c.h"
 
-MFILE hello = 
-{
-  "hello.c",
-  __hello_sz,
-  __hello,
-  0
-};
-MFILE *mhello = &hello;
+// MFILE hello = 
+// {
+//   "hello.c",
+//   __hello_sz,
+//   __hello,
+//   0
+// };
+// MFILE *mhello = &hello;
+MFILE *mhello;
 
 long debug;    // print the executed instructions
 long assembly; // print out the assembly and source
@@ -1308,7 +1309,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    libmin_mopen(mhello, "r");
+    mhello = libmin_mopen("hello.c", "r");
 
     poolsize = 256 * 1024; // arbitrary size
     line = 1;

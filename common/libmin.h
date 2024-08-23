@@ -269,7 +269,7 @@ typedef struct _MFILE MFILE;
 #define EOF (-1)
 
 /* open an in-memory file */
-void libmin_mopen(MFILE *mfile, const char *mode);
+MFILE* libmin_mopen(const char* fname, const char *mode);
 #if ALIAS_RM_LIBMIN
 #define mopen libmin_mopen
 #endif

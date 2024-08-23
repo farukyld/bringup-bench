@@ -1,7 +1,10 @@
 
 LOCAL_CFLAGS=
 LOCAL_LIBS=
-LOCAL_OBJS=lz-compress.o
+LOCAL_OBJS=lz-compress.o lz_compress_include_input_files.o
+
+lz_compress_include_input_files.o: lz_compress_include_input_files.S
+	$(TARGET_CC) $(CFLAGS) -c $< -o $@
 
 PROG=lz-compress
 

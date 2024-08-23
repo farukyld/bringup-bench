@@ -1,7 +1,11 @@
 
 LOCAL_CFLAGS=
 LOCAL_LIBS=
-LOCAL_OBJS=checkers.o consttypes.o functions.o
+LOCAL_OBJS=checkers.o consttypes.o functions.o checkers_include_input_files.o
+
+checkers_include_input_files.o: checkers_include_input_files.S
+	$(TARGET_CC) $(CFLAGS) -c $< -o $@
+
 
 PROG=checkers
 

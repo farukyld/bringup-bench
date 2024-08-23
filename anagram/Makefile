@@ -1,7 +1,11 @@
 
 LOCAL_CFLAGS=
 LOCAL_LIBS=
-LOCAL_OBJS=anagram.o
+# NOT: anagram_input_files.S dosyasi, sadece libmin'le derlenecegi zaman kulalnilmalidir.
+LOCAL_OBJS=anagram.o anagram_input_files.o
+
+anagram_input_files.o: anagram_input_files.S
+	$(TARGET_CC) $(TARGET_CFLAGS) -c anagram_input_files.S -o anagram_input_files.o
 
 PROG=anagram
 

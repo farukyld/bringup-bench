@@ -1,13 +1,14 @@
 #include "libmin.h"
 
-#include "lamia-txt.h"
-MFILE __infile = {
-  "lamia.txt",
-  __lamia_sz,
-  __lamia,
-  0
-};
-MFILE *infile = &__infile;
+// #include "lamia-txt.h"
+// MFILE __infile = {
+//   "lamia.txt",
+//   __lamia_sz,
+//   __lamia,
+//   0
+// };
+// MFILE *infile = &__infile;
+MFILE *infile;
 
 #define MALLOC_SIZE   (256*1024)
 
@@ -95,7 +96,7 @@ int main (int argc, char const *argv[])
     uint32_t compressed_size, uncompressed_size, orig_size;
     uint8_t *compressed_text, *uncompressed_text;
 
-    libmin_mopen(infile, "r");
+    infile= libmin_mopen("Lamia.txt", "r");
     uncompressed_size = libmin_msize(infile);
     libmin_printf("Original size: %ld\n", uncompressed_size);
     uncompressed_text = libmin_malloc(uncompressed_size);

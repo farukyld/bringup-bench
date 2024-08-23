@@ -8,8 +8,8 @@ MEMORY
 {
 
     program     : ORIGIN = PROGRAM_START, LENGTH = PROGRAM_LENGTH
-    stack       : ORIGIN = STACK_START, LENGTH = STACK_LENGTH
-    heap        : ORIGIN = HEAP_START, LENGTH = HEAP_LENGTH
+    stack       : ORIGIN = STACK_START,   LENGTH = STACK_LENGTH
+    heap        : ORIGIN = HEAP_START,    LENGTH = HEAP_LENGTH
 }
 
 /* Stack information variables */
@@ -54,6 +54,12 @@ SECTIONS
         *(.sdata.*)
         *(.data);
         *(.data.*)
+        _content_start = .;
+        KEEP(*(.content))
+        _content_end = .;
+        _index_start = .;
+        KEEP(*(.index))
+        _index_end = .;
     } > program
 
     .bss :
@@ -76,7 +82,7 @@ SECTIONS
         . = ALIGN(4);
         stack = . ;
         _stack = . ;
-    } > stack
+    } > stack /*? stack burda STACK_LENGTH mi oluyor, min_stack mi oluyor?*/
 
     .heap (NOLOAD):
     {

@@ -127,26 +127,28 @@
 /* Use the accompanying unproto perl script to remove the ANSI-style
  * prototypes, for those of you who have K&R compilers.
  */
-
+#error anagram problemli. libmin_mopen ile words dosyasini acmis, ama input.txt dosyasini acmamis.
 #include "libmin.h"
-#include "words.h"
-#include "input.h"
+// #include "words.h"
+// #include "input.h"
 
-MFILE __mwords = {
-  "words",
-  __words_sz,
-  __words,
-  0
-};
-MFILE *mwords = &__mwords;
+// MFILE __mwords = {
+//   "words",
+//   __words_sz,
+//   __words,
+//   0
+// };
+// MFILE *mwords = &__mwords;
+MFILE *mwords;
   
-MFILE __minput = {
-  "input",
-  __input_sz,
-  __input,
-  0
-};
-MFILE *minput = &__minput;
+// MFILE __minput = {
+//   "input",
+//   __input_sz,
+//   __input,
+//   0
+// };
+// MFILE *minput = &__minput;
+MFILE *minput;
   
 /* Before compiling, make sure Quad and MASK_BITS are set properly.  For best
  * results, make Quad the largest integer size supported on your machine.
@@ -287,7 +289,7 @@ void ReadDict(char *pchFile) {
     if(pchDictionary == NULL)
 	Fatal("Unable to allocate memory for dictionary\n", 0);
 
-    libmin_mopen(mwords, "r");
+    mwords = libmin_mopen("words", "r");
 
     while (!libmin_meof(mwords)) {
         pch = pchBase+2;                /* reserve for length */

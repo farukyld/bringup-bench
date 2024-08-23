@@ -3,19 +3,20 @@
 #include "consttypes.h"
 #include "functions.h"
 
-#include "test0-txt.h"
-MFILE __infile = {
-  "test0.txt",
-  __test0_sz,
-  __test0,
-  0
-};
-MFILE *infile = &__infile;
+// #include "test0-txt.h"
+// MFILE __infile = {
+//   "test0.txt",
+//   __test0_sz,
+//   __test0,
+//   0
+// };
+// MFILE *infile = &__infile;
+MFILE *infile;
 
 int
 main(int argc, char *argv[])
 {
-  libmin_mopen(infile, "r");
+  infile= libmin_mopen("test0.txt", "r");
 
   board_t* board = (board_t*)libmin_malloc(sizeof(board_t)); // main board pointer
 
