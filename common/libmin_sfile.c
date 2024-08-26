@@ -192,6 +192,7 @@ sfile_mode_e get_file_mode(const char *mode)
   {
     libmin_printf("libmin sfile only support mode.\n");
     libmin_exit(1);
+    return FMODE_W;
   }
 }
 
