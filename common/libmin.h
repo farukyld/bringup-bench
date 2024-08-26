@@ -259,7 +259,7 @@ void libmin_free(void * addr);
 
 /* in-memory file I/O */
 struct _MFILE {
-  char *fname;
+  const char *fname;
   size_t data_sz;
   const uint8_t *data;
   int rdptr;
