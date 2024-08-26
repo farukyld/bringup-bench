@@ -1,16 +1,16 @@
 #include "libmin.h"
-#include "speech.h"
+// #include "speech.h"
 
 #define BUFFER_LENGTH 511
 
-struct _MFILE speech = { "speech.txt", __speech_sz, __speech, 0 };
+// struct _MFILE speech = { "speech.txt", __speech_sz, __speech, 0 };
 
 int
 main(void)
 {
   int ac = 3; char *av[] = { "simple-grep", "speech.txt", "the" };
   char lineBuffer[BUFFER_LENGTH+1];
-  MFILE *fp = &speech;
+  MFILE *fp;
   int count = 0;
 
   if (ac < 3)
@@ -19,7 +19,7 @@ main(void)
     return 1;
   }
 
-  libmin_mopen(&speech, "r");
+  fp = libmin_mopen("speech.txt", "r");
   if (!fp)
   {
     libmin_printf("Error - unable to open %s\n", av[1]);

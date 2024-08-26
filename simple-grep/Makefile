@@ -1,7 +1,11 @@
 
 LOCAL_CFLAGS=
 LOCAL_LIBS=
-LOCAL_OBJS=simple-grep.o
+LOCAL_OBJS=simple-grep.o simple_grep_include_input_files.o
+
+simple_grep_include_input_files.o: simple_grep_include_input_files.S
+	$(TARGET_CC) $(CFLAGS) -c $< -o $@
+
 
 PROG=simple-grep
 
