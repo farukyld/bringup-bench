@@ -103,8 +103,10 @@ SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode
   }
   else // en az iki farkli eleman var
   {
-    live_files_tail->next = fp;
-    fp->prev = live_files_tail;
+    SFILE* old_tail = live_files_tail;
+    old_tail->next = fp;
+    fp->prev = old_tail;
+    live_files_tail = fp;
   }
 
   live_files_count++;
@@ -143,7 +145,7 @@ void sflush_safe(SFILE *file)
 {
   if (file->write_idx==0)
     return;
-  char *s = file->out_buff;
+  char *s = file->escape_sequence;
   for (; *s; s++)
     libtarg_putc(*s);
   file->out_buff[file->write_idx] = '\0';

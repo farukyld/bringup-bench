@@ -155,7 +155,7 @@ gdb: $(TARGET_EXE)
 	-ex "target extended-remote:3333" \
 	-ex "lay split" \
 	-ex "print wait=0" \
-	-ex "b simple-grep.c:40" \
+	-ex "b create_sfile" \
 	-ex "c" \
 	$(TARGET_EXE)
 

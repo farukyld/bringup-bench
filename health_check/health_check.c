@@ -4,16 +4,26 @@
 char global_buf[2048];
 
 // #define TEST_INPUT
-#define TEST_MEMSET
-
+// #define TEST_MEMSET
+// #define TEST_OUTPUT
 int main()
 {
+#ifdef TEST_OUTPUT
+  SFILE *file1 = libmin_sfopen("outfile1.txt", "w");
+  SFILE *file2 = libmin_sfopen("outfile2.txt", "w");
+  libmin_sfprintf(file1, "first to file 1\n");
+  libmin_sfprintf(file2, "then to file 2\n");
+  libmin_sfprintf(stdout, "to out\n");
+  libmin_sfprintf(stderr, "to err\n");
+
+#endif
 
 #ifdef TEST_INPUT
   MFILE *mfile;
   libmin_printf("printing health_check.out\n");
   mfile = libmin_mopen("health_check.out", "r");
-  while (!libmin_meof(mfile)) {
+  while (!libmin_meof(mfile))
+  {
     char buf[1024];
     libmin_mread(buf, 1024, mfile);
     libmin_printf("%s", buf);
