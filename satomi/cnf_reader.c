@@ -20,9 +20,9 @@
  *
  */
 static char *
-file_open(MFILE *mfile)
+file_open(const char * fname)
 {
-	libmin_mopen(mfile, "r");
+	MFILE* mfile = libmin_mopen( fname, "r");
 	char *buffer;
 	size_t sz_file;
 
@@ -101,14 +101,14 @@ read_clause(char **token, vec_ui32_t *lits)
  * Returns false upon immediate conflict.
  */
 int
-satomi_parse_dimacs(MFILE *mfile, satomi_t **solver)
+satomi_parse_dimacs(const char *fname, satomi_t **solver)
 {
 	satomi_t *p = NULL;
 	vec_ui32_t *lits = NULL;
 	int n_var;
 	int n_clause;
-	char *token = file_open(mfile);
-	char *name = libmin_strrchr(mfile->fname, '/') + 1;
+	char *token = file_open(fname);
+	char *name = libmin_strrchr(fname, '/') + 1;
 
 	while (1) {
 		skip_spaces(&token);

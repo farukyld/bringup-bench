@@ -25,14 +25,15 @@ satomi_usage(int status)
 	libmin_fail(status);
 }
 
-#include "cnffile.h"
-MFILE __mcnffile = {
-  "zebra_v155_c1135.cnf",
-  __cnffile_sz,
-  __cnffile,
-  0
-};
-MFILE *mcnffile = &__mcnffile;
+// #include "cnffile.h"
+// MFILE __mcnffile = {
+//   "zebra_v155_c1135.cnf",
+//   __cnffile_sz,
+//   __cnffile,
+//   0
+// };
+// MFILE *mcnffile = &__mcnffile;
+MFILE *mcnffile;
 
 
 int 
@@ -84,7 +85,7 @@ return 0;
 		return 1;
 	}
 
-	satomi_parse_dimacs(mcnffile, &solver);
+	satomi_parse_dimacs("zebra_v155_c1135.cnf", &solver);
 	satomi_configure(solver, &options);
 	status = satomi_solve(solver);
 	if (1)

@@ -1,9 +1,13 @@
 
 LOCAL_CFLAGS=
 LOCAL_LIBS=
-LOCAL_OBJS=satomi.o cnf_reader.o solver.o
+LOCAL_OBJS=satomi.o cnf_reader.o solver.o satomi_include_input_files.o
 
 PROG=satomi
+
+satomi_include_input_files.o: satomi_include_input_files.S
+	$(TARGET_CC) $(CFLAGS) -c $< -o $@
+
 
 include ../Makefile
 
