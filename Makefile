@@ -1,5 +1,5 @@
 ALIAS_RM_LIBMIN = 1
-PRINT_CYCLES_ON_EXIT = 0
+PRINT_CYCLES_ON_EXIT = 1
 SPIKE_INTERAC = 0
 HARD_FLOAT = 0
 GDB_DEBUG = 0
@@ -37,7 +37,6 @@ error:
 	@echo "$$HELP_TEXT"
 
 
-OPT_CFLAGS = -O3 -g
 
 STACK_START        = $(shell printf "0x%X\n" $$(($(PROGRAM_START) + $(PROGRAM_LENGTH))))
 HEAP_START         = $(shell printf "0x%X\n" $$(($(STACK_START) + $(STACK_LENGTH))))
@@ -122,14 +121,13 @@ build: $(TARGET_EXE)
 
 
 run: $(TARGET_EXE)
-# @echo "\033[0;34m"
 	$(TARGET_SIM) ./$(TARGET_EXE)
 
 disassembled.s: $(TARGET_EXE)
 	riscv64-unknown-elf-objdump -Dts $(TARGET_EXE) > disassembled.s; code disassembled.s
 
 %.o: %.c
-	$(TARGET_CC) $(CFLAGS) -I../common/ -I../target/ -o $@ -c $<
+	$(TARGET_CC) $(CFLAGS) -o $@ -c $<
 
 ../common/libmin.a: $(LIBMIN_OBJS)
 	$(TARGET_AR) rcs ../common/libmin.a $(LIBMIN_OBJS)
@@ -208,4 +206,4 @@ clean-all all-clean:
 
 
 openocd:
-	openocd -f $(CURDIR)/openocd.cfg
+	openocd -f openocd.cfg
