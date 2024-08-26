@@ -39,7 +39,7 @@ SECTIONS
     }  > program
 
     .rodata : {
-        . = ALIGN(4);
+        . = ALIGN(8);
         /* Small RO data before large RO data */
         *(.srodata)
         *(.srodata.*)
@@ -48,15 +48,17 @@ SECTIONS
     } > program
 
     .data : {
-        . = ALIGN(4);
+        . = ALIGN(8);
         /* Small data before large data */
         *(.sdata)
         *(.sdata.*)
         *(.data);
         *(.data.*)
+        . = ALIGN(8);
         _content_start = .;
         KEEP(*(.content))
         _content_end = .;
+        . = ALIGN(8);
         _index_start = .;
         KEEP(*(.index))
         _index_end = .;
