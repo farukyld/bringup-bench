@@ -181,18 +181,19 @@ Once these four interfaces are implemented, all of the Bringup-Bench benchmarks 
 
 REGISTER_FILE(file1.txt, file1_txt)
 REGISTER_FILE(file2.txt, file2_txt)
-
 ```
-file1.txt and file2.txt are file names, the paths are relative to where you lauch the assembler. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
 
-compile and link that assembly file into your elf file. 
 
-The following interfaces are available to access memory files:
+>file1.txt and file2.txt are file names, the paths are relative to where you lauch the assembler. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
+
+>compile and link that assembly file into your elf file. 
+
+>The following interfaces are available to access memory files:
 ```c
 /* open an in-memory file */
 MFILE * libmin_mopen(const char *fname, const char *mode);
-```c
-here, fname is the string passed to `REGISTER_FILE` macro. (`file1.txt`)
+```
+>here, fname is the string passed to `REGISTER_FILE` macro. (`file1.txt`)
 
 
 ```c
