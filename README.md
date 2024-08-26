@@ -175,27 +175,27 @@ Once these four interfaces are implemented, all of the Bringup-Bench benchmarks 
 
 ## Using the code-based read-only file system
 
-### This Part is going to be rwten
-> Using the code-based read-only file system, it is possible for a benchmark to access a read-only file that is incorporated into its code. To convert an input file to a read-only code-based file, use the following command (shown for the benchmark "anagram"):
-```
-python3 scriptsr/file2hex.py words words.h __words
-```
-> Where "words" is the file to convert, "words.h" is the name of the output header file with the data, and "__words" is the name of the variable defined in the header file "words.h". The resulting file produces two values: __words_sz is the size of the data in the __words array. To access the file, include into a MFILE definition in the benchmark file, for example:
-```
-MFILE __mwords = {
-  "words",
-  __words_sz,
-  __words,
-  0
-};
-MFILE *mwords = &__mwords;
-```
-***
-Now the code-based read-only memory file "mwords" is now available for opening, reading, and closing. The following interfaces are available to access memory files:
-```
-/* open an in-memory file */
-void libmin_mopen(MFILE *mfile, const char *mode);
+> Using the code-based read-only file system, it is possible for a benchmark to access a read-only file that is incorporated into its code. To convert an input file to a read-only code-based file, create an assembly file, containing the below lines:
+```assembly
+#include "target/include_input_files.h"
 
+REGISTER_FILE(file1.txt, file1_txt)
+REGISTER_FILE(file2.txt, file2_txt)
+
+```
+file1.txt and file2.txt are file names, the paths are relative to where you lauch the assembler. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
+
+compile and link that assembly file into your elf file. 
+
+The following interfaces are available to access memory files:
+```c
+/* open an in-memory file */
+MFILE * libmin_mopen(const char *fname, const char *mode);
+```c
+here, fname is the string passed to `REGISTER_FILE` macro. (`file1.txt`)
+
+
+```c
 /* return in-memory file size */
 size_t libmin_msize(MFILE *mfile);
 
