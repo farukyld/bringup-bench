@@ -171,7 +171,7 @@ run-tests:
 	  echo "--------------------------------" ; \
 	  echo "Running "$$_BMARK"              " ; \
 	  echo "--------------------------------" ; \
-	  $(MAKE) clean build test || exit 1; \
+	  $(MAKE)  build test || exit 1; \
 	  cd .. ; \
 	done
 
@@ -191,7 +191,7 @@ run-sims:
 		echo "--------------------------------" ; \
 		echo "Running "$$_BMARK"              " ; \
 		echo "--------------------------------" ; \
-		$(MAKE) clean build run-sim; \
+		$(MAKE)  build run-sim; \
 		cd .. ; \
 	done
 
