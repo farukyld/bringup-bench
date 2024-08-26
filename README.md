@@ -175,7 +175,7 @@ Once these four interfaces are implemented, all of the Bringup-Bench benchmarks 
 
 ## Using the code-based read-only file system
 
-> Using the code-based read-only file system, it is possible for a benchmark to access a read-only file that is incorporated into its code. To convert an input file to a read-only code-based file, create an assembly file, containing the below lines:
+ Using the code-based read-only file system, it is possible for a benchmark to access a read-only file that is incorporated into its code. To convert an input file to a read-only code-based file, create an assembly file, containing the below lines:
 ```assembly
 #include "target/include_input_files.h"
 
@@ -184,16 +184,16 @@ REGISTER_FILE(file2.txt, file2_txt)
 ```
 
 
->file1.txt and file2.txt are file names, the paths are relative to where you lauch the assembler. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
+file1.txt and file2.txt are file names, the paths are relative to where you lauch the assembler. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
 
->compile and link that assembly file into your elf file. 
+compile and link that assembly file into your elf file. 
 
->The following interfaces are available to access memory files:
+The following interfaces are available to access memory files:
 ```c
 /* open an in-memory file */
 MFILE * libmin_mopen(const char *fname, const char *mode);
 ```
->here, fname is the string passed to `REGISTER_FILE` macro. (`file1.txt`)
+here, fname is the string passed to `REGISTER_FILE` macro. (`file1.txt`)
 
 
 ```c
