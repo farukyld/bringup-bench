@@ -121,10 +121,12 @@ LIBS = ../common/libmin.a
 build: $(TARGET_EXE)
 
 
-run-sim: $(TARGET_EXE)
-	@echo "\033[0;34m"
+run: $(TARGET_EXE)
+# @echo "\033[0;34m"
 	$(TARGET_SIM) ./$(TARGET_EXE)
-	@echo "\033[0m"
+
+disassembled.s: $(TARGET_EXE)
+	riscv64-unknown-elf-objdump -Dts $(TARGET_EXE) > disassembled.s; code disassembled.s
 
 %.o: %.c
 	$(TARGET_CC) $(CFLAGS) -I../common/ -I../target/ -o $@ -c $<
@@ -150,6 +152,14 @@ clean:
 	rm -f $(PROG).host $(PROG).sa $(PROG).elf *.o ../common/*.o ../target/*.o ../target/spike-map-prep.ld\
 	 ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) $(TARGET_CLEAN)
 
+gdb: $(TARGET_EXE)
+	riscv64-unknown-elf-gdb \
+	-ex "target extended-remote:3333" \
+	-ex "lay split" \
+	-ex "print wait=0" \
+	-ex "b simple-grep.c:40" \
+	-ex "c" \
+	$(TARGET_EXE)
 
 #
 # top-level Makefile interfaces
