@@ -49,15 +49,15 @@ TARGET_CC = riscv64-unknown-elf-gcc
 TARGET_AR = riscv64-unknown-elf-ar
 
 ifeq ($(GDB_DEBUG), 1)
-CC_GDB_FLAGS = -g -Og -DGDB_DEBUG=1
+CC_GDB_OPT_FLAGS = -g -Og -DGDB_DEBUG=1
 else
-CC_GDB_FLAGS = -DGDB_DEBUG=0
+CC_GDB_OPT_FLAGS = -Os -DGDB_DEBUG=0
 endif
 
 COMMON_CFLAGS = -DALIAS_RM_LIBMIN=$(ALIAS_RM_LIBMIN)\
   -DPRINT_CYCLES_ON_EXIT=$(PRINT_CYCLES_ON_EXIT)\
-  -DHEAP_LENGTH=$(HEAP_LENGTH) $(CC_GDB_FLAGS)\
-	-static -mcmodel=medlow -Wall -g -Os \
+  -DHEAP_LENGTH=$(HEAP_LENGTH) $(CC_GDB_OPT_FLAGS)\
+	-static -mcmodel=medlow -Wall \
 	-fvisibility=hidden -nostdlib -nostartfiles -ffreestanding -fPIC # -MMD -mcmodel=medany
 
 ifeq ($(HARD_FLOAT), 1)
@@ -101,7 +101,7 @@ TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort dhrystone distinct
 
 
 
-CFLAGS = -Wall $(OPT_CFLAGS) -Wno-strict-aliasing $(TARGET_CFLAGS) $(LOCAL_CFLAGS)
+CFLAGS = -Wall -Wno-strict-aliasing $(TARGET_CFLAGS) $(LOCAL_CFLAGS) -I../common/ -I../target/
 OBJS = $(LOCAL_OBJS) ../target/libtarg.o
 __LIBMIN_SRCS = libmin_abs.c libmin_atof.c libmin_atoi.c libmin_atol.c libmin_ctype.c libmin_exit.c \
   libmin_fabs.c libmin_fail.c libmin_floor.c libmin_getopt.c libmin_malloc.c libmin_mclose.c \
