@@ -4,7 +4,7 @@
 char global_buf[2048];
 
 // #define TEST_INPUT
-// #define TEST_MEMSET
+#define TEST_MEMSET
 // #define TEST_OUTPUT
 int main()
 {

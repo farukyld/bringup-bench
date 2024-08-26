@@ -103,7 +103,7 @@ SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode
   }
   else // en az iki farkli eleman var
   {
-    SFILE* old_tail = live_files_tail;
+    SFILE *old_tail = live_files_tail;
     old_tail->next = fp;
     fp->prev = old_tail;
     live_files_tail = fp;
@@ -114,14 +114,28 @@ SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode
   return fp;
 }
 
-const char *request_escape_sequence()
+const char *request_escape_sequence(const char *requested)
 {
-  for (size_t i = 0; i < MAX_OUT_FILES; i++)
+  if (requested != NULL)
   {
-    if (!esc_seq_in_use[i])
+    for (size_t i = 0; i < MAX_OUT_FILES; i++)
     {
-      esc_seq_in_use[i] = true;
-      return escape_sequences[i];
+      if (!esc_seq_in_use[i] && libmin_strncmp(requested, escape_sequences[i], MAX_ESCAPE_LEN) == 0)
+      {
+        esc_seq_in_use[i] = true;
+        return escape_sequences[i];
+      }
+    }
+  }
+  else
+  {
+    for (size_t i = 0; i < MAX_OUT_FILES; i++)
+    {
+      if (!esc_seq_in_use[i])
+      {
+        esc_seq_in_use[i] = true;
+        return escape_sequences[i];
+      }
     }
   }
   return NULL;
@@ -143,7 +157,7 @@ SFILE *find_file(const char *file_name)
 
 void sflush_safe(SFILE *file)
 {
-  if (file->write_idx==0)
+  if (file->write_idx == 0)
     return;
   char *s = file->escape_sequence;
   for (; *s; s++)
@@ -180,7 +194,7 @@ int libmin_sfflush(SFILE *file)
 SFILE *libmin_sfopen(const char *fname, const char *mode_str)
 {
   sfile_mode_e mode = get_file_mode(mode_str);
-  const char *esc_seq = request_escape_sequence();
+  const char *esc_seq = request_escape_sequence(NULL);
   return create_sfile((char *)fname, esc_seq, mode);
 }
 
@@ -201,19 +215,15 @@ sfile_mode_e get_file_mode(const char *mode)
 void serial_output_init()
 {
   file_desc_file = 1; // 0, stdin icin ayrilmistir.
-  stdout = create_sfile("stdout", ESC_DEFAULT, FMODE_W);
-  stderr = create_sfile("stderr", ESC_RED, FMODE_W);
-  for (size_t i = 0; i < MAX_OUT_FILES; i++)
-  {
-    if (libmin_strncmp(ESC_DEFAULT, escape_sequences[i], MAX_ESCAPE_LEN) == 0)
-    {
-      esc_seq_in_use[i] = true;
-    }
-    else if (libmin_strncmp(ESC_RED, escape_sequences[i], MAX_ESCAPE_LEN) == 0)
-    {
-      esc_seq_in_use[i] = true;
-    }
+  const char *stdout_escape = request_escape_sequence(ESC_DEFAULT);
+  const char *stderr_escape = request_escape_sequence(ESC_RED);
+  if (stdout_escape == NULL || stderr_escape == NULL){
+    libmin_printf("requested escape sequences for stdout and stderr are not available");
+    libmin_fail(1);
   }
+  stdout = create_sfile("stdout", stdout_escape, FMODE_W);
+  stderr = create_sfile("stderr", stderr_escape, FMODE_W);
+  
 }
 
 int libmin_sfclose(SFILE *file)
