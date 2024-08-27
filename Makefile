@@ -116,22 +116,16 @@ LIBMIN_OBJS = $(addprefix ../common/,$(addsuffix .o,$(basename $(__LIBMIN_SRCS))
 
 LIBS = ../common/libmin.a
 
-build: $(TARGET_EXE)
 
-
-run: $(TARGET_EXE)
-	$(TARGET_SIM) ./$(TARGET_EXE)
-
-disassembled.s: $(TARGET_EXE)
-	riscv64-unknown-elf-objdump -Dts $(TARGET_EXE) > disassembled.s; code disassembled.s
+# 
+# rules can be run from bench directories
+#
 
 %.o: %.c
 	$(TARGET_CC) $(CFLAGS) -o $@ -c $<
 
 ../common/libmin.a: $(LIBMIN_OBJS)
 	$(TARGET_AR) rcs ../common/libmin.a $(LIBMIN_OBJS)
-
-
 
 LINKER_MACROS = -DPROGRAM_START=$(PROGRAM_START) -DPROGRAM_LENGTH=$(PROGRAM_LENGTH)\
   -DHEAP_START=$(HEAP_START) -DHEAP_LENGTH=$(HEAP_LENGTH)\
@@ -149,13 +143,31 @@ clean:
 	rm -f $(PROG).host $(PROG).sa $(PROG).elf *.o ../common/*.o ../target/*.o ../target/spike-map-prep.ld\
 	 ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) *.d
 
-gdb: $(TARGET_EXE)
-	riscv64-unknown-elf-gdb \
-	-ex "target extended-remote:3333" \
-	-ex "lay split" \
-	-ex "print wait=0" \
-	$(LOCAL_GDB_FLAGS)\
-	$(TARGET_EXE)
+
+define check_bench_dir
+$(if $(filter bringup-bench,$(notdir $(CURDIR))), \
+	$(1): ;\
+		@echo "You should run this rule from a benchmark directory."; \
+, \
+	$(1): $(2) ;\
+		$(3) \
+)
+endef
+
+$(eval $(call check_bench_dir,build,$(TARGET_EXE),))
+
+$(eval $(call check_bench_dir,run, $(TARGET_EXE), $(TARGET_SIM) ./$(TARGET_EXE)))
+
+$(eval $(call check_bench_dir,disassembled.s, $(TARGET_EXE), riscv64-unknown-elf-objdump -Dts $(TARGET_EXE) > disassembled.s; code disassembled.s))
+
+$(eval $(call check_bench_dir, gdb, $(TARGET_EXE),\
+ riscv64-unknown-elf-gdb \
+ -ex "target extended-remote:3333"\
+ -ex "lay split"\
+ -ex "print wait=0"\
+ $(LOCAL_GDB_FLAGS)\
+  $(TARGET_EXE)))
+
 
 #
 # top-level Makefile interfaces
