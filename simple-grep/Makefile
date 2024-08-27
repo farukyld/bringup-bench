@@ -1,5 +1,6 @@
 
 LOCAL_CFLAGS=
+LOCAL_GDB_FLAGS=
 LOCAL_LIBS=
 LOCAL_OBJS=simple-grep.o simple_grep_include_input_files.o
 

@@ -1,5 +1,6 @@
 
 LOCAL_CFLAGS=
+LOCAL_GDB_FLAGS=
 LOCAL_LIBS=
 LOCAL_OBJS=checkers.o consttypes.o functions.o checkers_include_input_files.o
 

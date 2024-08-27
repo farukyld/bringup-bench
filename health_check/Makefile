@@ -1,5 +1,6 @@
 
 LOCAL_CFLAGS=
+LOCAL_GDB_FLAGS=-ex "b create_sfile" -ex "c"
 LOCAL_LIBS=
 LOCAL_OBJS=health_check.o health_check_include_input_files.o
 

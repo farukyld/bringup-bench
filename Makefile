@@ -3,10 +3,11 @@ PRINT_CYCLES_ON_EXIT = 1
 SPIKE_INTERAC = 0
 HARD_FLOAT = 0
 GDB_DEBUG = 0
-HEAP_LENGTH        = 0x5000
 PROGRAM_START      = 0x80000000
 PROGRAM_LENGTH     = 0x600000
 STACK_LENGTH       = 0x8000
+HEAP_LENGTH        = 0x5000
+# (dusuk adres) program (= text, data, bss) stack, heap (yuksek adres)
 
 
 define HELP_TEXT
@@ -41,7 +42,7 @@ error:
 STACK_START        = $(shell printf "0x%X\n" $$(($(PROGRAM_START) + $(PROGRAM_LENGTH))))
 HEAP_START         = $(shell printf "0x%X\n" $$(($(STACK_START) + $(STACK_LENGTH))))
 MEM_START          = $(PROGRAM_START)
-MEM_LENGTH         = $(shell printf "0x%X\n" $$(($(PROGRAM_LENGTH) + $(STACK_LENGTH) + $(HEAP_LENGTH) )))
+MEM_LENGTH         = $(shell printf "0x%X\n" $$(($(PROGRAM_LENGTH) + $(STACK_LENGTH) + $(HEAP_LENGTH))))
 
 
 TARGET_CC = riscv64-unknown-elf-gcc
@@ -80,18 +81,16 @@ else
 RBB_PORT=
 endif
 #  -ffreestanding  -fvisibility=hidden -nostdlib olmadan da calisiyor gibi gorunuyor.
-TARGET_SIM = $(SPIKE_ORIG)/build/spike $(SPK_DBG) $(RBB_PORT) --isa=RV64IMAFDC -m$(MEM_START):$(MEM_LENGTH)
+TARGET_SIM = $(SPIKE_ORIG)/build/spike $(SPK_DBG) $(RBB_PORT) --isa=RV64IMAFDC\
+ -m$(MEM_START):$(MEM_LENGTH)
 
 ifeq ($(PRINT_CYCLES_ON_EXIT), 1)
 TARGET_DIFF =sed -i 's/mcycle.*//' FOO;  truncate -s -2 FOO; diff
 else
 TARGET_DIFF =diff
 endif
-
 TARGET_EXE = $(PROG).elf
-TARGET_EXTRA_DEPS = ../target/spike-map-prep.ld ../target/spike-crt0.S
-# bu alt satirdaki ne?
-TARGET_CLEAN = *.d ibex_simple_system_pcount.csv
+
 TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort dhrystone distinctness fft-int flood-fill\
   frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler \
 	knapsack life mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal \
@@ -142,21 +141,20 @@ LINKER_MACROS = -DPROGRAM_START=$(PROGRAM_START) -DPROGRAM_LENGTH=$(PROGRAM_LENG
 	riscv64-unknown-elf-cpp $(LINKER_MACROS) -P $< > $@
 
 
-$(TARGET_EXE): $(OBJS) $(LIBS) $(TARGET_EXTRA_DEPS)
+$(TARGET_EXE): $(OBJS) $(LIBS) ../target/spike-map-prep.ld ../target/spike-crt0.S
 	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map-prep.ld $(OBJS) ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 
 
 clean:
 	rm -f $(PROG).host $(PROG).sa $(PROG).elf *.o ../common/*.o ../target/*.o ../target/spike-map-prep.ld\
-	 ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) $(TARGET_CLEAN)
+	 ../common/libmin.a *.d ../common/*.d core mem.out *.log FOO $(LOCAL_CLEAN) *.d
 
 gdb: $(TARGET_EXE)
 	riscv64-unknown-elf-gdb \
 	-ex "target extended-remote:3333" \
 	-ex "lay split" \
 	-ex "print wait=0" \
-	-ex "b create_sfile" \
-	-ex "c" \
+	$(LOCAL_GDB_FLAGS)\
 	$(TARGET_EXE)
 
 #

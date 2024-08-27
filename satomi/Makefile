@@ -1,5 +1,6 @@
 
 LOCAL_CFLAGS=
+LOCAL_GDB_FLAGS=
 LOCAL_LIBS=
 LOCAL_OBJS=satomi.o cnf_reader.o solver.o satomi_include_input_files.o
 

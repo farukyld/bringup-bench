@@ -1,5 +1,6 @@
 
 LOCAL_CFLAGS=
+LOCAL_GDB_FLAGS=
 LOCAL_LIBS=
 # NOT: anagram_input_files.S dosyasi, sadece libmin'le derlenecegi zaman kulalnilmalidir.
 LOCAL_OBJS=anagram.o anagram_input_files.o

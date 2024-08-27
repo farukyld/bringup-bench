@@ -1,5 +1,6 @@
 
 LOCAL_CFLAGS=
+LOCAL_GDB_FLAGS=
 LOCAL_LIBS=
 LOCAL_OBJS=c-interp.o c_interp_include_input_files.o
 
