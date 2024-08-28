@@ -99,6 +99,10 @@ typedef	uint64_t	time_t;
 #define	_TIME_T_DECLARED
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* benchmark completed successfully */
 void libtarg_success(void);
 
@@ -113,5 +117,13 @@ void *libtarg_sbrk(size_t inc);
 
 /* islemci cevrim sayisini dondur */
 time_t libtarg_get_cycles();
+
+
+void * memcpy(void *dest, const void *src, size_t len);
+void * memset(void *dest, int val, size_t len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LIBTARG_H */

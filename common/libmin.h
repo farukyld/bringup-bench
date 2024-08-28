@@ -20,6 +20,10 @@
 
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* standard atol() implementation */
 long libmin_atol(const char *s);
 #if ALIAS_RM_LIBMIN
@@ -560,5 +564,9 @@ int __rem_pio2(double x, double *y);
 /* MIN/MAX functions */
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LIBMIN_H */
