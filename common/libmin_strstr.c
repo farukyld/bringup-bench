@@ -1,7 +1,7 @@
 #include "libmin.h"
 #include "libtarg.h"
 
-const char *
+char *
 libmin_strstr(const char *s1, const char *s2)
 {
   const char *p = s1;
