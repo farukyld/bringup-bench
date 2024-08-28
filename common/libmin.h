@@ -89,7 +89,7 @@ int libmin_strcmp(const char *l, const char *r);
 #if ALIAS_RM_LIBMIN
 #define strcmp libmin_strcmp
 #endif
-int libmin_strncmp(const char *s1, const char *s2, register size_t n);
+int libmin_strncmp(const char *s1, const char *s2, size_t n);
 #if ALIAS_RM_LIBMIN
 #define strncmp libmin_strncmp
 #endif
@@ -121,7 +121,7 @@ char *libmin_strpbrk(const char *s, const char *b);
 #if ALIAS_RM_LIBMIN
 #define strpbrk libmin_strpbrk
 #endif
-const char *libmin_strstr (const char *s1, const char *s2);
+char *libmin_strstr (const char *s1, const char *s2);
 #if ALIAS_RM_LIBMIN
 #define strstr libmin_strstr
 #endif
