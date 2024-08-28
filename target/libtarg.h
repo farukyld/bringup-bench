@@ -92,7 +92,12 @@ typedef uint64_t              uintptr_t;
 /* floating point */
 typedef float                 float_t;
 typedef double                double_t;
-typedef uint64_t              time_t;
+
+#if !defined(__time_t_defined) && !defined(_TIME_T_DECLARED)
+typedef	uint64_t	time_t;
+#define	__time_t_defined
+#define	_TIME_T_DECLARED
+#endif
 
 /* benchmark completed successfully */
 void libtarg_success(void);

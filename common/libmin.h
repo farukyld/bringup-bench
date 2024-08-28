@@ -4,9 +4,14 @@
 #include "libtarg.h"
 
 #include <stdbool.h>
-#define TRUE true
-#define FALSE false
 
+#ifndef TRUE
+#define TRUE true
+#endif
+
+#ifndef FALSE
+#define FALSE false
+#endif
 /* Build parameters:
 
    #define LIBMIN_SILENT		- disable all console messages
@@ -254,7 +259,9 @@ void libmin_free(void * addr);
 #endif
 
 #ifndef __clang__
+#ifndef NULL
 #define NULL	((void *)0)
+#endif
 #endif
 
 /* in-memory file I/O */
@@ -349,7 +356,11 @@ int libmin_sfflush(SFILE *file);
 #endif
 
 
-typedef uint64_t time_t;
+#if !defined(__time_t_defined) && !defined(_TIME_T_DECLARED)
+typedef	uint64_t	time_t;
+#define	__time_t_defined
+#define	_TIME_T_DECLARED
+#endif
 time_t libmin_time(time_t *timer);
 #if ALIAS_RM_LIBMIN
 #define time libmin_time
