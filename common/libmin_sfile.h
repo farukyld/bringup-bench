@@ -59,9 +59,9 @@ typedef enum sfile_mode_e
 {
   // FMODE_R,
   // FMODE_RB,
-  FMODE_W, // only supported.
+  FMODE_W, 
   // FMODE_WB,
-  // FMODE_A,
+  FMODE_A,
   // FMODE_AB,
   // FMODE_RP,
   // FMODE_RBP,
@@ -102,7 +102,7 @@ SFILE *find_file(const char *file_name);
 
 SFILE* create_sfile(const char *file_name,const char *escape, sfile_mode_e mode);
 
-sfile_mode_e get_file_mode(const char *mode_str);
+sfile_mode_e str_to_file_mode(const char *mode_str);
 
 void serial_output_init();
 

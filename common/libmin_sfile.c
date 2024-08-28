@@ -24,7 +24,7 @@ SFILE *stderr = NULL;
 
 int libmin_sfputs(const char *str, SFILE *file)
 {
-  if (file == NULL || file->file_mode != FMODE_W)
+  if (file == NULL || !(file->file_mode == FMODE_W || file->file_mode == FMODE_A))
   {
     // errno = EBADF;
     return EOF;
@@ -72,13 +72,22 @@ SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode
     libmin_printf("maximum number of files reached.\n");
     return NULL;
   }
-
-  if (find_file(file_name) != NULL)
+  // mode append ise ayni isimde dosya olabilir.
+  MFILE *found_file = find_file(file_name);
+  if (found_file != NULL)
   {
-    libmin_printf("cannot create two files with same name.\n");
-    return NULL;
+    if (mode != FMODE_A)
+    {
+      libmin_printf("cannot create two files with same name.\n");
+      return NULL;
+    }
+    else
+    {
+      // ayni isimde dosya varsa ve append modda tekrar acilmak isteniyorsa
+      // mevcut dosyayi dondur.
+      return found_file;
+    }
   }
-
   SFILE *fp = (SFILE *)libmin_malloc(sizeof(SFILE));
 
   fp->file_desc = file_desc_file++;
@@ -193,20 +202,24 @@ int libmin_sfflush(SFILE *file)
 
 SFILE *libmin_sfopen(const char *fname, const char *mode_str)
 {
-  sfile_mode_e mode = get_file_mode(mode_str);
+  sfile_mode_e mode = str_to_file_mode(mode_str);
   const char *esc_seq = request_escape_sequence(NULL);
   return create_sfile((char *)fname, esc_seq, mode);
 }
 
-sfile_mode_e get_file_mode(const char *mode)
+sfile_mode_e str_to_file_mode(const char *mode)
 {
   if (libmin_strncmp(mode, "w", 2) == 0)
   {
     return FMODE_W;
   }
+  else if (libmin_strncmp(mode, "a", 2) == 0)
+  {
+    return FMODE_A;
+  }
   else
   {
-    libmin_printf("libmin sfile only support mode.\n");
+    libmin_printf("libmin sfile only support w and a mode.\n");
     libmin_exit(1);
     return FMODE_W;
   }
@@ -217,13 +230,13 @@ void serial_output_init()
   file_desc_file = 1; // 0, stdin icin ayrilmistir.
   const char *stdout_escape = request_escape_sequence(ESC_DEFAULT);
   const char *stderr_escape = request_escape_sequence(ESC_RED);
-  if (stdout_escape == NULL || stderr_escape == NULL){
+  if (stdout_escape == NULL || stderr_escape == NULL)
+  {
     libmin_printf("requested escape sequences for stdout and stderr are not available");
     libmin_fail(1);
   }
   stdout = create_sfile("stdout", stdout_escape, FMODE_W);
   stderr = create_sfile("stderr", stderr_escape, FMODE_W);
-  
 }
 
 int libmin_sfclose(SFILE *file)

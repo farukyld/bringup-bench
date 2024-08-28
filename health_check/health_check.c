@@ -5,10 +5,46 @@ char global_buf[2048];
 
 // #define TEST_INPUT
 #define TEST_MEMSET
-
+// #define TEST_APPEND_OUTPUT
 // #define TEST_OUTPUT
 int main()
 {
+#ifdef TEST_APPEND_OUTPUT
+  SFILE *log_file = libmin_sfopen("log.txt", "w");
+  libmin_sfprintf(log_file, "outfile1.txt art arda append ile aciliyor\n");
+  libmin_sfflush(NULL);
+  SFILE *file1 = libmin_sfopen("outfile1.txt", "a");
+  SFILE *file2 = libmin_sfopen("outfile1.txt", "a");
+  libmin_sfprintf(log_file, "outfile1.txt'ye farkli file pointerlar ile yaziliyor\n");
+  libmin_sfflush(NULL);
+
+  libmin_sfprintf(file1, "pointer file1 ile yazilan\n");
+  libmin_sfprintf(file2, "pointer file2 ile yazilan\n");
+  libmin_sfflush(NULL);
+
+  libmin_sfprintf(log_file, "outfile2.txt once w sonra a mod ile aciliyor\n");
+  libmin_sfflush(NULL);
+
+  SFILE *file3 = libmin_sfopen("outfile2.txt", "w");
+  SFILE *file4 = libmin_sfopen("outfile2.txt", "a");
+  libmin_sfprintf(log_file, "outfile2.txt'ye farkli file pointerlar ile yaziliyor\n");
+  libmin_sfflush(NULL);
+
+  libmin_sfprintf(file3, "pointer file3 ile yazilan\n");
+  libmin_sfprintf(file4, "pointer file4 ile yazilan\n");
+  libmin_sfflush(NULL);
+
+  libmin_sfprintf(log_file, "outfile4.txt iki kere w mod ile aciliyor\n");
+  libmin_sfflush(NULL);
+  SFILE *file5 = libmin_sfopen("outfile4.txt", "w");
+  SFILE *file6 = libmin_sfopen("outfile4.txt", "w");
+
+  libmin_sfprintf(log_file, "outfile5.txt once a sonra w mod ile aciliyor\n");
+  libmin_sfflush(NULL);
+  SFILE *file7 = libmin_sfopen("outfile5.txt", "a");
+  SFILE *file8 = libmin_sfopen("outfile5.txt", "w");
+
+#endif
 #ifdef TEST_OUTPUT
   SFILE *file1 = libmin_sfopen("outfile1.txt", "w");
   SFILE *file2 = libmin_sfopen("outfile2.txt", "w");
