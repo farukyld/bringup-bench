@@ -3,7 +3,7 @@
 
 MFILE *stdin;
 
-init_stdin()
+void init_stdin()
 {
   stdin = libmin_malloc(sizeof(MFILE));
   stdin->fname = "";

@@ -108,7 +108,7 @@ __LIBMIN_SRCS = libmin_abs.c libmin_atof.c libmin_atoi.c libmin_atol.c libmin_ct
   libmin_putc.c libmin_puts.c libmin_qsort.c libmin_rand.c libmin_rempio2.c libmin_scalbn.c \
   libmin_scanf.c libmin_sfile.c libmin_sincos.c libmin_sqrt.c libmin_strcat.c libmin_strchr.c \
   libmin_strcmp.c libmin_strcpy.c libmin_strcspn.c libmin_strdup.c libmin_strfits.c libmin_strlen.c \
-	libmin_strncat.c libmin_strncmp.c libmin_strncontains.c \
+	libmin_strncat.c libmin_strncmp.c libmin_strncontains.c libmin_stdin.c\
   libmin_strncpy.c libmin_strpbrk.c libmin_strrchr.c libmin_strspn.c libmin_strstr.c libmin_strcasestr.c \
   libmin_strtok.c libmin_strtol.c libmin_success.c libmin_strncasecmp.c libmin_time.c
 LIBMIN_SRCS = $(addprefix ../common/,$(basename $(__LIBMIN_SRCS)))

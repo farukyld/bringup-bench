@@ -106,7 +106,7 @@ sfile_mode_e str_to_file_mode(const char *mode_str);
 
 void serial_output_init();
 
-const char* request_escape_sequence();
+const char *request_escape_sequence(const char *requested);
 
 void sflush_safe(SFILE *file);
 

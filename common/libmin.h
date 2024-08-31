@@ -395,12 +395,67 @@ time_t libmin_time(time_t *timer);
 #define time libmin_time
 #endif
 
-
+#if !(USE_EXTERNAL_QSORT)
 /* sort an array */
 typedef int (*cmpfun)(const void *, const void *);
 void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
-#if ALIAS_RM_LIBMIN && !(USE_EXTERNAL_QSORT)
+#if ALIAS_RM_LIBMIN
 #define qsort libmin_qsort
+#endif
+#endif
+
+// mfile ve sfile icin cevreleyici 
+struct file_t;
+typedef struct file_t FILE;
+
+FILE *libmin_fopen(const char *fname, const char *mode_str);
+#if ALIAS_RM_LIBMIN
+#define fopen libmin_fopen
+#endif
+
+int libmin_fclose(FILE *file);
+#if ALIAS_RM_LIBMIN
+#define fclose libmin_fclose
+#endif
+
+size_t libmin_fread(void *ptr, size_t size, FILE *file);
+#if ALIAS_RM_LIBMIN
+#define fread libmin_fread
+#endif
+
+char *libmin_fgets(char *s, size_t size, FILE *file);
+#if ALIAS_RM_LIBMIN
+#define fgets libmin_fgets
+#endif
+
+int libmin_fgetc(FILE *file);
+#if ALIAS_RM_LIBMIN
+#define fgetc libmin_fgetc
+#endif
+
+int libmin_ungetc(int c, FILE *file);
+#if ALIAS_RM_LIBMIN
+#define ungetc libmin_ungetc
+#endif
+
+int libmin_fputs(const char *str, FILE *file);
+#if ALIAS_RM_LIBMIN
+#define fputs libmin_fputs
+#endif
+
+int libmin_fprintf(FILE *file, const char *fmt, ...);
+#if ALIAS_RM_LIBMIN
+#define fprintf libmin_fprintf
+#endif
+
+int libmin_vfprintf(FILE *file, const char *fmt, va_list ap);
+#if ALIAS_RM_LIBMIN
+#define vfprintf libmin_vfprintf
+#endif
+
+int libmin_fflush(FILE *file);
+#if ALIAS_RM_LIBMIN
+#define fflush libmin_fflush
 #endif
 
 
