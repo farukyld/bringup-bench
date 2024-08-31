@@ -768,6 +768,24 @@ libmin_printf(char *fmt, ...)
   return cnt;
 }
 
+
+int libmin_vprintf(const char *fmt, va_list ap)
+{
+    char buf[1024], *s;
+    dopr(buf, 1024, fmt, ap);
+    /* make sure the output string is terminated */
+    buf[1023] = '\0';
+
+    int cnt = 0;
+    for (s = buf; *s; s++)
+    {
+        libtarg_putc(*s);
+        cnt++;
+    }
+    return cnt;
+}
+
+
 int libmin_sfprintf(SFILE *file, const char *fmt, ...)
 {
   char buf[1024]; // TODO: tek seferde yazilan seyin 1024 karakteri gecmeyecegini varsaymak dogru bir sey mi?
@@ -782,6 +800,19 @@ int libmin_sfprintf(SFILE *file, const char *fmt, ...)
   libmin_sfputs(buf, file);
   return len;
 }
+
+
+int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap)
+{
+    char buf[1024]; // TODO: tek seferde yazilan seyin 1024 karakteri gecmeyecegini varsaymak dogru bir sey mi?
+    size_t len = dopr(buf, 1024, fmt, ap);
+    /* make sure the output string is terminated */
+    buf[1023] = '\0';
+
+    libmin_sfputs(buf, file);
+    return len;
+}
+
 
 int libmin_sprintf(char *buffer, const char *format, ...)
 {

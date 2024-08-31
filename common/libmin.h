@@ -171,6 +171,18 @@ int libmin_printf(char *fmt, ...);
 #define libmin_printf(FMT, ARGS...)	do { ; } while (0)
 #endif /* TARGET_SILENT */
 
+#ifndef TARGET_SILENT
+int libmin_vprintf(const char *fmt, va_list ap);
+#if ALIAS_RM_LIBMIN
+#define vprintf libmin_vprintf
+#endif
+#else /* TARGET_SILENT */
+#define libmin_vprintf(FMT, AP)	do { ; } while (0)
+#endif /* TARGET_SILENT */
+
+
+
+
 int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...);
 #if ALIAS_RM_LIBMIN
 #define snprintf libmin_snprintf
@@ -354,6 +366,11 @@ int libmin_sfputs(const char *str, SFILE *file);
 int libmin_sfprintf(SFILE *file, const char *fmt, ...);
 #if ALIAS_RM_LIBMIN
 #define sfprintf libmin_sfprintf
+#endif
+
+int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap);
+#if ALIAS_RM_LIBMIN
+#define vsfprintf libmin_vsfprintf
 #endif
 
 int libmin_sfflush(SFILE *file);
