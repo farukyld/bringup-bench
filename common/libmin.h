@@ -335,6 +335,12 @@ int libmin_mgetc(MFILE *mfile);
 #define mgetc libmin_mgetc
 #endif
 
+int libmin_mungetc(int c,MFILE *mfile);
+#if ALIAS_RM_LIBMIN
+#define mungetc libmin_mungetc
+#endif
+
+
 struct serial_output_file_t;
 typedef struct serial_output_file_t SFILE;
 
