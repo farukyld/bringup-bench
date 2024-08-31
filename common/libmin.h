@@ -278,6 +278,8 @@ struct _MFILE {
 typedef struct _MFILE MFILE;
 
 #define EOF (-1)
+extern MFILE *stdin;
+#define stdin stdin
 
 /* open an in-memory file */
 MFILE* libmin_mopen(const char* fname, const char *mode);
