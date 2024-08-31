@@ -20,6 +20,8 @@
 	 Engineering a sort function; Jon Bentley and M. Douglas McIlroy;
 	 Software - Practice and Experience; Vol. 23 (11), 1249-1265, 1993.  */
 
+#ifndef USE_EXTERNAL_QSORT
+
 #include "libmin.h"
 #include "libtarg.h"
 
@@ -257,3 +259,6 @@ void libmin_qsort(void *b, size_t n, size_t s, cmpfun cmp)
 {
 	return quicksort(b, n, s, (__compar_d_fn_t)cmp_wrapper, cmp);
 }
+
+
+#endif /* USE_EXTERNAL_QSORT */
