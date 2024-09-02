@@ -680,6 +680,15 @@ int libmin_fclose(FILE *file);
   #endif
 #endif
 
+int libmin_feof(FILE *file);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define feof libmin_feof
+  #else
+    const auto &feof = libmin_feof;
+  #endif
+#endif
+
 int libmin_fseek(FILE *file, long offset, int whence);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus

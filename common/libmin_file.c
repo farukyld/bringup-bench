@@ -54,6 +54,20 @@ int libmin_fclose(FILE *file)
   }
 }
 
+int libmin_feof(FILE *file)
+{
+  if (unlikely(file == NULL))
+    return -1;
+  if (file->type == FILE_TYPE_MFILE)
+  {
+    return libmin_meof((MFILE *)file->file);
+  }
+  else
+  {
+    return false;
+  }
+}
+
 // MFILE icin ozel arayuzler
 int libmin_fseek(FILE *file, long offset, int whence)
 {
