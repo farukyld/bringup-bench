@@ -497,6 +497,15 @@ void libmin_mclose(MFILE *mfile);
   #endif
 #endif
 
+int libmin_mseek(struct _MFILE *mfile, long offset, int whence);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define mseek libmin_mseek
+  #else
+    const auto &mseek = libmin_mseek;
+  #endif
+#endif
+
 /* read a buffer from the in-memory file */
 size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
 #if ALIAS_RM_LIBMIN
@@ -649,6 +658,10 @@ void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
 struct file_t;
 typedef struct file_t FILE;
 
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
+
 FILE *libmin_fopen(const char *fname, const char *mode_str);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
@@ -664,6 +677,15 @@ int libmin_fclose(FILE *file);
     #define fclose libmin_fclose
   #else
     const auto &fclose = libmin_fclose;
+  #endif
+#endif
+
+int libmin_fseek(FILE *file, long offset, int whence);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define fseek libmin_fseek
+  #else
+    const auto &fseek = libmin_fseek;
   #endif
 #endif
 

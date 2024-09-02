@@ -55,6 +55,22 @@ int libmin_fclose(FILE *file)
 }
 
 // MFILE icin ozel arayuzler
+int libmin_fseek(FILE *file, long offset, int whence)
+{
+  if (unlikely(file == NULL))
+    return -1;
+  if (likely(file->type == FILE_TYPE_MFILE))
+  {
+    return libmin_mseek((MFILE *)file->file, offset, whence);
+  }
+  else
+  {
+    libmin_printf("libmin_fseek only supports MFILE\n");
+    libmin_exit(1);
+    return EOF;
+  }
+}
+
 size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file)
 {
   if (unlikely(file == NULL))
