@@ -581,6 +581,15 @@ int libmin_sfputs(const char *str, SFILE *file);
   #endif
 #endif
 
+size_t libmin_sfwrite(const void *ptr, size_t size, size_t nmemb, SFILE *file);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define sfwrite libmin_sfwrite
+  #else
+    const auto &sfwrite = libmin_sfwrite;
+  #endif
+#endif
+
 int libmin_sfprintf(SFILE *file, const char *fmt, ...);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
@@ -636,7 +645,7 @@ void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
 #endif
 #endif
 
-// mfile ve sfile icin cevreleyici 
+// mfile ve sfile icin cevreleyici
 struct file_t;
 typedef struct file_t FILE;
 
@@ -709,6 +718,15 @@ int libmin_fputs(const char *str, FILE *file);
     #define fputs libmin_fputs
   #else
     const auto &fputs = libmin_fputs;
+  #endif
+#endif
+
+size_t libmin_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *file);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define fwrite libmin_fwrite
+  #else
+    const auto &fwrite = libmin_fwrite;
   #endif
 #endif
 

@@ -30,18 +30,30 @@ int libmin_sfputs(const char *str, SFILE *file)
     return EOF;
   }
   size_t n = libmin_strlen(str);
+  return sfwrite(str, 1, n, file);
+}
+
+size_t libmin_sfwrite(const void *ptr, size_t ssize, size_t nmemb, SFILE *file)
+{
+  if (file == NULL || !(file->file_mode == FMODE_W || file->file_mode == FMODE_A))
+  {
+    // errno = EBADF;
+    return 0;
+  }
+  size_t n = ssize * nmemb;
+  const char *str = (const char *)ptr;
   while (file->write_idx + n >= BUFF_SIZE - 1)
   {
     size_t k = BUFF_SIZE - 1 - file->write_idx;
-    libmin_strncpy(file->out_buff + file->write_idx, str, k);
+    libmin_memcpy(file->out_buff + file->write_idx, str, k);
     file->write_idx += k;
     sflush_safe(file);
     str += k;
     n -= k;
   }
-  libmin_strncpy(file->out_buff + file->write_idx, str, n);
+  libmin_memcpy(file->out_buff + file->write_idx, str, n);
   file->write_idx += n;
-  return 0;
+  return nmemb;
 }
 
 int libmin_sfputc(int c, SFILE *file)

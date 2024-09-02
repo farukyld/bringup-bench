@@ -163,6 +163,19 @@ int libmin_fputs(const char *str, FILE *file)
   return libmin_sfputs(str, (SFILE *)file->file);
 }
 
+size_t libmin_fwrite(const void *ptr, size_t ssize, size_t nmemb, FILE *file)
+{
+  if (unlikely(file == NULL))
+    return 0;
+  if (unlikely(file->type == FILE_TYPE_MFILE))
+  {
+    libmin_printf("libmin_fwrite only supports SFILE\n");
+    libmin_exit(1);
+    return EOF;
+  }
+  return libmin_sfwrite(ptr, ssize, nmemb, file->file);
+}
+
 // int libmin_sfprintf(SFILE *file, const char *fmt, ...);
 int libmin_fprintf(FILE *file, const char *fmt, ...)
 {
