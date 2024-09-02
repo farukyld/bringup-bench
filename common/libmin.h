@@ -762,6 +762,15 @@ int libmin_ungetc(int c, FILE *file);
   #endif
 #endif
 
+int libmin_fputc(int c, FILE *file);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define fputc libmin_fputc
+  #else
+    const auto &fputc = libmin_fputc;
+  #endif
+#endif
+
 int libmin_fputs(const char *str, FILE *file);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
