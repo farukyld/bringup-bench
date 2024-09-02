@@ -73,7 +73,7 @@ SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode
     return NULL;
   }
   // mode append ise ayni isimde dosya olabilir.
-  MFILE *found_file = find_file(file_name);
+  SFILE *found_file = find_file(file_name);
   if (found_file != NULL)
   {
     if (mode != FMODE_A)
