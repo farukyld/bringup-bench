@@ -37,6 +37,7 @@ export HELP_TEXT
 error:
 	@echo "$$HELP_TEXT"
 
+help: error
 
 
 STACK_START        = $(shell printf "0x%X\n" $$(($(PROGRAM_START) + $(PROGRAM_LENGTH))))

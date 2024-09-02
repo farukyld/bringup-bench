@@ -1,3 +1,38 @@
+# Çalıştırmak için:
+
+```shell
+# Makefile dosyasinda simulasyon komutu olarak 
+# $SPIKE_ORIG/build/spike seklinde kullanilmakta
+export SPIKE_ORIG=$SPIKE_ORIG 
+make run-tests
+```
+
+aşağıda benchmark'ları derlerken kullandığım derleyicinin versiyonu ve konfigürasyonu yer almaktadır: (konfigürasyonda gerekli multilib destekleri olmayınca derlemede hata veriyor. (konfigürasyonun küçültülmesi üzerine)[])
+```shell
+riscv64-unknown-elf-gcc -v
+```
+```shell
+Using built-in specs.
+COLLECT_GCC=riscv64-unknown-elf-gcc
+COLLECT_LTO_WRAPPER=/opt/riscv/libexec/gcc/riscv64-unknown-elf/13.2.0/lto-wrapper
+Target: riscv64-unknown-elf
+Configured with: /home/usr1/riscv-gnu-toolchain/gcc/configure --target=riscv64-unknown-elf --prefix=/opt/riscv --disable-shared --disable-threads --enable-languages=c,c++ --with-pkgversion=gc891d8dc23e --with-system-zlib --enable-tls --with-newlib --with-sysroot=/opt/riscv/riscv64-unknown-elf --with-native-system-header-dir=/include --disable-libmudflap --disable-libssp --disable-libquadmath --disable-libgomp --disable-nls --disable-tm-clone-registry --src=.././gcc --enable-multilib --with-multilib-generator='rv32e-ilp32e--;rv32ea-ilp32e--;rv32em-ilp32e--;rv32eac-ilp32e--;rv32emac-ilp32e--;rv32i-ilp32--;rv32if-ilp32f--;rv32ifd-ilp32d--;rv32ia-ilp32--;rv32iaf-ilp32f--;rv32imaf-ilp32f--;rv32iafd-ilp32d--;rv32im-ilp32--;rv32imf-ilp32f--;rv32imfc-ilp32f--;rv32imfd-ilp32d--;rv32iac-ilp32--;rv32imac-ilp32--;rv32imafc-ilp32f--;rv32imafdc-ilp32d--;rv64i-lp64--;rv64if-lp64f--;rv64ifd-lp64d--;rv64ia-lp64--;rv64iaf-lp64f--;rv64imaf-lp64f--;rv64iafd-lp64d--;rv64im-lp64--;rv64imf-lp64f--;rv64imfc-lp64f--;rv64imfd-lp64d--;rv64iac-lp64--;rv64imac-lp64--;rv64imafc-lp64f--;rv64imafdc-lp64d--;rv64imafdc_zifencei-lp64d--;' --with-abi=lp64d --with-arch=rv64imafdc --with-tune=rocket --with-isa-spec=20191213 'CFLAGS_FOR_TARGET=-Os    -mcmodel=medany' 'CXXFLAGS_FOR_TARGET=-Os    -mcmodel=medany'
+Thread model: single
+Supported LTO compression algorithms: zlib
+gcc version 13.2.0 (gc891d8dc23e)
+```
+
+**NOT:** Burada önemli olan konfigürasyon komutu:
+```shell
+/home/usr1/riscv-gnu-toolchain/gcc/configure --target=riscv64-unknown-elf --prefix=/opt/riscv --disable-shared --disable-threads --enable-languages=c,c++ --with-pkgversion=gc891d8dc23e --with-system-zlib --enable-tls --with-newlib --with-sysroot=/opt/riscv/riscv64-unknown-elf --with-native-system-header-dir=/include --disable-libmudflap --disable-libssp --disable-libquadmath --disable-libgomp --disable-nls --disable-tm-clone-registry --src=.././gcc --enable-multilib --with-multilib-generator='rv32e-ilp32e--;rv32ea-ilp32e--;rv32em-ilp32e--;rv32eac-ilp32e--;rv32emac-ilp32e--;rv32i-ilp32--;rv32if-ilp32f--;rv32ifd-ilp32d--;rv32ia-ilp32--;rv32iaf-ilp32f--;rv32imaf-ilp32f--;rv32iafd-ilp32d--;rv32im-ilp32--;rv32imf-ilp32f--;rv32imfc-ilp32f--;rv32imfd-ilp32d--;rv32iac-ilp32--;rv32imac-ilp32--;rv32imafc-ilp32f--;rv32imafdc-ilp32d--;rv64i-lp64--;rv64if-lp64f--;rv64ifd-lp64d--;rv64ia-lp64--;rv64iaf-lp64f--;rv64imaf-lp64f--;rv64iafd-lp64d--;rv64im-lp64--;rv64imf-lp64f--;rv64imfc-lp64f--;rv64imfd-lp64d--;rv64iac-lp64--;rv64imac-lp64--;rv64imafc-lp64f--;rv64imafdc-lp64d--;rv64imafdc_zifencei-lp64d--;' --with-abi=lp64d --with-arch=rv64imafdc --with-tune=rocket --with-isa-spec=20191213 'CFLAGS_FOR_TARGET=-Os    -mcmodel=medany' 'CXXFLAGS_FOR_TARGET=-Os    -mcmodel=medany'
+```
+
+spike versiyonu (en güncel versiyonda da çalışmalı)
+```
+11fbcb52f4d7ca247cb5f2503552ec653025bf40
+```
+
+
 # Bringup-Bench Benchmark Suite
 
 Bringup */bring-up/* **verb**
@@ -12,15 +47,9 @@ I (Todd Austin) have used this benchmark suite to bring up new CPUs, new compile
 ## Bringing up Bringup-Bench
 To build and test a benchmark, simply enter one of the benchmark directories and execute the following makefile command:
 ```
-make TARGET=<target> clean build test
+make clean build test
 ```
-This command will first "clean" the benchmark directory and then "build" the application, and "test" that it is running correctly. The \<target> indicates the specific target that the application should be built for. Currently, Bringup-Bench support the following targets: 
-
-- **Linux host target - TARGET=host** - This target builds the benchmarks to run as a Linux application.
-
-- **Standalone target - TARGET=sa** - This target builds the benchmarks to run as a memory-only standalone application. For this target, all benchmark output is spooled to a pre-defined memory buffer, and the libmin\_success() and libmin\_fail() intefaces result in the application spinning at a specific code address. This mode is designed for bringing up CPUs and accelerators that do not yet have any OS or device I/O support. See common/libtarg.c for the internal intefaces used to spool program output to internal buffers. This particular target is useful in bringing up CPUs when they still have no I/O support, simply spool benchmark output to DRAM, and dump the DRAM after the benchmark completes.
-
-- **Simple_System target - TARGET=simple** - This target build the benchmarks to run in the RISC-V Simple_System simulation environment. Simple_system allows hardware developers to do SystemVerilog development on Verilator, with fast SystemVerilog simulation using the Simple_System target. The Simple_System target supports a character output device, plus a simple memory system. By default, this is an integer computation only mode, so any FP in the benchmarks will be emulated with GCC's soft-float support. To learn more about the RISC-V Simple_System, go here: https://github.com/lowRISC/ibex/blob/master/examples/simple_system/README.md. The current version of the Simple_System target was tested with: 1) Ibex "small" core, 2) Simple_System default devices and memory configuration.
+This command will first "clean" the benchmark directory and then "build" the application, and "test" that it is running correctly. 
 
 Each benchmark support three standard Makefile targets: build, test, and clean
 
@@ -32,14 +61,14 @@ Each benchmark support three standard Makefile targets: build, test, and clean
 
 For example, to build, test and then clean the Bubble Sort benchmark in encrypted mode:
 ```
-make TARGET=host build
-make TARGET=host test
-make TARGET=host clean
+make build
+make test
+make clean
 ```
 
 To assist in running experiments, the top-level Makefile includes a few useful targets:
 ```
-make TARGET=<target> run-tests   # clean, build, and test all benchmarks in the specified target mode (host, standalone, simple)
+make run-tests   # clean, build, and test all benchmarks
 make all-clean   # clean all benchmark directories for all supported targets
 ```
 You should be able to adapt these targets to your own project-specific tasks.
