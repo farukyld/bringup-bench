@@ -506,6 +506,15 @@ int libmin_mseek(struct _MFILE *mfile, long offset, int whence);
   #endif
 #endif
 
+long libmin_mtell(MFILE *mfile);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define mtell libmin_mtell
+  #else
+    const auto &mtell = libmin_mtell;
+  #endif
+#endif
+
 /* read a buffer from the in-memory file */
 size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
 #if ALIAS_RM_LIBMIN
@@ -697,6 +706,16 @@ int libmin_fseek(FILE *file, long offset, int whence);
     const auto &fseek = libmin_fseek;
   #endif
 #endif
+
+long libmin_ftell(FILE *file);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define ftell libmin_ftell
+  #else
+    const auto &ftell = libmin_ftell;
+  #endif
+#endif
+
 
 size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file);
 #if ALIAS_RM_LIBMIN

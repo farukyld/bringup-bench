@@ -85,6 +85,22 @@ int libmin_fseek(FILE *file, long offset, int whence)
   }
 }
 
+long libmin_ftell(FILE *file)
+{
+  if (unlikely(file == NULL))
+    return -1;
+  if (likely(file->type == FILE_TYPE_MFILE))
+  {
+    return libmin_mtell((MFILE *)file->file);
+  }
+  else
+  {
+    libmin_printf("libmin_ftell only supports MFILE\n");
+    libmin_exit(1);
+    return EOF;
+  }
+}
+
 size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file)
 {
   if (unlikely(file == NULL))
