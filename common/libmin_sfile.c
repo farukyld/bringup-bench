@@ -168,7 +168,7 @@ void sflush_safe(SFILE *file)
 {
   if (file->write_idx == 0)
     return;
-  char *s = file->escape_sequence;
+  const char *s = file->escape_sequence;
   for (; *s; s++)
     libtarg_putc(*s);
   file->out_buff[file->write_idx] = '\0';
