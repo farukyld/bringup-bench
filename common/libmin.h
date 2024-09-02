@@ -498,12 +498,12 @@ void libmin_mclose(MFILE *mfile);
 #endif
 
 /* read a buffer from the in-memory file */
-size_t libmin_mread(void *ptr, size_t size, MFILE *mfile);
+size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
-    #define mread libmin_mread
+    #define mread_bytes libmin_mread_bytes
   #else
-    const auto &mread = libmin_mread;
+    const auto &mread = libmin_mread_bytes;
   #endif
 #endif
 
@@ -658,7 +658,16 @@ int libmin_fclose(FILE *file);
   #endif
 #endif
 
-size_t libmin_fread(void *ptr, size_t size, FILE *file);
+size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define fread_bytes libmin_fread_bytes
+  #else
+    const auto &fread_bytes = libmin_fread_bytes;
+  #endif
+#endif
+
+size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
     #define fread libmin_fread

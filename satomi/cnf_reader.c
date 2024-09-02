@@ -32,7 +32,7 @@ file_open(const char * fname)
 	}
 	sz_file = libmin_msize(mfile);
 	buffer = STM_ALLOC(char, sz_file + 3);
-	libmin_mread(buffer, sz_file, mfile);
+	libmin_mread_bytes(buffer, sz_file, mfile);
 	buffer[sz_file + 0] = '\n';
 	buffer[sz_file + 1] = '\0';
 	return buffer;

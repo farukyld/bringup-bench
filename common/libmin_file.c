@@ -55,13 +55,29 @@ int libmin_fclose(FILE *file)
 }
 
 // MFILE icin ozel arayuzler
-size_t libmin_fread(void *ptr, size_t size, FILE *file)
+size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file)
 {
   if (unlikely(file == NULL))
     return 0;
   if (likely(file->type == FILE_TYPE_MFILE))
   {
-    return libmin_mread(ptr, size, (MFILE *)file->file);
+    return libmin_mread_bytes(ptr, size, (MFILE *)file->file);
+  }
+  else
+  {
+    libmin_printf("libmin_fread_bytes only supports MFILE\n");
+    libmin_exit(1);
+    return EOF;
+  }
+}
+
+size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file)
+{
+  if (unlikely(file == NULL))
+    return 0;
+  if (likely(file->type == FILE_TYPE_MFILE))
+  {
+    return libmin_mread(ptr, size,nmemb, (MFILE *)file->file);
   }
   else
   {

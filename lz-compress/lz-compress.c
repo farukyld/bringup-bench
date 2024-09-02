@@ -100,7 +100,7 @@ int main (int argc, char const *argv[])
     uncompressed_size = libmin_msize(infile);
     libmin_printf("Original size: %ld\n", uncompressed_size);
     uncompressed_text = libmin_malloc(uncompressed_size);
-    if((uncompressed_size != libmin_mread(uncompressed_text, uncompressed_size, infile)))
+    if((uncompressed_size != libmin_mread_bytes(uncompressed_text, uncompressed_size, infile)))
         return 0;
     libmin_mclose(infile);
 

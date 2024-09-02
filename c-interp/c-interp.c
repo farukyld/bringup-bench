@@ -1366,7 +1366,7 @@ int main(int argc, char **argv)
         return -1;
     }
     // read the source file
-    if ((i = libmin_mread(src, poolsize-1, mhello)) <= 0) {
+    if ((i = libmin_mread_bytes(src, poolsize-1, mhello)) <= 0) {
         libmin_printf("read() returned %ld\n", i);
         return -1;
     }

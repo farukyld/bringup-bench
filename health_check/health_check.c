@@ -62,7 +62,7 @@ int main()
   while (!libmin_meof(mfile))
   {
     char buf[1024];
-    libmin_mread(buf, 1024, mfile);
+    libmin_mread_bytes(buf, 1024, mfile);
     libmin_printf("%s", buf);
   }
   libmin_mclose(mfile);
@@ -72,7 +72,7 @@ int main()
   while (!libmin_meof(mfile))
   {
     char buf[1024];
-    libmin_mread(buf, 1024, mfile);
+    libmin_mread_bytes(buf, 1024, mfile);
     libmin_printf("%s", buf);
   }
   libmin_mclose(mfile);
