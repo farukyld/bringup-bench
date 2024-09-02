@@ -241,6 +241,46 @@ void serial_output_init()
 
 int libmin_sfclose(SFILE *file)
 {
-#warning not implemented
+  if (file == NULL)
+  {
+    return -1;
+  }
+  release_escape_sequence(file->escape_sequence);
+  if (file->prev == NULL && file->next == NULL) // sistemdeki tek output dosyasi kapatiliyor.
+  {
+    live_files_head = NULL;
+    live_files_tail = NULL;
+  }
+  else if (file->prev == NULL) // dosya head ise
+  {
+    live_files_head = file->next;
+    live_files_head->prev = NULL;
+  }
+  else if (file->next == NULL) // dosya tail ise
+  {
+    live_files_tail = file->prev;
+    live_files_tail->next = NULL;
+  }
+  else // dosya arada ise
+  {
+    file->prev->next = file->next;
+    file->next->prev = file->prev;
+  }
+
+  libmin_free(file);
+  live_files_count--;
+
   return 0;
+}
+
+void release_escape_sequence(const char *esc_seq)
+{
+  for (size_t i = 0; i < MAX_OUT_FILES; i++)
+  {
+    if (libmin_strncmp(esc_seq, escape_sequences[i], MAX_ESCAPE_LEN) == 0)
+    {
+      esc_seq_in_use[i] = false;
+      return;
+    }
+  }
 }
