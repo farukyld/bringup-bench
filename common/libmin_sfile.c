@@ -2,6 +2,7 @@
 #include "libmin.h"
 #include "libtarg.h"
 #include <stdarg.h>
+#include "libmin_file.h"
 
 static const char *const escape_sequences[MAX_OUT_FILES] = {
     ESC_DEFAULT,
@@ -19,8 +20,8 @@ SFILE *live_files_tail = NULL; // bagli listenin sonu.
 static size_t live_files_count;
 static int64_t file_desc_file;
 
-SFILE *stdout = NULL;
-SFILE *stderr = NULL;
+FILE *stdout = NULL;
+FILE *stderr = NULL;
 
 int libmin_sfputs(const char *str, SFILE *file)
 {
@@ -247,8 +248,12 @@ void serial_output_init()
     libmin_printf("requested escape sequences for stdout and stderr are not available");
     libmin_fail(1);
   }
-  stdout = create_sfile("stdout", stdout_escape, FMODE_W);
-  stderr = create_sfile("stderr", stderr_escape, FMODE_W);
+  stdout = libmin_malloc(sizeof(FILE));
+  stdout->type = FILE_TYPE_SFILE;
+  stdout->file = create_sfile("stdout", stdout_escape, FMODE_W);
+  stderr = libmin_malloc(sizeof(FILE));
+  stderr->type = FILE_TYPE_SFILE;
+  stderr->file = create_sfile("stderr", stderr_escape, FMODE_W);
 }
 
 int libmin_sfclose(SFILE *file)
