@@ -1,22 +1,10 @@
 // MFILE ve SFILE struct'lari ve API'leri icin cevreleyici yapi.
-
+#include "libmin_file.h"
 #include "libmin.h"
 #include "libtarg.h"
 
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
-
-
-typedef enum file_type_e{
-  FILE_TYPE_MFILE,
-  FILE_TYPE_SFILE
-} file_type_e;
-
-typedef struct file_t
-{
-  void *file;
-  file_type_e type;
-} FILE;
 
 
 // MFILE SFILE ortak arayuzleri
@@ -28,13 +16,13 @@ FILE *libmin_fopen(const char *fname, const char *mode_str)
     return NULL;
   if (libmin_strncmp(mode_str, "r",2)==0)
   {
-    file->file = libmin_mopen(fname, "r");
     file->type = FILE_TYPE_MFILE;
+    file->file = libmin_mopen(fname, "r");
   }
   else
   {
-    file->file = libmin_sfopen(fname, mode_str);
     file->type = FILE_TYPE_SFILE;
+    file->file = libmin_sfopen(fname, mode_str);
   }
   return file;
 }
