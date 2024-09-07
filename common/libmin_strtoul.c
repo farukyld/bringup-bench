@@ -3,7 +3,6 @@
 
 unsigned long libmin_strtoul(const char *nptr, char **endptr, int base) {
   unsigned long result = 0;
-  unsigned long prev_result = 0;
   const char *p = nptr;
 
   // Skip leading white space
@@ -51,7 +50,6 @@ unsigned long libmin_strtoul(const char *nptr, char **endptr, int base) {
       break;
 
     // Check for overflow
-    prev_result = result;
     if (result > (ULONG_MAX - digit) / base) {
       result = ULONG_MAX;  // Clamp the result to ULONG_MAX on overflow
       if (endptr)
