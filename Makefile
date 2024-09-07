@@ -96,7 +96,7 @@ TARGET_BMARKS = banner blake2b boyer-moore-search bubble-sort dhrystone distinct
   frac-calc fuzzy-match fy-shuffle gcd-list grad-descent hanoi heapsort indirect-test kadane kepler \
 	knapsack life mandelbrot max-subseq mersenne minspan murmur-hash natlog nr-solver parrondo pascal \
 	primal-test qsort-demo regex-parser shortest-path sieve simple-grep skeleton strange topo-sort \
-	totient weekday health_check
+	totient weekday health_check test_strtoul
 
 
 
