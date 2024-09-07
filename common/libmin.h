@@ -29,7 +29,7 @@ long libmin_atol(const char *s);
   #ifndef __cplusplus
     #define atol libmin_atol
   #else
-    const auto &atol = libmin_atol;
+    inline const auto &atol = libmin_atol;
   #endif
 #endif
 
@@ -39,7 +39,7 @@ int libmin_atoi(const char *s);
   #ifndef __cplusplus
     #define atoi libmin_atoi
   #else
-    const auto &atoi = libmin_atoi;
+    inline const auto &atoi = libmin_atoi;
   #endif
 #endif
 double libmin_atof(const char *s);
@@ -47,7 +47,7 @@ double libmin_atof(const char *s);
   #ifndef __cplusplus
     #define atof libmin_atof
   #else
-    const auto &atof = libmin_atof;
+    inline const auto &atof = libmin_atof;
   #endif
 #endif
 long libmin_strtol(const char *s, char **endptr, int base);
@@ -55,9 +55,19 @@ long libmin_strtol(const char *s, char **endptr, int base);
   #ifndef __cplusplus
     #define strtol libmin_strtol
   #else
-    const auto &strtol = libmin_strtol;
+    inline const auto &strtol = libmin_strtol;
   #endif
 #endif
+
+unsigned long libmin_strtoul(const char* s, char**endptr, int base);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define strtoul libmin_strtoul
+  #else
+    inline const auto &strtoul = libmin_strtoul;
+  #endif
+#endif
+
 
 /* getopt() hooks */
 extern char *optarg;
@@ -69,7 +79,7 @@ int libmin_getopt(int argc, char * const argv[], const char *optstring);
   #ifndef __cplusplus
     #define getopt libmin_getopt
   #else
-    const auto &getopt = libmin_getopt;
+    inline const auto &getopt = libmin_getopt;
   #endif
 #endif
 
@@ -79,7 +89,7 @@ char *libmin_strcat(char *dest, const char *src);
   #ifndef __cplusplus
     #define strcat libmin_strcat
   #else
-    const auto &strcat = libmin_strcat;
+    inline const auto &strcat = libmin_strcat;
   #endif
 #endif
 char *libmin_strcpy(char *dest, const char *src);
@@ -87,7 +97,7 @@ char *libmin_strcpy(char *dest, const char *src);
   #ifndef __cplusplus
     #define strcpy libmin_strcpy
   #else
-    const auto &strcpy = libmin_strcpy;
+    inline const auto &strcpy = libmin_strcpy;
   #endif
 #endif
 char *libmin_strncpy(char *dst, const char *src, size_t n);
@@ -95,7 +105,7 @@ char *libmin_strncpy(char *dst, const char *src, size_t n);
   #ifndef __cplusplus
     #define strncpy libmin_strncpy
   #else
-    const auto &strncpy = libmin_strncpy;
+    inline const auto &strncpy = libmin_strncpy;
   #endif
 #endif
 char *libmin_strncat(char *d, const char *s, size_t n);
@@ -112,7 +122,7 @@ bool libmin_strncontains(const char *str,char c, size_t n);
   #ifndef __cplusplus
     #define strncontains libmin_strncontains
   #else
-    const auto &strncontains = libmin_strncontains;
+    inline const auto &strncontains = libmin_strncontains;
   #endif
 #endif
 
@@ -121,7 +131,7 @@ bool libmin_strfits(const char *str, size_t n);
   #ifndef __cplusplus
     #define strfits libmin_strfits
   #else
-    const auto &strfits = libmin_strfits;
+    inline const auto &strfits = libmin_strfits;
   #endif
 #endif
 
@@ -131,7 +141,7 @@ size_t libmin_strlen(const char *str);
   #ifndef __cplusplus
     #define strlen libmin_strlen
   #else
-    const auto &strlen = libmin_strlen;
+    inline const auto &strlen = libmin_strlen;
   #endif
 #endif
 
@@ -141,7 +151,7 @@ int libmin_strcmp(const char *l, const char *r);
   #ifndef __cplusplus
     #define strcmp libmin_strcmp
   #else
-    const auto &strcmp = libmin_strcmp;
+    inline const auto &strcmp = libmin_strcmp;
   #endif
 #endif
 int libmin_strncmp(const char *s1, const char *s2, size_t n);
@@ -149,7 +159,7 @@ int libmin_strncmp(const char *s1, const char *s2, size_t n);
   #ifndef __cplusplus
     #define strncmp libmin_strncmp
   #else
-    const auto &strncmp = libmin_strncmp;
+    inline const auto &strncmp = libmin_strncmp;
   #endif
 #endif
 size_t libmin_strspn(const char *s, const char *c);
@@ -157,7 +167,7 @@ size_t libmin_strspn(const char *s, const char *c);
   #ifndef __cplusplus
     #define strspn libmin_strspn
   #else
-    const auto &strspn = libmin_strspn;
+    inline const auto &strspn = libmin_strspn;
   #endif
 #endif
 
@@ -166,7 +176,7 @@ char *libmin_strtok(char *s, const char *sep);
   #ifndef __cplusplus
     #define strtok libmin_strtok
   #else
-    const auto &strtok = libmin_strtok;
+    inline const auto &strtok = libmin_strtok;
   #endif
 #endif
 char *libmin_strdup (const char *s);
@@ -174,7 +184,7 @@ char *libmin_strdup (const char *s);
   #ifndef __cplusplus
     #define strdup libmin_strdup
   #else
-    const auto &strdup = libmin_strdup;
+    inline const auto &strdup = libmin_strdup;
   #endif
 #endif
 char *libmin_strchr(const char *s, char c);
@@ -182,7 +192,7 @@ char *libmin_strchr(const char *s, char c);
   #ifndef __cplusplus
     #define strchr libmin_strchr
   #else
-    const auto &strchr = libmin_strchr;
+    inline const auto &strchr = libmin_strchr;
   #endif
 #endif
 char *libmin_strrchr(const char *s, int c);
@@ -190,7 +200,7 @@ char *libmin_strrchr(const char *s, int c);
   #ifndef __cplusplus
     #define strrchr libmin_strrchr
   #else
-    const auto &strrchr = libmin_strrchr;
+    inline const auto &strrchr = libmin_strrchr;
   #endif
 #endif
 size_t libmin_strcspn(const char *s, const char *c);
@@ -198,7 +208,7 @@ size_t libmin_strcspn(const char *s, const char *c);
   #ifndef __cplusplus
     #define strcspn libmin_strcspn
   #else
-    const auto &strcspn = libmin_strcspn;
+    inline const auto &strcspn = libmin_strcspn;
   #endif
 #endif
 char *libmin_strpbrk(const char *s, const char *b);
@@ -206,7 +216,7 @@ char *libmin_strpbrk(const char *s, const char *b);
   #ifndef __cplusplus
     #define strpbrk libmin_strpbrk
   #else
-    const auto &strpbrk = libmin_strpbrk;
+    inline const auto &strpbrk = libmin_strpbrk;
   #endif
 #endif
 char *libmin_strstr (const char *s1, const char *s2);
@@ -214,7 +224,7 @@ char *libmin_strstr (const char *s1, const char *s2);
   #ifndef __cplusplus
     #define strstr libmin_strstr
   #else
-    const auto &strstr = libmin_strstr;
+    inline const auto &strstr = libmin_strstr;
   #endif
 #endif
 char *libmin_strcasestr(const char *h, const char *n);
@@ -222,7 +232,7 @@ char *libmin_strcasestr(const char *h, const char *n);
   #ifndef __cplusplus
     #define strcasestr libmin_strcasestr
   #else
-    const auto &strcasestr = libmin_strcasestr;
+    inline const auto &strcasestr = libmin_strcasestr;
   #endif
 #endif
 #if ALIAS_RM_LIBMIN
@@ -230,7 +240,7 @@ int libmin_strncasecmp(const char *_l, const char *_r, size_t n);
   #ifndef __cplusplus
     #define strncasecmp libmin_strncasecmp
   #else
-    const auto &strncasecmp = libmin_strncasecmp;
+    inline const auto &strncasecmp = libmin_strncasecmp;
   #endif
 #endif
 
@@ -245,7 +255,7 @@ int libmin_memcmp(const void *vl, const void *vr, size_t n);
   #ifndef __cplusplus
     #define memcmp libmin_memcmp
   #else
-    const auto &memcmp = libmin_memcmp;
+    inline const auto &memcmp = libmin_memcmp;
   #endif
 #endif
 void *libmin_memmove(void *dest, const void *src, size_t n);
@@ -253,7 +263,7 @@ void *libmin_memmove(void *dest, const void *src, size_t n);
   #ifndef __cplusplus
     #define memmove libmin_memmove
   #else
-    const auto &memmove = libmin_memmove;
+    inline const auto &memmove = libmin_memmove;
   #endif
 #endif
 
@@ -265,7 +275,7 @@ int libmin_printf(char *fmt, ...);
   #ifndef __cplusplus
     #define printf libmin_printf
   #else
-    const auto &printf = libmin_printf;
+    inline const auto &printf = libmin_printf;
   #endif
 
 #endif
@@ -280,22 +290,37 @@ int libmin_vprintf(const char *fmt, va_list ap);
   #ifndef __cplusplus
     #define vprintf libmin_vprintf
   #else
-    const auto &vprintf = libmin_vprintf;
+    inline const auto &vprintf = libmin_vprintf;
   #endif
 #endif
 #else /* TARGET_SILENT */
 #define libmin_vprintf(FMT, AP)	do { ; } while (0)
 #endif /* TARGET_SILENT */
 
+int libmin_vsprintf(char *buffer, const char *format, va_list ap);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define vsprintf libmin_vsprintf
+  #else
+    inline const auto &vsprintf = libmin_vsprintf;
+  #endif
+#endif
 
-
+int libmin_vsnprintf(char *buffer, size_t maxlen, const char *format, va_list ap);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define vsnprintf libmin_vsnprintf
+  #else
+    inline const auto &vsnprintf = libmin_vsnprintf;
+  #endif
+#endif
 
 int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
     #define snprintf libmin_snprintf
   #else
-    const auto &snprintf = libmin_snprintf;
+    inline const auto &snprintf = libmin_snprintf;
   #endif
 
 #endif
@@ -305,7 +330,7 @@ int libmin_sprintf(char *buffer, const char *format, ...);
   #ifndef __cplusplus
     #define sprintf libmin_sprintf
   #else
-    const auto &sprintf = libmin_sprintf;
+    inline const auto &sprintf = libmin_sprintf;
   #endif
 #endif
 
@@ -316,7 +341,7 @@ void libmin_putc(char c);
   #ifndef __cplusplus
     #define putc libmin_putc
   #else
-    const auto &putc = libmin_putc;
+    inline const auto &putc = libmin_putc;
   #endif
 #endif
 
@@ -326,7 +351,7 @@ void libmin_puts(char *s);
   #ifndef __cplusplus
     #define puts libmin_puts
   #else
-    const auto &puts = libmin_puts;
+    inline const auto &puts = libmin_puts;
   #endif
 #endif
 
@@ -336,7 +361,34 @@ int libmin_sscanf(const char *buf, const char *fmt, ...);
   #ifndef __cplusplus
     #define sscanf libmin_sscanf
   #else
-    const auto &sscanf = libmin_sscanf;
+    inline const auto &sscanf = libmin_sscanf;
+  #endif
+#endif
+
+int libmin_scanf(const char *fmt, ...);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define scanf libmin_scanf
+  #else
+    inline const auto &scanf = libmin_scanf;
+  #endif
+#endif
+
+int libmin_getchar(void);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define getchar libmin_getchar
+  #else
+    inline const auto &getchar = libmin_getchar;
+  #endif
+#endif
+
+int libmin_putchar(int c);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define putchar libmin_putchar
+  #else
+    inline const auto &putchar = libmin_putchar;
   #endif
 #endif
 
@@ -350,7 +402,7 @@ void libmin_success(void);
   #ifndef __cplusplus
     #define success libmin_success
   #else
-    const auto &success = libmin_success;
+    inline const auto &success = libmin_success;
   #endif
 #endif
 
@@ -360,7 +412,19 @@ void libmin_fail(int code);
   #ifndef __cplusplus
     #define fail libmin_fail
   #else
-    const auto &fail = libmin_fail;
+    inline const auto &fail = libmin_fail;
+  #endif
+#endif
+
+void libmin_abort(void);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define abort libmin_abort
+  #else
+  namespace std {
+    inline const auto &abort = libmin_abort;
+    // inline void abort() { libmin_abort(); }
+  }
   #endif
 #endif
 
@@ -369,7 +433,7 @@ void libmin_exit(int status);
   #ifndef __cplusplus
     #define exit libmin_exit
   #else
-    const auto &exit = libmin_exit;
+    inline const auto &exit = libmin_exit;
   #endif
 #endif
 
@@ -388,7 +452,7 @@ void libmin_srand(unsigned int seed);
   #ifndef __cplusplus
     #define srand libmin_srand
   #else
-    const auto &srand = libmin_srand;
+    inline const auto &srand = libmin_srand;
   #endif
 #endif
 
@@ -398,7 +462,7 @@ unsigned int libmin_rand(void);
   #ifndef __cplusplus
     #define rand libmin_rand
   #else
-    const auto &rand = libmin_rand;
+    inline const auto &rand = libmin_rand;
   #endif
 #endif
 
@@ -408,7 +472,7 @@ void *libmin_malloc(size_t size);
   #ifndef __cplusplus
     #define malloc libmin_malloc
   #else
-    const auto &malloc = libmin_malloc;
+    inline const auto &malloc = libmin_malloc;
   #endif
 #endif
 void *libmin_calloc(size_t m, size_t n);
@@ -416,7 +480,7 @@ void *libmin_calloc(size_t m, size_t n);
   #ifndef __cplusplus
     #define calloc libmin_calloc
   #else
-    const auto &calloc = libmin_calloc;
+    inline const auto &calloc = libmin_calloc;
   #endif
 #endif
 void *libmin_realloc(void *block, size_t size);
@@ -424,7 +488,7 @@ void *libmin_realloc(void *block, size_t size);
   #ifndef __cplusplus
     #define realloc libmin_realloc
   #else
-    const auto &realloc = libmin_realloc;
+    inline const auto &realloc = libmin_realloc;
   #endif
 #endif
 
@@ -434,7 +498,7 @@ void libmin_free(void * addr);
   #ifndef __cplusplus
     #define free libmin_free
   #else
-    const auto &free = libmin_free;
+    inline const auto &free = libmin_free;
   #endif
 #endif
 
@@ -454,8 +518,6 @@ struct _MFILE {
 typedef struct _MFILE MFILE;
 
 #define EOF (-1)
-extern MFILE *stdin;
-#define stdin stdin
 
 /* open an in-memory file */
 MFILE* libmin_mopen(const char* fname, const char *mode);
@@ -463,7 +525,7 @@ MFILE* libmin_mopen(const char* fname, const char *mode);
   #ifndef __cplusplus
     #define mopen libmin_mopen
   #else
-    const auto &mopen = libmin_mopen;
+    inline const auto &mopen = libmin_mopen;
   #endif
 #endif
 
@@ -473,7 +535,7 @@ size_t libmin_msize(MFILE *mfile);
   #ifndef __cplusplus
     #define msize libmin_msize
   #else
-    const auto &msize = libmin_msize;
+    inline const auto &msize = libmin_msize;
   #endif
 #endif
 
@@ -483,7 +545,7 @@ int libmin_meof(MFILE *mfile);
   #ifndef __cplusplus
     #define meof libmin_meof
   #else
-    const auto &meof = libmin_meof;
+    inline const auto &meof = libmin_meof;
   #endif
 #endif
 
@@ -493,7 +555,7 @@ void libmin_mclose(MFILE *mfile);
   #ifndef __cplusplus
     #define mclose libmin_mclose
   #else
-    const auto &mclose = libmin_mclose;
+    inline const auto &mclose = libmin_mclose;
   #endif
 #endif
 
@@ -502,7 +564,7 @@ int libmin_mseek(struct _MFILE *mfile, long offset, int whence);
   #ifndef __cplusplus
     #define mseek libmin_mseek
   #else
-    const auto &mseek = libmin_mseek;
+    inline const auto &mseek = libmin_mseek;
   #endif
 #endif
 
@@ -511,7 +573,7 @@ long libmin_mtell(MFILE *mfile);
   #ifndef __cplusplus
     #define mtell libmin_mtell
   #else
-    const auto &mtell = libmin_mtell;
+    inline const auto &mtell = libmin_mtell;
   #endif
 #endif
 
@@ -521,9 +583,19 @@ size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
   #ifndef __cplusplus
     #define mread_bytes libmin_mread_bytes
   #else
-    const auto &mread = libmin_mread_bytes;
+    inline const auto &mread = libmin_mread_bytes;
   #endif
 #endif
+
+size_t libmin_mread(void *_ptr, size_t size, size_t nmemb, MFILE *mfile);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define mread libmin_mread
+  #else
+    inline const auto &mread = libmin_mread;
+  #endif
+#endif
+
 
 /* get a string from the in-memory file */
 char *libmin_mgets(char *s, size_t size, MFILE *mfile);
@@ -531,7 +603,7 @@ char *libmin_mgets(char *s, size_t size, MFILE *mfile);
   #ifndef __cplusplus
     #define mgets libmin_mgets
   #else
-    const auto &mgets = libmin_mgets;
+    inline const auto &mgets = libmin_mgets;
   #endif
 #endif
 
@@ -541,7 +613,7 @@ int libmin_mgetc(MFILE *mfile);
   #ifndef __cplusplus
     #define mgetc libmin_mgetc
   #else
-    const auto &mgetc = libmin_mgetc;
+    inline const auto &mgetc = libmin_mgetc;
   #endif
 #endif
 
@@ -550,7 +622,7 @@ int libmin_mungetc(int c,MFILE *mfile);
   #ifndef __cplusplus
     #define mungetc libmin_mungetc
   #else
-    const auto &mungetc = libmin_mungetc;
+    inline const auto &mungetc = libmin_mungetc;
   #endif
 #endif
 
@@ -558,17 +630,13 @@ int libmin_mungetc(int c,MFILE *mfile);
 struct serial_output_file_t;
 typedef struct serial_output_file_t SFILE;
 
-extern SFILE *stderr;
-extern SFILE *stdout;
-#define stderr stderr
-#define stdout stdout
 
 SFILE *libmin_sfopen(const char *fname, const char *mode);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
     #define sfopen libmin_sfopen
   #else
-    const auto &sfopen = libmin_sfopen;
+    inline const auto &sfopen = libmin_sfopen;
   #endif
 #endif
 
@@ -577,7 +645,7 @@ int libmin_sfclose(SFILE *file);
   #ifndef __cplusplus
     #define sfclose libmin_sfclose
   #else
-    const auto &sfclose = libmin_sfclose;
+    inline const auto &sfclose = libmin_sfclose;
   #endif
 #endif
 
@@ -586,7 +654,7 @@ int libmin_sfputc(int c, SFILE *file);
   #ifndef __cplusplus
     #define sfputc libmin_sfputc
   #else
-    const auto &sfputc = libmin_sfputc;
+    inline const auto &sfputc = libmin_sfputc;
   #endif
 #endif
 
@@ -595,7 +663,7 @@ int libmin_sfputs(const char *str, SFILE *file);
   #ifndef __cplusplus
     #define sfputs libmin_sfputs
   #else
-    const auto &sfputs = libmin_sfputs;
+    inline const auto &sfputs = libmin_sfputs;
   #endif
 #endif
 
@@ -604,7 +672,7 @@ size_t libmin_sfwrite(const void *ptr, size_t size, size_t nmemb, SFILE *file);
   #ifndef __cplusplus
     #define sfwrite libmin_sfwrite
   #else
-    const auto &sfwrite = libmin_sfwrite;
+    inline const auto &sfwrite = libmin_sfwrite;
   #endif
 #endif
 
@@ -613,7 +681,7 @@ int libmin_sfprintf(SFILE *file, const char *fmt, ...);
   #ifndef __cplusplus
     #define sfprintf libmin_sfprintf
   #else
-    const auto &sfprintf = libmin_sfprintf;
+    inline const auto &sfprintf = libmin_sfprintf;
   #endif
 #endif
 
@@ -622,7 +690,7 @@ int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap);
   #ifndef __cplusplus
     #define vsfprintf libmin_vsfprintf
   #else
-    const auto &vsfprintf = libmin_vsfprintf;
+    inline const auto &vsfprintf = libmin_vsfprintf;
   #endif
 #endif
 
@@ -631,7 +699,7 @@ int libmin_sfflush(SFILE *file);
   #ifndef __cplusplus
     #define sfflush libmin_sfflush
   #else
-    const auto &sfflush = libmin_sfflush;
+    inline const auto &sfflush = libmin_sfflush;
   #endif
 #endif
 
@@ -646,9 +714,19 @@ time_t libmin_time(time_t *timer);
   #ifndef __cplusplus
     #define time libmin_time
   #else
-    const auto &time = libmin_time;
+    inline const auto &time = libmin_time;
   #endif
 #endif
+
+double libmin_difftime (time_t _time2, time_t _time1);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define difftime libmin_difftime
+  #else
+    inline const auto &difftime = libmin_difftime;
+  #endif
+#endif
+
 
 #if !(USE_EXTERNAL_QSORT)
 /* sort an array */
@@ -658,7 +736,7 @@ void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
   #ifndef __cplusplus
     #define qsort libmin_qsort
   #else
-    const auto &qsort = libmin_qsort;
+    inline const auto &qsort = libmin_qsort;
   #endif
 #endif
 #endif
@@ -666,6 +744,14 @@ void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
 // mfile ve sfile icin cevreleyici
 struct file_t;
 typedef struct file_t FILE;
+
+extern FILE *stdin;
+#define stdin stdin
+
+extern FILE *stderr;
+extern FILE *stdout;
+#define stderr stderr
+#define stdout stdout
 
 #define SEEK_SET 0
 #define SEEK_CUR 1
@@ -676,7 +762,7 @@ FILE *libmin_fopen(const char *fname, const char *mode_str);
   #ifndef __cplusplus
     #define fopen libmin_fopen
   #else
-    const auto &fopen = libmin_fopen;
+    inline const auto &fopen = libmin_fopen;
   #endif
 #endif
 
@@ -685,7 +771,7 @@ int libmin_fclose(FILE *file);
   #ifndef __cplusplus
     #define fclose libmin_fclose
   #else
-    const auto &fclose = libmin_fclose;
+    inline const auto &fclose = libmin_fclose;
   #endif
 #endif
 
@@ -694,7 +780,7 @@ int libmin_feof(FILE *file);
   #ifndef __cplusplus
     #define feof libmin_feof
   #else
-    const auto &feof = libmin_feof;
+    inline const auto &feof = libmin_feof;
   #endif
 #endif
 
@@ -703,7 +789,7 @@ int libmin_fseek(FILE *file, long offset, int whence);
   #ifndef __cplusplus
     #define fseek libmin_fseek
   #else
-    const auto &fseek = libmin_fseek;
+    inline const auto &fseek = libmin_fseek;
   #endif
 #endif
 
@@ -712,7 +798,7 @@ long libmin_ftell(FILE *file);
   #ifndef __cplusplus
     #define ftell libmin_ftell
   #else
-    const auto &ftell = libmin_ftell;
+    inline const auto &ftell = libmin_ftell;
   #endif
 #endif
 
@@ -722,7 +808,7 @@ size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file);
   #ifndef __cplusplus
     #define fread_bytes libmin_fread_bytes
   #else
-    const auto &fread_bytes = libmin_fread_bytes;
+    inline const auto &fread_bytes = libmin_fread_bytes;
   #endif
 #endif
 
@@ -731,7 +817,7 @@ size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file);
   #ifndef __cplusplus
     #define fread libmin_fread
   #else
-    const auto &fread = libmin_fread;
+    inline const auto &fread = libmin_fread;
   #endif
 #endif
 
@@ -740,7 +826,7 @@ char *libmin_fgets(char *s, size_t size, FILE *file);
   #ifndef __cplusplus
     #define fgets libmin_fgets
   #else
-    const auto &fgets = libmin_fgets;
+    inline const auto &fgets = libmin_fgets;
   #endif
 #endif
 
@@ -749,7 +835,7 @@ int libmin_fgetc(FILE *file);
   #ifndef __cplusplus
     #define fgetc libmin_fgetc
   #else
-    const auto &fgetc = libmin_fgetc;
+    inline const auto &fgetc = libmin_fgetc;
   #endif
 #endif
 
@@ -758,7 +844,7 @@ int libmin_ungetc(int c, FILE *file);
   #ifndef __cplusplus
     #define ungetc libmin_ungetc
   #else
-    const auto &ungetc = libmin_ungetc;
+    inline const auto &ungetc = libmin_ungetc;
   #endif
 #endif
 
@@ -767,7 +853,7 @@ int libmin_fputc(int c, FILE *file);
   #ifndef __cplusplus
     #define fputc libmin_fputc
   #else
-    const auto &fputc = libmin_fputc;
+    inline const auto &fputc = libmin_fputc;
   #endif
 #endif
 
@@ -776,7 +862,7 @@ int libmin_fputs(const char *str, FILE *file);
   #ifndef __cplusplus
     #define fputs libmin_fputs
   #else
-    const auto &fputs = libmin_fputs;
+    inline const auto &fputs = libmin_fputs;
   #endif
 #endif
 
@@ -785,7 +871,7 @@ size_t libmin_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *file);
   #ifndef __cplusplus
     #define fwrite libmin_fwrite
   #else
-    const auto &fwrite = libmin_fwrite;
+    inline const auto &fwrite = libmin_fwrite;
   #endif
 #endif
 
@@ -794,7 +880,7 @@ int libmin_fprintf(FILE *file, const char *fmt, ...);
   #ifndef __cplusplus
     #define fprintf libmin_fprintf
   #else
-    const auto &fprintf = libmin_fprintf;
+    inline const auto &fprintf = libmin_fprintf;
   #endif
 #endif
 
@@ -803,7 +889,7 @@ int libmin_vfprintf(FILE *file, const char *fmt, va_list ap);
   #ifndef __cplusplus
     #define vfprintf libmin_vfprintf
   #else
-    const auto &vfprintf = libmin_vfprintf;
+    inline const auto &vfprintf = libmin_vfprintf;
   #endif
 #endif
 
@@ -812,7 +898,43 @@ int libmin_fflush(FILE *file);
   #ifndef __cplusplus
     #define fflush libmin_fflush
   #else
-    const auto &fflush = libmin_fflush;
+    inline const auto &fflush = libmin_fflush;
+  #endif
+#endif
+
+int libmin_system(const char *cmd);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define system libmin_system
+  #else
+    inline const auto &system = libmin_system;
+  #endif
+#endif
+
+int libmin_unlink(const char *pathname);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define unlink libmin_unlink
+  #else
+    inline const auto &unlink = libmin_unlink;
+  #endif
+#endif
+
+char *libmin_getcwd(char *buf, size_t size);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define getcwd libmin_getcwd
+  #else
+    inline const auto &getcwd = libmin_getcwd;
+  #endif
+#endif
+
+int libmin_chdir(const char *path);
+#if ALIAS_RM_LIBMIN
+  #ifndef __cplusplus
+    #define chdir libmin_chdir
+  #else
+    inline const auto &chdir = libmin_chdir;
   #endif
 #endif
 
@@ -963,7 +1085,7 @@ double libmin_floor(double x);
   #ifndef __cplusplus
     #define floor libmin_floor
   #else
-    const auto &floor = libmin_floor;
+    inline const auto &floor = libmin_floor;
   #endif
 #endif
 double libmin_scalbn(double x, int n);
@@ -971,7 +1093,7 @@ double libmin_scalbn(double x, int n);
   #ifndef __cplusplus
     #define scalbn libmin_scalbn
   #else
-    const auto &scalbn = libmin_scalbn;
+    inline const auto &scalbn = libmin_scalbn;
   #endif
 #endif
 double libmin_cos(double x);
@@ -979,7 +1101,7 @@ double libmin_cos(double x);
   #ifndef __cplusplus
     #define cos libmin_cos
   #else
-    const auto &cos = libmin_cos;
+    inline const auto &cos = libmin_cos;
   #endif
 #endif
 double libmin_sin(double x);
@@ -987,7 +1109,7 @@ double libmin_sin(double x);
   #ifndef __cplusplus
     #define sin libmin_sin
   #else
-    const auto &sin = libmin_sin;
+    inline const auto &sin = libmin_sin;
   #endif
 #endif
 double fabs(double x);
@@ -996,7 +1118,7 @@ double libmin_pow(double x, double y);
   #ifndef __cplusplus
     #define pow libmin_pow
   #else
-    const auto &pow = libmin_pow;
+    inline const auto &pow = libmin_pow;
   #endif
 #endif
 double libmin_sqrt(double x);
@@ -1004,7 +1126,7 @@ double libmin_sqrt(double x);
   #ifndef __cplusplus
     #define sqrt libmin_sqrt
   #else
-    const auto &sqrt = libmin_sqrt;
+    inline const auto &sqrt = libmin_sqrt;
   #endif
 #endif
 
@@ -1013,7 +1135,7 @@ int libmin_abs(int i);
   #ifndef __cplusplus
     #define abs libmin_abs
   #else
-    const auto &abs = libmin_abs;
+    inline const auto &abs = libmin_abs;
   #endif
 #endif
 
@@ -1035,6 +1157,8 @@ int __rem_pio2(double x, double *y);
 /* MIN/MAX functions */
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+#define min(X, Y) (((X) < (Y)) ? (X) : (Y))
+#define max(X, Y) (((X) > (Y)) ? (X) : (Y))
 
 #ifdef __cplusplus
 }
