@@ -23,15 +23,6 @@ int val[N] = { 27, 34, 9, 22, 8, 17, 22, 21, 23, 19, 7, 36, 11, 42, 37, 16, 10, 
 int wt[N] = { 23, 47, 22, 15, 42, 30, 15, 32, 47, 33, 15, 38, 44, 7, 16, 34, 30, 33, 3, 2, 43, 31, 46, 17, 30, 1, 34, 21, 30, 21, 29, 21, 36, 14, 18, 21, 13, 3, 27, 44, 33, 11, 9, 31, 40, 40, 30, 9, 41, 31 };
 #endif /* !PROBLEM_TINY */
 
-// A utility function that returns maximum of two integers
-int
-max(int a, int b)
-{
-  if (a > b)
-    return a;
-  else
-    return b;
-}
 
 // Returns the maximum value that can be put in a knapsack of capacity W
 void
