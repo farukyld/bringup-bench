@@ -826,6 +826,16 @@ int libmin_sprintf(char *buffer, const char *format, ...)
   return (int)len;
 }
 
+int libmin_vsprintf(char *buffer, const char *format, va_list args)
+{
+  return dopr(buffer, (size_t)-1, format, args);
+}
+
+int libmin_vsnprintf(char *buffer, size_t maxlen, const char *format, va_list args)
+{
+  return dopr(buffer, maxlen, format, args);
+}
+
 int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...)
 {
   va_list args;

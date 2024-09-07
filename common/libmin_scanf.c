@@ -4,6 +4,14 @@
 #define MAXLN	1024
 #define SPACE	"\t\n\f\r " 
 
+int libmin_scanf(const char* fmt, ...)
+{
+  libmin_printf("libmin_scanf not implemented\n");
+  libmin_exit(1);
+  return 0;
+}
+
+
 int
 libmin_sscanf(const char *buf, const char *fmt, ...)
 {
