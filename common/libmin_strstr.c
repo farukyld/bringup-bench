@@ -8,7 +8,7 @@ libmin_strstr(const char *s1, const char *s2)
   const size_t len = libmin_strlen(s2);
 
   if (!len)
-    return s1;
+    return (char *)s1;
 
   for (; (p = libmin_strchr(p, *s2)) != 0; p++)
     {
