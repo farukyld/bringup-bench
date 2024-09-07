@@ -113,7 +113,7 @@ __LIBMIN_SRCS = libmin_abs.c libmin_atof.c libmin_atoi.c libmin_atol.c libmin_ct
   libmin_strncpy.c libmin_strpbrk.c libmin_strrchr.c libmin_strspn.c libmin_strstr.c libmin_strcasestr.c \
   libmin_strtok.c libmin_strtol.c libmin_success.c libmin_strncasecmp.c libmin_time.c libmin_file.c \
 	libmin_abort.c libmin_strtoul.c libmin_system.c libmin_unlink.c libmin_chdir_getcwd.c libmin_mungetc.c \
-	libmin_mseek.c libmin_mtell.c
+	libmin_mseek.c libmin_mtell.c libmin_putchar.c
 LIBMIN_SRCS = $(addprefix ../common/,$(basename $(__LIBMIN_SRCS)))
 LIBMIN_OBJS = $(addprefix ../common/,$(addsuffix .o,$(basename $(__LIBMIN_SRCS))))
 
