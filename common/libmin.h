@@ -383,7 +383,7 @@ int libmin_getchar(void);
   #endif
 #endif
 
-int libmin_putchar(int c);
+void libmin_putchar(int c);
 #if ALIAS_RM_LIBMIN
   #ifndef __cplusplus
     #define putchar libmin_putchar
