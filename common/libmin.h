@@ -97,6 +97,9 @@ declare_alias(libmin_strdup, strdup)
 char *libmin_strchr(const char *s, char c);
 declare_alias(libmin_strchr, strchr)
 
+void *libmin_memchr(const void *src, int c, size_t n);
+declare_alias(libmin_memchr, memchr)
+
 char *libmin_strrchr(const char *s, int c);
 declare_alias(libmin_strrchr, strrchr)
 
