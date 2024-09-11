@@ -394,7 +394,7 @@ int libmin_chdir(const char *path);
 declare_alias(libmin_chdir, chdir)
 
 char *libmin_getenv(const char *name);
-declare_alias(libmin_getenv, getenv)
+// declare_alias(libmin_getenv, getenv)
 
 /* ctype defs */
 //
