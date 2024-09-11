@@ -89,3 +89,5 @@ libmin_memset(void *dest, int c, size_t n)
 
 	return dest;
 }
+
+strong_alias(libmin_memset, memset);

@@ -11,3 +11,5 @@ libmin_strchr(const char *s, char c)
   } while (*s++);
   return NULL;
 }
+
+strong_alias(libmin_strchr, strchr)

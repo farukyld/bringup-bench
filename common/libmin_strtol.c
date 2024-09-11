@@ -143,3 +143,5 @@ libmin_strtol(const char  *nptr, char** endptr, int base)
 	  *endptr = (char*)q;
   return (number);
 }
+
+strong_alias(libmin_strtol, strtol)

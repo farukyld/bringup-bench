@@ -66,6 +66,8 @@ libmin_malloc(size_t size) {
 	return (void *) (header + 1);
 }
 
+strong_alias(libmin_malloc, malloc)
+
 void
 libmin_free(void *block) {
 	memhdr_t *header;
@@ -97,6 +99,8 @@ libmin_free(void *block) {
 
 	header->is_free = 1;
 }
+
+strong_alias(libmin_free, free)
 
 void *
 libmin_calloc(size_t num, size_t nsize) {
@@ -135,3 +139,5 @@ libmin_realloc(void *block, size_t size)
 	}
 	return ret;
 }
+
+strong_alias(libmin_calloc, calloc)

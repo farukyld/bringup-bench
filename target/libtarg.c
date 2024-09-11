@@ -19,12 +19,6 @@ time_t libtarg_get_cycles()
 }
 
 void *
-memset(void *dest, int val, size_t len)
-{
-  return libmin_memset(dest, val, len);
-}
-
-void *
 memcpy(void *dest, const void *src, size_t len)
 {
   return libmin_memcpy(dest, src, len);

@@ -37,6 +37,8 @@ libmin_srand(unsigned int seed)
   mti = N;
 }
 
+strong_alias(libmin_srand, srand);
+
 /* generate a pseudo-random number */
 unsigned int
 libmin_rand(void)
@@ -82,3 +84,5 @@ libmin_rand(void)
 
   return y & RAND_MAX;
 }
+
+strong_alias(libmin_rand, rand);

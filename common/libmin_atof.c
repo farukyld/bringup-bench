@@ -46,3 +46,4 @@ libmin_atof(const char *s)
   return a;
 }
 
+strong_alias(libmin_atof, atof);

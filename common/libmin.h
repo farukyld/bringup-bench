@@ -12,62 +12,40 @@
 #ifndef FALSE
 #define FALSE false
 #endif
-/* Build parameters:
 
-   #define LIBMIN_SILENT		- disable all console messages
-   #define LIBMIN_HOST		- build to run on Unix host
-   #define LIBMIN_TARGET		- build to run on ARM target model
+#ifdef ALIAS_RM_LIBMIN
+#define strong_alias(name, aliasname) _strong_alias(name, aliasname)
+#define _strong_alias(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 
-*/
+#define declare_alias(name, aliasname) _declare_alias(name, aliasname)
+#define _declare_alias(name, aliasname) \
+  extern __typeof (name) aliasname;
+#else
+#define strong_alias(name, aliasname)
+#define declare_alias(name, aliasname)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* standard atol() implementation */
 long libmin_atol(const char *s);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define atol libmin_atol
-  #else
-    inline const auto &atol = libmin_atol;
-  #endif
-#endif
+declare_alias(libmin_atol, atol)
 
 /* standard atoi/atof implementation */
 int libmin_atoi(const char *s);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define atoi libmin_atoi
-  #else
-    inline const auto &atoi = libmin_atoi;
-  #endif
-#endif
+declare_alias(libmin_atoi, atoi)
+
 double libmin_atof(const char *s);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define atof libmin_atof
-  #else
-    inline const auto &atof = libmin_atof;
-  #endif
-#endif
+declare_alias(libmin_atof, atof)
+
 long libmin_strtol(const char *s, char **endptr, int base);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strtol libmin_strtol
-  #else
-    inline const auto &strtol = libmin_strtol;
-  #endif
-#endif
+declare_alias(libmin_strtol, strtol)
 
 unsigned long libmin_strtoul(const char* s, char**endptr, int base);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strtoul libmin_strtoul
-  #else
-    inline const auto &strtoul = libmin_strtoul;
-  #endif
-#endif
-
+declare_alias(libmin_strtoul, strtoul)
 
 /* getopt() hooks */
 extern char *optarg;
@@ -75,322 +53,117 @@ extern int optind, opterr, optopt, optpos, optreset;
 
 /* standard getopt() implementation */
 int libmin_getopt(int argc, char * const argv[], const char *optstring);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define getopt libmin_getopt
-  #else
-    inline const auto &getopt = libmin_getopt;
-  #endif
-#endif
+declare_alias(libmin_getopt, getopt)
 
 /* copy src to dst, truncating or null-padding to always copy n bytes */
 char *libmin_strcat(char *dest, const char *src);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strcat libmin_strcat
-  #else
-    inline const auto &strcat = libmin_strcat;
-  #endif
-#endif
-char *libmin_strcpy(char *dest, const char *src);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strcpy libmin_strcpy
-  #else
-    inline const auto &strcpy = libmin_strcpy;
-  #endif
-#endif
-char *libmin_strncpy(char *dst, const char *src, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strncpy libmin_strncpy
-  #else
-    inline const auto &strncpy = libmin_strncpy;
-  #endif
-#endif
-char *libmin_strncat(char *d, const char *s, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-  #else
-  #endif
+declare_alias(libmin_strcat, strcat)
 
-#define strncat libmin_strncat
-#endif
+char *libmin_strcpy(char *dest, const char *src);
+declare_alias(libmin_strcpy, strcpy)
+
+char *libmin_strncpy(char *dst, const char *src, size_t n);
+declare_alias(libmin_strncpy, strncpy)
+
+char *libmin_strncat(char *d, const char *s, size_t n);
+declare_alias(libmin_strncat, strncat)
 
 bool libmin_strncontains(const char *str,char c, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strncontains libmin_strncontains
-  #else
-    inline const auto &strncontains = libmin_strncontains;
-  #endif
-#endif
+declare_alias(libmin_strncontains, strncontains)
 
 bool libmin_strfits(const char *str, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strfits libmin_strfits
-  #else
-    inline const auto &strfits = libmin_strfits;
-  #endif
-#endif
+declare_alias(libmin_strfits, strfits)
 
 /* return string length */
 size_t libmin_strlen(const char *str);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strlen libmin_strlen
-  #else
-    inline const auto &strlen = libmin_strlen;
-  #endif
-#endif
+declare_alias(libmin_strlen, strlen)
 
 /* return order of strings */
 int libmin_strcmp(const char *l, const char *r);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strcmp libmin_strcmp
-  #else
-    inline const auto &strcmp = libmin_strcmp;
-  #endif
-#endif
+declare_alias(libmin_strcmp, strcmp)
+
 int libmin_strncmp(const char *s1, const char *s2, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strncmp libmin_strncmp
-  #else
-    inline const auto &strncmp = libmin_strncmp;
-  #endif
-#endif
+declare_alias(libmin_strncmp, strncmp)
+
 size_t libmin_strspn(const char *s, const char *c);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strspn libmin_strspn
-  #else
-    inline const auto &strspn = libmin_strspn;
-  #endif
-#endif
+declare_alias(libmin_strspn, strspn)
 
 char *libmin_strtok(char *s, const char *sep);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strtok libmin_strtok
-  #else
-    inline const auto &strtok = libmin_strtok;
-  #endif
-#endif
+declare_alias(libmin_strtok, strtok)
+
 char *libmin_strdup (const char *s);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strdup libmin_strdup
-  #else
-    inline const auto &strdup = libmin_strdup;
-  #endif
-#endif
+declare_alias(libmin_strdup, strdup)
+
 char *libmin_strchr(const char *s, char c);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strchr libmin_strchr
-  #else
-    inline const auto &strchr = libmin_strchr;
-  #endif
-#endif
+declare_alias(libmin_strchr, strchr)
+
 char *libmin_strrchr(const char *s, int c);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strrchr libmin_strrchr
-  #else
-    inline const auto &strrchr = libmin_strrchr;
-  #endif
-#endif
+declare_alias(libmin_strrchr, strrchr)
+
 size_t libmin_strcspn(const char *s, const char *c);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strcspn libmin_strcspn
-  #else
-    inline const auto &strcspn = libmin_strcspn;
-  #endif
-#endif
+declare_alias(libmin_strcspn, strcspn)
+
 char *libmin_strpbrk(const char *s, const char *b);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strpbrk libmin_strpbrk
-  #else
-    inline const auto &strpbrk = libmin_strpbrk;
-  #endif
-#endif
+declare_alias(libmin_strpbrk, strpbrk)
+
 char *libmin_strstr (const char *s1, const char *s2);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strstr libmin_strstr
-  #else
-    inline const auto &strstr = libmin_strstr;
-  #endif
-#endif
+declare_alias(libmin_strstr, strstr)
+
 char *libmin_strcasestr(const char *h, const char *n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define strcasestr libmin_strcasestr
-  #else
-    inline const auto &strcasestr = libmin_strcasestr;
-  #endif
-#endif
-#if ALIAS_RM_LIBMIN
-int libmin_strncasecmp(const char *_l, const char *_r, size_t n);
-  #ifndef __cplusplus
-    #define strncasecmp libmin_strncasecmp
-  #else
-    inline const auto &strncasecmp = libmin_strncasecmp;
-  #endif
-#endif
+declare_alias(libmin_strcasestr, strcasestr)
 
 /* set a block of memory to a value */
 void *libmin_memset(void *dest, int c, size_t n);
-void *memset(void *dest, int c, size_t n);
+declare_alias(libmin_memset, memset)
 
 void *libmin_memcpy(void *dest, const void *src, size_t n);
+declare_alias(libmin_memcpy, memcpy)
 
 int libmin_memcmp(const void *vl, const void *vr, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define memcmp libmin_memcmp
-  #else
-    inline const auto &memcmp = libmin_memcmp;
-  #endif
-#endif
+declare_alias(libmin_memcmp, memcmp)
+
 void *libmin_memmove(void *dest, const void *src, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define memmove libmin_memmove
-  #else
-    inline const auto &memmove = libmin_memmove;
-  #endif
-#endif
+declare_alias(libmin_memmove, memmove)
 
-
-#ifndef TARGET_SILENT
 /* print a message with format FMT to the co-simulation console */
 int libmin_printf(char *fmt, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define printf libmin_printf
-  #else
-    inline const auto &printf = libmin_printf;
-  #endif
+declare_alias(libmin_printf, printf)
 
-#endif
-#else /* TARGET_SILENT */
-/* run silent */
-#define libmin_printf(FMT, ARGS...)	do { ; } while (0)
-#endif /* TARGET_SILENT */
-
-#ifndef TARGET_SILENT
 int libmin_vprintf(const char *fmt, va_list ap);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define vprintf libmin_vprintf
-  #else
-    inline const auto &vprintf = libmin_vprintf;
-  #endif
-#endif
-#else /* TARGET_SILENT */
-#define libmin_vprintf(FMT, AP)	do { ; } while (0)
-#endif /* TARGET_SILENT */
+declare_alias(libmin_vprintf, vprintf)
 
 int libmin_vsprintf(char *buffer, const char *format, va_list ap);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define vsprintf libmin_vsprintf
-  #else
-    inline const auto &vsprintf = libmin_vsprintf;
-  #endif
-#endif
+declare_alias(libmin_vsprintf, vsprintf)
 
 int libmin_vsnprintf(char *buffer, size_t maxlen, const char *format, va_list ap);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define vsnprintf libmin_vsnprintf
-  #else
-    inline const auto &vsnprintf = libmin_vsnprintf;
-  #endif
-#endif
+declare_alias(libmin_vsnprintf, vsnprintf)
 
 int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define snprintf libmin_snprintf
-  #else
-    inline const auto &snprintf = libmin_snprintf;
-  #endif
-
-#endif
+declare_alias(libmin_snprintf, snprintf)
 
 int libmin_sprintf(char *buffer, const char *format, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sprintf libmin_sprintf
-  #else
-    inline const auto &sprintf = libmin_sprintf;
-  #endif
-#endif
-
+declare_alias(libmin_sprintf, sprintf)
 
 /* print one character */
 void libmin_putc(char c);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define putc libmin_putc
-  #else
-    inline const auto &putc = libmin_putc;
-  #endif
-#endif
+declare_alias(libmin_putc, putc)
 
 /* print one string */
 void libmin_puts(char *s);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define puts libmin_puts
-  #else
-    inline const auto &puts = libmin_puts;
-  #endif
-#endif
+declare_alias(libmin_puts, puts)
 
 /* scan a string */
 int libmin_sscanf(const char *buf, const char *fmt, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sscanf libmin_sscanf
-  #else
-    inline const auto &sscanf = libmin_sscanf;
-  #endif
-#endif
+declare_alias(libmin_sscanf, sscanf)
 
 int libmin_scanf(const char *fmt, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define scanf libmin_scanf
-  #else
-    inline const auto &scanf = libmin_scanf;
-  #endif
-#endif
+declare_alias(libmin_scanf, scanf)
 
 int libmin_getchar(void);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define getchar libmin_getchar
-  #else
-    inline const auto &getchar = libmin_getchar;
-  #endif
-#endif
+declare_alias(libmin_getchar, getchar)
 
 void libmin_putchar(int c);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define putchar libmin_putchar
-  #else
-    inline const auto &putchar = libmin_putchar;
-  #endif
-#endif
+declare_alias(libmin_putchar, putchar)
 
 /* failure/success codes */
 #define EXIT_FAILURE  1 /* failing exit status */
@@ -398,46 +171,18 @@ void libmin_putchar(int c);
 
 /* successfully exit co-simulation */
 void libmin_success(void);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define success libmin_success
-  #else
-    inline const auto &success = libmin_success;
-  #endif
-#endif
+declare_alias(libmin_success, success)
 
 /* exit co-simulation with failure exit code CODE */
 void libmin_fail(int code);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fail libmin_fail
-  #else
-    inline const auto &fail = libmin_fail;
-  #endif
-#endif
+declare_alias(libmin_fail, fail)
 
 void libmin_abort(void);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define abort libmin_abort
-  #else
-  // burayi extern "C"nin disina tasiyorum.
-  // namespace std {
-  //   inline const auto &abort = libmin_abort;
-  //   // inline void abort() { libmin_abort(); }
-  // }
-  #endif
-#endif
+// abort'la ilgili farkli bir durum olabilir, libgcc'de std::abort olarak kullniliyor cunku.
+// declare_alias(libmin_abort, abort)
 
 void libmin_exit(int status);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define exit libmin_exit
-  #else
-    inline const auto &exit = libmin_exit;
-  #endif
-#endif
-
+declare_alias(libmin_exit, exit)
 
 /* largest random number, must be power-of-two-minus-one! */
 #define RAND_MAX (0x7fffffff)
@@ -449,59 +194,25 @@ void libmin_exit(int status);
 
 /* see the random integer generator */
 void libmin_srand(unsigned int seed);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define srand libmin_srand
-  #else
-    inline const auto &srand = libmin_srand;
-  #endif
-#endif
+declare_alias(libmin_srand, srand)
 
 /* generate a random integer */
 unsigned int libmin_rand(void);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define rand libmin_rand
-  #else
-    inline const auto &rand = libmin_rand;
-  #endif
-#endif
+declare_alias(libmin_rand, rand)
 
 /* allocate memory */
-void *libmin_malloc(size_t size);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define malloc libmin_malloc
-  #else
-    inline const auto &malloc = libmin_malloc;
-  #endif
-#endif
+extern void *libmin_malloc(size_t size);
+declare_alias(libmin_malloc, malloc)
+
 void *libmin_calloc(size_t m, size_t n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define calloc libmin_calloc
-  #else
-    inline const auto &calloc = libmin_calloc;
-  #endif
-#endif
+declare_alias(libmin_calloc, calloc)
+
 void *libmin_realloc(void *block, size_t size);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define realloc libmin_realloc
-  #else
-    inline const auto &realloc = libmin_realloc;
-  #endif
-#endif
+declare_alias(libmin_realloc, realloc)
 
 /* free memory */
 void libmin_free(void * addr);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define free libmin_free
-  #else
-    inline const auto &free = libmin_free;
-  #endif
-#endif
+declare_alias(libmin_free, free)
 
 #ifndef __clang__
 #ifndef NULL
@@ -522,188 +233,71 @@ typedef struct _MFILE MFILE;
 
 /* open an in-memory file */
 MFILE* libmin_mopen(const char* fname, const char *mode);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mopen libmin_mopen
-  #else
-    inline const auto &mopen = libmin_mopen;
-  #endif
-#endif
+declare_alias(libmin_mopen, mopen)
 
 /* return in-memory file size */
 size_t libmin_msize(MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define msize libmin_msize
-  #else
-    inline const auto &msize = libmin_msize;
-  #endif
-#endif
+declare_alias(libmin_msize, msize)
 
 /* at end of file */
 int libmin_meof(MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define meof libmin_meof
-  #else
-    inline const auto &meof = libmin_meof;
-  #endif
-#endif
+declare_alias(libmin_meof, meof)
 
 /* close the in-memory file */
 void libmin_mclose(MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mclose libmin_mclose
-  #else
-    inline const auto &mclose = libmin_mclose;
-  #endif
-#endif
+declare_alias(libmin_mclose, mclose)
 
 int libmin_mseek(struct _MFILE *mfile, long offset, int whence);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mseek libmin_mseek
-  #else
-    inline const auto &mseek = libmin_mseek;
-  #endif
-#endif
+declare_alias(libmin_mseek, mseek)
 
 long libmin_mtell(MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mtell libmin_mtell
-  #else
-    inline const auto &mtell = libmin_mtell;
-  #endif
-#endif
+declare_alias(libmin_mtell, mtell)
 
 /* read a buffer from the in-memory file */
 size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mread_bytes libmin_mread_bytes
-  #else
-    inline const auto &mread_bytes = libmin_mread_bytes;
-  #endif
-#endif
+declare_alias(libmin_mread_bytes, mread_bytes)
 
 size_t libmin_mread(void *_ptr, size_t size, size_t nmemb, MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mread libmin_mread
-  #else
-    inline const auto &mread = libmin_mread;
-  #endif
-#endif
-
+declare_alias(libmin_mread, mread)
 
 /* get a string from the in-memory file */
 char *libmin_mgets(char *s, size_t size, MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mgets libmin_mgets
-  #else
-    inline const auto &mgets = libmin_mgets;
-  #endif
-#endif
+declare_alias(libmin_mgets, mgets)
 
 /* read a character from the in-memory file */
 int libmin_mgetc(MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mgetc libmin_mgetc
-  #else
-    inline const auto &mgetc = libmin_mgetc;
-  #endif
-#endif
+declare_alias(libmin_mgetc, mgetc)
 
 int libmin_mungetc(int c,MFILE *mfile);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define mungetc libmin_mungetc
-  #else
-    inline const auto &mungetc = libmin_mungetc;
-  #endif
-#endif
-
+declare_alias(libmin_mungetc, mungetc)
 
 struct serial_output_file_t;
 typedef struct serial_output_file_t SFILE;
 
 
 SFILE *libmin_sfopen(const char *fname, const char *mode);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfopen libmin_sfopen
-  #else
-    inline const auto &sfopen = libmin_sfopen;
-  #endif
-#endif
+declare_alias(libmin_sfopen, sfopen)
 
 int libmin_sfclose(SFILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfclose libmin_sfclose
-  #else
-    inline const auto &sfclose = libmin_sfclose;
-  #endif
-#endif
+declare_alias(libmin_sfclose, sfclose)
 
 int libmin_sfputc(int c, SFILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfputc libmin_sfputc
-  #else
-    inline const auto &sfputc = libmin_sfputc;
-  #endif
-#endif
+declare_alias(libmin_sfputc, sfputc)
 
 int libmin_sfputs(const char *str, SFILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfputs libmin_sfputs
-  #else
-    inline const auto &sfputs = libmin_sfputs;
-  #endif
-#endif
+declare_alias(libmin_sfputs, sfputs)
 
 size_t libmin_sfwrite(const void *ptr, size_t size, size_t nmemb, SFILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfwrite libmin_sfwrite
-  #else
-    inline const auto &sfwrite = libmin_sfwrite;
-  #endif
-#endif
+declare_alias(libmin_sfwrite, sfwrite)
 
 int libmin_sfprintf(SFILE *file, const char *fmt, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfprintf libmin_sfprintf
-  #else
-    inline const auto &sfprintf = libmin_sfprintf;
-  #endif
-#endif
+declare_alias(libmin_sfprintf, sfprintf)
 
 int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define vsfprintf libmin_vsfprintf
-  #else
-    inline const auto &vsfprintf = libmin_vsfprintf;
-  #endif
-#endif
+declare_alias(libmin_vsfprintf, vsfprintf)
 
 int libmin_sfflush(SFILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sfflush libmin_sfflush
-  #else
-    inline const auto &sfflush = libmin_sfflush;
-  #endif
-#endif
-
+declare_alias(libmin_sfflush, sfflush)
 
 #if !defined(__time_t_defined) && !defined(_TIME_T_DECLARED)
 typedef	uint64_t	time_t;
@@ -711,35 +305,16 @@ typedef	uint64_t	time_t;
 #define	_TIME_T_DECLARED
 #endif
 time_t libmin_time(time_t *timer);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define time libmin_time
-  #else
-    inline const auto &time = libmin_time;
-  #endif
-#endif
+declare_alias(libmin_time, time)
 
 double libmin_difftime (time_t _time2, time_t _time1);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define difftime libmin_difftime
-  #else
-    inline const auto &difftime = libmin_difftime;
-  #endif
-#endif
-
+declare_alias(libmin_difftime, difftime)
 
 #if !(USE_EXTERNAL_QSORT)
 /* sort an array */
 typedef int (*cmpfun)(const void *, const void *);
 void libmin_qsort(void *base, size_t nel, size_t width, cmpfun cmp);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define qsort libmin_qsort
-  #else
-    inline const auto &qsort = libmin_qsort;
-  #endif
-#endif
+declare_alias(libmin_qsort, qsort)
 #endif
 
 // mfile ve sfile icin cevreleyici
@@ -759,186 +334,64 @@ extern FILE *stdout;
 #define SEEK_END 2
 
 FILE *libmin_fopen(const char *fname, const char *mode_str);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fopen libmin_fopen
-  #else
-    inline const auto &fopen = libmin_fopen;
-  #endif
-#endif
+declare_alias(libmin_fopen, fopen)
 
 int libmin_fclose(FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fclose libmin_fclose
-  #else
-    inline const auto &fclose = libmin_fclose;
-  #endif
-#endif
+declare_alias(libmin_fclose, fclose)
 
 int libmin_feof(FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define feof libmin_feof
-  #else
-    inline const auto &feof = libmin_feof;
-  #endif
-#endif
+declare_alias(libmin_feof, feof)
 
 int libmin_fseek(FILE *file, long offset, int whence);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fseek libmin_fseek
-  #else
-    inline const auto &fseek = libmin_fseek;
-  #endif
-#endif
+declare_alias(libmin_fseek, fseek)
 
 long libmin_ftell(FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define ftell libmin_ftell
-  #else
-    inline const auto &ftell = libmin_ftell;
-  #endif
-#endif
-
+declare_alias(libmin_ftell, ftell)
 
 size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fread_bytes libmin_fread_bytes
-  #else
-    inline const auto &fread_bytes = libmin_fread_bytes;
-  #endif
-#endif
+declare_alias(libmin_fread_bytes, fread_bytes)
 
 size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fread libmin_fread
-  #else
-    inline const auto &fread = libmin_fread;
-  #endif
-#endif
+declare_alias(libmin_fread, fread)
 
 char *libmin_fgets(char *s, size_t size, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fgets libmin_fgets
-  #else
-    inline const auto &fgets = libmin_fgets;
-  #endif
-#endif
+declare_alias(libmin_fgets, fgets)
 
 int libmin_fgetc(FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fgetc libmin_fgetc
-  #else
-    inline const auto &fgetc = libmin_fgetc;
-  #endif
-#endif
+declare_alias(libmin_fgetc, fgetc)
 
 int libmin_ungetc(int c, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define ungetc libmin_ungetc
-  #else
-    inline const auto &ungetc = libmin_ungetc;
-  #endif
-#endif
+declare_alias(libmin_ungetc, ungetc)
 
 int libmin_fputc(int c, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fputc libmin_fputc
-  #else
-    inline const auto &fputc = libmin_fputc;
-  #endif
-#endif
+declare_alias(libmin_fputc, fputc)
 
 int libmin_fputs(const char *str, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fputs libmin_fputs
-  #else
-    inline const auto &fputs = libmin_fputs;
-  #endif
-#endif
+declare_alias(libmin_fputs, fputs)
 
 size_t libmin_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fwrite libmin_fwrite
-  #else
-    inline const auto &fwrite = libmin_fwrite;
-  #endif
-#endif
+declare_alias(libmin_fwrite, fwrite)
 
 int libmin_fprintf(FILE *file, const char *fmt, ...);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fprintf libmin_fprintf
-  #else
-    inline const auto &fprintf = libmin_fprintf;
-  #endif
-#endif
+declare_alias(libmin_fprintf, fprintf)
 
 int libmin_vfprintf(FILE *file, const char *fmt, va_list ap);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define vfprintf libmin_vfprintf
-  #else
-    inline const auto &vfprintf = libmin_vfprintf;
-  #endif
-#endif
+declare_alias(libmin_vfprintf, vfprintf)
 
 int libmin_fflush(FILE *file);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define fflush libmin_fflush
-  #else
-    inline const auto &fflush = libmin_fflush;
-  #endif
-#endif
+declare_alias(libmin_fflush, fflush)
 
 int libmin_system(const char *cmd);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define system libmin_system
-  #else
-    inline const auto &system = libmin_system;
-  #endif
-#endif
+declare_alias(libmin_system, system)
 
 int libmin_unlink(const char *pathname);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define unlink libmin_unlink
-  #else
-    inline const auto &unlink = libmin_unlink;
-  #endif
-#endif
+declare_alias(libmin_unlink, unlink)
 
 char *libmin_getcwd(char *buf, size_t size);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define getcwd libmin_getcwd
-  #else
-    inline const auto &getcwd = libmin_getcwd;
-  #endif
-#endif
+declare_alias(libmin_getcwd, getcwd)
 
 int libmin_chdir(const char *path);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define chdir libmin_chdir
-  #else
-    inline const auto &chdir = libmin_chdir;
-  #endif
-#endif
-
+declare_alias(libmin_chdir, chdir)
 
 /* ctype defs */
 //
@@ -1082,63 +535,28 @@ do {                                              \
 #define DBL_EPSILON 2.22044604925031308085e-16
 
 double libmin_floor(double x);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define floor libmin_floor
-  #else
-    inline const auto &floor = libmin_floor;
-  #endif
-#endif
+declare_alias(libmin_floor, floor)
+
 double libmin_scalbn(double x, int n);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define scalbn libmin_scalbn
-  #else
-    inline const auto &scalbn = libmin_scalbn;
-  #endif
-#endif
+declare_alias(libmin_scalbn, scalbn)
+
 double libmin_cos(double x);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define cos libmin_cos
-  #else
-    inline const auto &cos = libmin_cos;
-  #endif
-#endif
+declare_alias(libmin_cos, cos)
+
 double libmin_sin(double x);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sin libmin_sin
-  #else
-    inline const auto &sin = libmin_sin;
-  #endif
-#endif
+declare_alias(libmin_sin, sin)
+
 double fabs(double x);
+declare_alias(fabs, libmin_fabs)
+
 double libmin_pow(double x, double y);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define pow libmin_pow
-  #else
-    inline const auto &pow = libmin_pow;
-  #endif
-#endif
+declare_alias(libmin_pow, pow)
+
 double libmin_sqrt(double x);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define sqrt libmin_sqrt
-  #else
-    inline const auto &sqrt = libmin_sqrt;
-  #endif
-#endif
+declare_alias(libmin_sqrt, sqrt)
 
 int libmin_abs(int i);
-#if ALIAS_RM_LIBMIN
-  #ifndef __cplusplus
-    #define abs libmin_abs
-  #else
-    inline const auto &abs = libmin_abs;
-  #endif
-#endif
+declare_alias(libmin_abs, abs)
 
 /* internal mathlib interfaces */
 int __rem_pio2_large(double *x, double *y, int e0, int nx, int prec);
@@ -1163,10 +581,6 @@ int __rem_pio2(double x, double *y);
 
 #ifdef __cplusplus
 }
-// namespace std {
-//     inline const auto &abort = libmin_abort;
-//     // inline void abort() { libmin_abort(); }
-// }
 #endif
 
 #endif /* LIBMIN_H */

@@ -27,6 +27,8 @@ FILE *libmin_fopen(const char *fname, const char *mode_str)
   return file;
 }
 
+strong_alias(libmin_fopen, fopen);
+
 int libmin_fclose(FILE *file)
 {
   if (unlikely(file == NULL))
@@ -42,6 +44,8 @@ int libmin_fclose(FILE *file)
   }
 }
 
+strong_alias(libmin_fclose, fclose);
+
 int libmin_feof(FILE *file)
 {
   if (unlikely(file == NULL))
@@ -55,6 +59,8 @@ int libmin_feof(FILE *file)
     return false;
   }
 }
+
+strong_alias(libmin_feof, feof);
 
 // MFILE icin ozel arayuzler
 int libmin_fseek(FILE *file, long offset, int whence)
@@ -73,6 +79,8 @@ int libmin_fseek(FILE *file, long offset, int whence)
   }
 }
 
+strong_alias(libmin_fseek, fseek);
+
 long libmin_ftell(FILE *file)
 {
   if (unlikely(file == NULL))
@@ -88,6 +96,8 @@ long libmin_ftell(FILE *file)
     return EOF;
   }
 }
+
+strong_alias(libmin_ftell, ftell);
 
 size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file)
 {
@@ -105,6 +115,8 @@ size_t libmin_fread_bytes(void *ptr, size_t size, FILE *file)
   }
 }
 
+strong_alias(libmin_fread_bytes, fread_bytes);
+
 size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file)
 {
   if (unlikely(file == NULL))
@@ -120,6 +132,8 @@ size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file)
     return EOF;
   }
 }
+
+strong_alias(libmin_fread, fread);
 
 char *libmin_fgets(char *s, size_t size, FILE *file)
 {
@@ -137,6 +151,8 @@ char *libmin_fgets(char *s, size_t size, FILE *file)
   }
 }
 
+strong_alias(libmin_fgets, fgets);
+
 int libmin_fgetc(FILE *file)
 {
   if (unlikely(file == NULL))
@@ -152,6 +168,8 @@ int libmin_fgetc(FILE *file)
     return EOF;
   }
 }
+
+strong_alias(libmin_fgetc, fgetc);
 
 int libmin_ungetc(int c, FILE *file)
 {
@@ -169,6 +187,8 @@ int libmin_ungetc(int c, FILE *file)
   }
 }
 
+strong_alias(libmin_ungetc, ungetc);
+
 // SFILE icin ozel arayuzler
 int libmin_fputc(int c, FILE *file)
 {
@@ -182,6 +202,8 @@ int libmin_fputc(int c, FILE *file)
   }
   return libmin_sfputc(c, (SFILE *)file->file);
 }
+
+strong_alias(libmin_fputc, fputc);
 
 // int libmin_sfputs(const char *str, SFILE *file);
 int libmin_fputs(const char *str, FILE *file)
@@ -197,6 +219,8 @@ int libmin_fputs(const char *str, FILE *file)
   return libmin_sfputs(str, (SFILE *)file->file);
 }
 
+strong_alias(libmin_fputs, fputs);
+
 size_t libmin_fwrite(const void *ptr, size_t ssize, size_t nmemb, FILE *file)
 {
   if (unlikely(file == NULL))
@@ -209,6 +233,8 @@ size_t libmin_fwrite(const void *ptr, size_t ssize, size_t nmemb, FILE *file)
   }
   return libmin_sfwrite(ptr, ssize, nmemb, file->file);
 }
+
+strong_alias(libmin_fwrite, fwrite);
 
 // int libmin_sfprintf(SFILE *file, const char *fmt, ...);
 int libmin_fprintf(FILE *file, const char *fmt, ...)
@@ -228,6 +254,8 @@ int libmin_fprintf(FILE *file, const char *fmt, ...)
   return ret;
 }
 
+strong_alias(libmin_fprintf, fprintf);
+
 // int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap);
 int libmin_vfprintf(FILE *file, const char *fmt, va_list ap)
 {
@@ -241,6 +269,8 @@ int libmin_vfprintf(FILE *file, const char *fmt, va_list ap)
   }
   return libmin_vsfprintf((SFILE *)file->file, fmt, ap);
 }
+
+strong_alias(libmin_vfprintf, vfprintf);
 
 
 // int libmin_sfflush(SFILE *file); // aslinda ortak olabilir. ama simdilik sadece sfile icin tanimlanacak.
@@ -256,3 +286,5 @@ int libmin_fflush(FILE *file)
   }
   return libmin_sfflush((SFILE *)file->file);
 }
+
+strong_alias(libmin_fflush, fflush);

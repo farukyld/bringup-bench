@@ -1,7 +1,6 @@
 #include "libmin.h"
 #define sin libmin_sin
 #define cos libmin_cos
-#define memset libmin_memset
 #define putchar libmin_putc
 #define printf libmin_printf
 #define xx unsigned x=0; x < 64; x++

@@ -8,3 +8,5 @@ libmin_memcmp(const void *vl, const void *vr, size_t n)
 	for (; n && *l == *r; n--, l++, r++);
 	return n ? *l-*r : 0;
 }
+
+strong_alias(libmin_memcmp, memcmp)
