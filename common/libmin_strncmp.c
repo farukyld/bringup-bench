@@ -17,3 +17,5 @@ libmin_strncmp(const char *s1, const char *s2, register size_t n)
     }
   return 0;
 }
+
+strong_alias(libmin_strncmp, strncmp);

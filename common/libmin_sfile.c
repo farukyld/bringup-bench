@@ -57,6 +57,8 @@ size_t libmin_sfwrite(const void *ptr, size_t ssize, size_t nmemb, SFILE *file)
   return nmemb;
 }
 
+strong_alias(libmin_sfwrite, sfwrite);
+
 int libmin_sfputc(int c, SFILE *file)
 {
   if (file == NULL || file->file_mode != FMODE_W)
@@ -71,6 +73,8 @@ int libmin_sfputc(int c, SFILE *file)
   file->out_buff[file->write_idx++] = c;
   return c;
 }
+
+strong_alias(libmin_sfputc, sfputc);
 
 SFILE *create_sfile(const char *file_name, const char *escape, sfile_mode_e mode)
 {

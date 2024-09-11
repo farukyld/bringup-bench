@@ -17,3 +17,5 @@ libmin_strtok(char *s, const char *sep)
     p = 0;
 	return s;
 }
+
+strong_alias(libmin_strtok, strtok);
