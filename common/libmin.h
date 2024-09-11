@@ -583,7 +583,7 @@ size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
   #ifndef __cplusplus
     #define mread_bytes libmin_mread_bytes
   #else
-    inline const auto &mread = libmin_mread_bytes;
+    inline const auto &mread_bytes = libmin_mread_bytes;
   #endif
 #endif
 
