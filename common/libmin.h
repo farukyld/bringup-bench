@@ -421,10 +421,11 @@ void libmin_abort(void);
   #ifndef __cplusplus
     #define abort libmin_abort
   #else
-  namespace std {
-    inline const auto &abort = libmin_abort;
-    // inline void abort() { libmin_abort(); }
-  }
+  // burayi extern "C"nin disina tasiyorum.
+  // namespace std {
+  //   inline const auto &abort = libmin_abort;
+  //   // inline void abort() { libmin_abort(); }
+  // }
   #endif
 #endif
 
@@ -1162,6 +1163,10 @@ int __rem_pio2(double x, double *y);
 
 #ifdef __cplusplus
 }
+// namespace std {
+//     inline const auto &abort = libmin_abort;
+//     // inline void abort() { libmin_abort(); }
+// }
 #endif
 
 #endif /* LIBMIN_H */
