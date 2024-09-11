@@ -11,6 +11,8 @@ int libmin_scanf(const char* fmt, ...)
   return 0;
 }
 
+strong_alias(libmin_scanf, scanf);
+
 
 int
 libmin_sscanf(const char *buf, const char *fmt, ...)
@@ -61,3 +63,5 @@ libmin_sscanf(const char *buf, const char *fmt, ...)
   va_end(vl);
   return ret;
 }
+
+strong_alias(libmin_sscanf, sscanf);

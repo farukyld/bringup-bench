@@ -768,6 +768,7 @@ libmin_printf(char *fmt, ...)
   return cnt;
 }
 
+strong_alias(libmin_printf, printf);
 
 int libmin_vprintf(const char *fmt, va_list ap)
 {
@@ -785,6 +786,7 @@ int libmin_vprintf(const char *fmt, va_list ap)
     return cnt;
 }
 
+strong_alias(libmin_vprintf, vprintf);
 
 int libmin_sfprintf(SFILE *file, const char *fmt, ...)
 {
@@ -801,6 +803,7 @@ int libmin_sfprintf(SFILE *file, const char *fmt, ...)
   return len;
 }
 
+strong_alias(libmin_sfprintf, sfprintf);
 
 int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap)
 {
@@ -813,6 +816,7 @@ int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap)
     return len;
 }
 
+strong_alias(libmin_vsfprintf, vsfprintf);
 
 int libmin_sprintf(char *buffer, const char *format, ...)
 {
@@ -826,15 +830,21 @@ int libmin_sprintf(char *buffer, const char *format, ...)
   return (int)len;
 }
 
+strong_alias(libmin_sprintf, sprintf);
+
 int libmin_vsprintf(char *buffer, const char *format, va_list args)
 {
   return dopr(buffer, (size_t)-1, format, args);
 }
 
+strong_alias(libmin_vsprintf, vsprintf);
+
 int libmin_vsnprintf(char *buffer, size_t maxlen, const char *format, va_list args)
 {
   return dopr(buffer, maxlen, format, args);
 }
+  
+strong_alias(libmin_vsnprintf, vsnprintf);
 
 int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...)
 {
@@ -847,3 +857,5 @@ int libmin_snprintf(char *buffer, size_t maxlen, const char *format, ...)
 
   return (int)len;
 }
+
+strong_alias(libmin_snprintf, snprintf);

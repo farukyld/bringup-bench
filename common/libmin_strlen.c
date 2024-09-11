@@ -13,3 +13,5 @@ libmin_strlen(const char *str)
 
   return str - ptr;
 }
+
+strong_alias(libmin_strlen, strlen)

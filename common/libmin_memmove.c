@@ -21,3 +21,5 @@ libmin_memmove(void *dest, const void *src, size_t n)
 
   return dest;
 }
+
+strong_alias(libmin_memmove, memmove)

@@ -6,3 +6,5 @@ int libmin_unlink(const char *pathname)
   libmin_exit(1);
   return -1;
 }
+
+strong_alias(libmin_unlink, unlink);

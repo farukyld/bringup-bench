@@ -74,3 +74,5 @@ unsigned long libmin_strtoul(const char *nptr, char **endptr, int base) {
 
   return result;
 }
+
+strong_alias(libmin_strtoul, strtoul);

@@ -6,3 +6,5 @@ int libmin_system(const char *cmd)
   libmin_exit(1);
   return -1;
 }
+
+strong_alias(libmin_system, system);

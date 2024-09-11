@@ -7,3 +7,5 @@ libmin_abs(int i)
 {
   return i < 0 ? -i : i;
 }
+
+strong_alias(libmin_abs, abs);

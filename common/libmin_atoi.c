@@ -16,3 +16,5 @@ libmin_atoi(const char *s)
 		n = 10*n - (*s++ - '0');
 	return neg ? n : -n;
 }
+
+strong_alias(libmin_atoi, atoi);

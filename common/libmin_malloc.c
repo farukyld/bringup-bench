@@ -120,6 +120,8 @@ libmin_calloc(size_t num, size_t nsize) {
 	return block;
 }
 
+strong_alias(libmin_calloc, calloc)
+
 void *
 libmin_realloc(void *block, size_t size)
 {
@@ -140,4 +142,4 @@ libmin_realloc(void *block, size_t size)
 	return ret;
 }
 
-strong_alias(libmin_calloc, calloc)
+strong_alias(libmin_realloc, realloc)

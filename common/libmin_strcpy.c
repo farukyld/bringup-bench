@@ -9,3 +9,5 @@ libmin_strcpy(char *dest, const char *src)
 	while ((*d++ = *s++));
 	return dest;
 }
+
+strong_alias(libmin_strcpy, strcpy);

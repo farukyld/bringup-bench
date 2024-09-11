@@ -23,3 +23,5 @@ libmin_strncpy(char *dst, const char *src, size_t n)
 	}
 	return (dst);
 }
+
+strong_alias(libmin_strncpy, strncpy);

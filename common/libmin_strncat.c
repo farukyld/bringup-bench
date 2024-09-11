@@ -11,3 +11,5 @@ libmin_strncat(char *d, const char *s, size_t n)
 	*d++ = 0;
 	return a;
 }
+
+strong_alias(libmin_strncat, strncat);

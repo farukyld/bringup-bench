@@ -26,6 +26,8 @@ int libmin_chdir(const char *path)
   return 0;
 }
 
+strong_alias(libmin_chdir, chdir);
+
 char *libmin_getcwd(char *buf, size_t size)
 {
   if (buf == NULL) {
@@ -39,3 +41,5 @@ char *libmin_getcwd(char *buf, size_t size)
   strcpy(buf, cwd);
   return buf;
 }
+
+strong_alias(libmin_getcwd, getcwd);
