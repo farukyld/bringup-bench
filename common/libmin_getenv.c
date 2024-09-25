@@ -6,4 +6,4 @@ char* libmin_getenv(const char* name) {
   return NULL;
 }
 
-// strong_alias(libmin_getenv, getenv);
+strong_alias(libmin_getenv, getenv);
