@@ -181,8 +181,7 @@ void libmin_fail(int code);
 declare_alias(libmin_fail, fail)
 
 void libmin_abort(void);
-// abort'la ilgili farkli bir durum olabilir, libgcc'de std::abort olarak kullniliyor cunku.
-// declare_alias(libmin_abort, abort)
+declare_alias(libmin_abort, abort)
 
 void libmin_exit(int status);
 declare_alias(libmin_exit, exit)
