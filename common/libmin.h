@@ -129,7 +129,7 @@ void *libmin_memmove(void *dest, const void *src, size_t n);
 declare_alias(libmin_memmove, memmove)
 
 /* print a message with format FMT to the co-simulation console */
-int libmin_printf(char *fmt, ...);
+int libmin_printf(const char *fmt, ...);
 declare_alias(libmin_printf, printf)
 
 int libmin_vprintf(const char *fmt, va_list ap);
