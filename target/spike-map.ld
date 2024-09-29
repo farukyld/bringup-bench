@@ -79,17 +79,17 @@ SECTIONS
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
-        . = ALIGN(4);
+        . = ALIGN(8);
         . = . + _min_stack ;
-        . = ALIGN(4);
+        . = ALIGN(8);
         stack = . ;
         _stack = . ;
     } > stack /*? stack burda STACK_LENGTH mi oluyor, min_stack mi oluyor?*/
 
     .heap (NOLOAD):
     {
-        . = ALIGN(4);
+        . = ALIGN(8);
         . = . + HEAP_LENGTH;
-        . = ALIGN(4);
+        . = ALIGN(8);
     } > heap
 }
