@@ -7,3 +7,5 @@ libmin_strcasestr(const char *h, const char *n)
 	for (; *h; h++) if (!libmin_strncasecmp(h, n, l)) return (char *)h;
 	return 0;
 }
+
+strong_alias(libmin_strcasestr, strcasestr)

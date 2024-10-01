@@ -115,6 +115,10 @@ declare_alias(libmin_strstr, strstr)
 char *libmin_strcasestr(const char *h, const char *n);
 declare_alias(libmin_strcasestr, strcasestr)
 
+
+int libmin_strncasecmp(const char *_l, const char *_r, size_t n);
+declare_alias(libmin_strncasecmp, strncasecmp)
+
 /* set a block of memory to a value */
 void *libmin_memset(void *dest, int c, size_t n);
 declare_alias(libmin_memset, memset)

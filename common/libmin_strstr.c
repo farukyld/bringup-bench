@@ -17,3 +17,5 @@ libmin_strstr(const char *s1, const char *s2)
     }
   return NULL;
 }
+
+strong_alias(libmin_strstr, strstr)

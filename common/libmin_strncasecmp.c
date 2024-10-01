@@ -9,3 +9,4 @@ libmin_strncasecmp(const char *_l, const char *_r, size_t n)
 	return tolower(*l) - tolower(*r);
 }
 
+strong_alias(libmin_strncasecmp, strncasecmp)
