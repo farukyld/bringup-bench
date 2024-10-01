@@ -106,6 +106,12 @@ libtarg_sbrk(size_t inc)
     return ptr;
 
   __heap_ptr += inc;
+  // check if 8 byte aligned
+  if (__heap_ptr % 8 != 0)
+  {
+    // libmin_printf("heap_ptr not aligned: %d\n", __heap_ptr);
+    __heap_ptr += 8 - (__heap_ptr % 8);
+  }
 #ifdef PRINT_MAX_HEAP_ON_EXIT
   if (__heap_ptr > max_heap_pointer)
   {
