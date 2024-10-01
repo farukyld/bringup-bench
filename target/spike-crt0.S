@@ -95,6 +95,7 @@ _start:
   .global _start
 
   /* clear BSS */
+#ifdef ENABLE_BSS_ZERO_LOOP
   la x26, _bss_start
   la x27, _bss_end
 
@@ -104,6 +105,7 @@ zero_loop:
   sw x0, 0(x26)
   addi x26, x26, 4
   ble x26, x27, zero_loop
+#endif /* ENABLE_BSS_ZERO_LOOP */
 zero_loop_end:
 
 
