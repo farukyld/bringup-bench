@@ -80,7 +80,7 @@ libmin_free(void *block) {
 
 	void *pbreak = libtarg_sbrk(0);
 	memhdr_t *tmp;
-	if ((char *) block + header->size == pbreak) {
+	if ((char *) block + header->size == pbreak) { // If the block is the last one
 		if (head == tail) {
 			head = tail = NULL;
 		} else {
