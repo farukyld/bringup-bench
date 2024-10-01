@@ -8,6 +8,7 @@ void libtarg_debug_wait_loop()
 {
   while (wait)
     ;
+  wait = 1;
 }
 #endif
 
