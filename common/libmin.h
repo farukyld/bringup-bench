@@ -361,6 +361,7 @@ declare_alias(libmin_fgets, fgets)
 
 int libmin_fgetc(FILE *file);
 declare_alias(libmin_fgetc, fgetc)
+declare_alias(libmin_fgetc, getc)
 
 int libmin_ungetc(int c, FILE *file);
 declare_alias(libmin_ungetc, ungetc)

@@ -170,6 +170,7 @@ int libmin_fgetc(FILE *file)
 }
 
 strong_alias(libmin_fgetc, fgetc);
+strong_alias(libmin_fgetc, getc);
 
 int libmin_ungetc(int c, FILE *file)
 {
