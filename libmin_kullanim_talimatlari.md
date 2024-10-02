@@ -52,13 +52,15 @@ ROOT                   :=..
 SRC                    :=$(ROOT)/src
 
 # eger USE_EXTERNAL_QSORT=0 ise bu asagidaki degisken onemsizdir
-# NOT: EXT_QSORT_LOCATION'daki dosyalarin derleme kurallari LIBMIN bolumunde mevcuttur.
+# NOT: EXT_QSORT_LOCATION'daki dosyalarin derleme kurallari 
+# LIBMIN bolumunde mevcuttur.
 EXT_QSORT_LOCATION     :=$(SRC)/qsort
 
 
 ########################################################
 #        BENCHMARK OBJECT DOSYALARI DERLENMESI         #
 ########################################################
+# bu kisim kullanici tarafindan degistirilebilir
 
 $(BENCHMARK_INC)       :=-I$(SRC)
 ifeq ($(USE_EXTERNAL_QSORT),1)
@@ -90,37 +92,6 @@ MAV:=\033[34m
 TRK:=\033[36m
 
 
-
-###########################
-#         DIZINLER        #
-###########################
-# NOT: su an bu Makefile dosyasi, build dizininin icinde bulunmasi gerekiyor.
-
-BUILD   :=.
-RUN_DIR :=$(ROOT)/run_spike
-
-$(RUN_DIR):
-	mkdir -p $(RUN_DIR)
-
-
-# bringup-bench/common
-LIBMIN_D    := $(LIBMIN_DIR)
-
-# bringup-bench/target
-TARGET_D    := $(LIBTARG_DIR)
-
-ifeq ($(LIBMIN_D), )
-$(error LIBMIN_D degiskenini bringup-bench/common dizinini gosterecek sekilde ayarlamalisiniz)
-endif
-
-ifeq ($(TARGET_D), )
-$(error TARGET_D degiskenini bringup-bench/target dizinini gosterecek sekilde ayarlamalisiniz)
-endif
-
-#################################
-EXEC   :=$(BUILD)/prog.elf
-
-
 help:
 	@echo "$(YSL)make komutuyla verilebilecek bazi argumanlar:$(VSY)"
 	@echo "    $(TRK)HARD_FLOAT$(VSY)=1       hardware float kullanacak sekilde derle."
@@ -143,7 +114,7 @@ help:
 	@echo "                       etkiledigi kurallar: derleme kurallari"
 	@echo "                       varsayilan: USE_EXTERNAL_QSORT=$(USE_EXTERNAL_QSORT)"
 	@echo "   "
-	@echo "    $(TRK)EXT_QSORT_LOCATION$(VSY)=0   libmin kutuphanesindeki haricinde kullanmak istediginiz qsort kodlarinin/kodunun konumu. USE_EXTERNAL_QSORT=0 ise gormezden gelinir."
+	@echo "    $(TRK)EXT_QSORT_LOCATION$(VSY)=dir   libmin kutuphanesindeki haricinde kullanmak istediginiz qsort kodlarinin/kodunun konumu. USE_EXTERNAL_QSORT=0 ise gormezden gelinir."
 	@echo "                       etkiledigi kurallar: derleme kurallari"
 	@echo "                       varsayilan: EXT_QSORT_LOCATION=$(EXT_QSORT_LOCATION)"
 	@echo "   "
@@ -166,12 +137,37 @@ help:
 	@echo "$(YSL)bazi kurallar:$(VSY)"
 	@echo "    $(SAR)preprocess$(VSY):        c preprocessor'u ile verilen dosyayi preprocess et."
 	@echo "   "
-	@echo "    $(SAR)disassembled.s$(VSY):    $(EXEC)'i olustur ve .text section'unu disassemble'layip disassembled.s dosyasina yaz."
+	@echo "    $(SAR)disassembled.s$(VSY):    elf dosyasini olustur ve .text section'unu disassemble'layip disassembled.s dosyasina yaz."
 	@echo "   "
 	@echo "    $(SAR)run$(VSY):               spike ile simulasyonu calistir."
 	@echo "    $(SAR)openocd$(VSY):           (eski) openocd calistir, konfigurasyonlar ROOT/openocd_conf.cfg'den okunmaktadir. bu komutu run'dan ayri bir terminal'de calistirmalisiniz. run'dan sonra calistirmalisiniz."
 	@echo "    $(SAR)gdb$(VSY):               (eski) gdb'yi calistir. bu komutu openocd'yi calistirdiktan sonra calistirmalisiniz. yine ayri bir terminal'de calistirmalisiniz."
 
+
+###########################
+#         DIZINLER        #
+###########################
+# NOT: su an bu Makefile dosyasi, build dizininin icinde bulunmasi gerekiyor.
+
+BUILD   :=.
+RUN_DIR :=$(ROOT)/run_spike
+
+$(RUN_DIR):
+	mkdir -p $(RUN_DIR)
+
+#bringup-bench
+BRINGUP_BENCH_DIR :=
+
+ifeq ($(BRINGUP_BENCH_DIR), )
+$(error BRINGUP_BENCH_DIR degiskenini bringup-bench\
+ dizinini gosterecek sekilde ayarlamalisiniz)
+endif
+
+# bringup-bench/common
+LIBMIN_D       := $(BRINGUP_BENCH_DIR)/common
+
+# bringup-bench/target
+TARGET_D       := $(BRINGUP_BENCH_DIR)/target
 
 
 ############################
@@ -277,6 +273,8 @@ $(BUILD)/%.o: $(TARGET_D)/%.S
 ######################################
 #         EXECUTABLE OLUSTURMA       #
 ######################################
+
+EXEC   :=$(BUILD)/prog.elf
 
 # Default target
 all: $(EXEC)
