@@ -1,6 +1,6 @@
 NOT1: bu dosyadaki komutlar test edilmemiştir.
 
-NOT2: libmin.h'yi libmin'i kullanacak olan dosyalarda `#include`lamalı ve bu header'da tanımlanan makro ve türleri ve prototiplenen fonksiyonları içeren diğer header'ların `#include`lanmasını kaldırmalısınız. 
+NOT2: libmin.h'yi libmin'i kullanacak olan dosyalarda `#include`lamalı ve bu header'da tanımlanan makro ve türleri ve prototiplenen fonksiyonları içeren diğer header'ların `#include`lanmasını kaldırmalısınız.
 
 Bunun için benchmark kodlarında standard header'ları içeren kod dosyalarında şu şekilde koşullu derleme yapabilirsiniz:
 ```c
@@ -30,11 +30,11 @@ PROGRAM_LENGTH         :=0xbd0000
 STACK_LENGTH           :=0x8000
 HEAP_LENGTH            :=0xf000000
 
-# UART_BASE tanimliysa 
+# UART_BASE tanimliysa
 # uart_putchar'in karakterleri bastigi degisken olan uart_base'in adresi
 # link asamasinda yeniden tanimlanir: ld --defsym=uart_base=$(UART_BASE)
 # aksi takdirde kodun icinde weak olarak tanimlanan degisken
-# linker tarafindan otomatik olarak uygun bir yere yerlestirilir. 
+# linker tarafindan otomatik olarak uygun bir yere yerlestirilir.
 UART_BASE              :=0x10000000
 HARD_FLOAT             :=0
 GDB_DEBUG              :=0
@@ -45,14 +45,17 @@ PREPROCESS_TARGET      :=
 PRINT_MAX_HEAP_ON_EXIT :=1
 SPIKE_OUT_FILE         :=
 
-# benchmark proje dizini
+ENABLE_SFILE_SYSTEM    :=0
+
+# yardimci kutuphane olarak
+# libmin kullanilmak istenen benchmark proje dizini
 ROOT                   :=..
 
 # benchmark kaynak dosyalari
 SRC                    :=$(ROOT)/src
 
 # eger USE_EXTERNAL_QSORT=0 ise bu asagidaki degisken onemsizdir
-# NOT: EXT_QSORT_LOCATION'daki dosyalarin derleme kurallari 
+# NOT: EXT_QSORT_LOCATION'daki dosyalarin derleme kurallari
 # LIBMIN bolumunde mevcuttur.
 EXT_QSORT_LOCATION     :=$(SRC)/qsort
 
@@ -109,6 +112,10 @@ help:
 	@echo "    $(TRK)SPIKE_INTERAC$(VSY)=1    spike interactive mod'da calistirilsin."
 	@echo "                       etkiledigi kurallar: run"
 	@echo "                       varsayilan: SPIKE_INTERAC=$(SPIKE_INTERAC)"
+	@echo "   "
+	@echo "    $(TRK)ENABLE_SFILE_SYSTEM$(VSY)=1    serial output file sistemi aktiflestir"
+	@echo "                       etkiledigi kurallar: derleme kurallari"
+	@echo "                       varsayilan: ENABLE_SFILE_SYSTEM=$(ENABLE_SFILE_SYSTEM)"
 	@echo "   "
 	@echo "    $(TRK)USE_EXTERNAL_QSORT$(VSY)=0   qsort fonksiyonu icin libmin'dekini kullan"
 	@echo "                       etkiledigi kurallar: derleme kurallari"
@@ -169,6 +176,10 @@ LIBMIN_D       := $(BRINGUP_BENCH_DIR)/common
 # bringup-bench/target
 TARGET_D       := $(BRINGUP_BENCH_DIR)/target
 
+# bringup-bench/disabled_functions
+DISABLED_FUNCTIONS_D := $(BRINGUP_BENCH_DIR)/disabled_functions
+
+
 
 ############################
 #   DERLEYICI VE FLAGLER   #
@@ -212,8 +223,8 @@ PREPFLAGS          := $(HARDF_MAC) -DTARGET_SPIKE -DALIAS_RM_LIBMIN \
 COMPILE_LINK_FLAGS := -Wall $(DBG_OPT_FLAGS) $(MARCH_MABI)\
   -static -nostartfiles -nostdlib -fno-builtin -fPIC
 CFLAGS             := $(PREPFLAGS) $(COMPILE_LINK_FLAGS)
-# NOT: aslinda bu flag'lerde daha ayrintili bir ayrim da yapilabilir 
-# her kural grubu sadece gerekli flag'leri alir. 
+# NOT: aslinda bu flag'lerde daha ayrintili bir ayrim da yapilabilir
+# her kural grubu sadece gerekli flag'leri alir.
 # linkleme, libmin derleme, benchmark derleme
 # ama vakit kaybi. ve ilerde hataya sebep olmayacagini garanti edemem.
 
@@ -270,6 +281,49 @@ $(BUILD)/%.o: $(TARGET_D)/%.S
 
 -include $(CRUNTIME_DEP)
 
+########################################
+#   DEVRE DISI BIRAKILAN FONKSIYONLAR  #
+########################################
+
+
+DISABLED_FUNCTION_FILES := $(wildcard $(DISABLED_FUNCTIONS_D)/*.S)
+
+ifeq ($(ENABLE_SFILE_SYSTEM),1)
+# remove disabled_sfile_fns.S from DISABLED_FUNCTION_FILES
+DISABLED_FUNCTION_FILES := $(filter-out $(DISABLED_FUNCTIONS_D)/disabled_sfile_fns.S, $(DISABLED_FUNCTION_FILES))
+endif
+
+ifeq ($(DISABLE_PRINTS),0)
+# remove disabled_print_fns.S from DISABLED_FUNCTION_FILES
+DISABLED_FUNCTION_FILES := $(filter-out $(DISABLED_FUNCTIONS_D)/disabled_print_fns.S, $(DISABLED_FUNCTION_FILES))
+endif
+
+# Extract all function names matching ^(\w+): from each file in DISABLED_FUNCTION_FILES
+DISABLED_FUNCTION_NAMES := $(foreach file,$(DISABLED_FUNCTION_FILES),$(shell grep -o '^\w\+:' $(file) | sed 's/://'))
+
+# If not empty, modify the compilation rule to use weakened_libmin
+ifneq ($(strip $(DISABLED_FUNCTION_NAMES)),)
+OBJCPY_WEAKEN_LIST := $(patsubst %,--weaken-symbol=%,$(DISABLED_FUNCTION_NAMES))
+endif
+
+# Rule to link the object files to create the executable
+
+ifeq ($(DISABLED_FUNCTION_NAMES),)
+LIBMIN_OR_WEAKENED_LIBMIN := $(LIBMIN)
+else
+LIBMIN_OR_WEAKENED_LIBMIN := $(BUILD)/libmin_weakened.a
+endif
+
+$(LIBMIN_OR_WEAKENED_LIBMIN): $(LIBMIN)
+	riscv64-unknown-elf-objcopy $(OBJCPY_WEAKEN_LIST) $(LIBMIN) $(LIBMIN_OR_WEAKENED_LIBMIN)
+
+# devre disi birakilmis fonksiyonlarin derlenmesi kurallari
+DISABLED_FUNCTIONS_OBJ  := $(patsubst %.S, $(BUILD)/%.o, $(notdir $(DISABLED_FUNCTION_FILES)))
+
+$(BUILD)/%.o: $(DISABLED_FUNCTIONS_D)/%.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
 ######################################
 #         EXECUTABLE OLUSTURMA       #
 ######################################
@@ -302,11 +356,16 @@ UART_BASE_OWR := -Wl,--defsym=uart_base=$(UART_BASE)
 else
 UART_BASE_OWR :=
 endif
-# Rule to link the object files to create the executable
-$(EXEC): $(BENCH_OBJS) $(CRUNTIME_OBJ) $(LIBMIN) $(BUILD)/spike-map-prep.ld
+
+# DISABLED_FUNCTIONS_OBJ, LIBMIN_OR_WEAKENED_LIBMIN arsivindeki
+# fonksiyonlardan bazilarini, ENABLE_SFILE_SYSTEM ve
+# DISABLE_PRINTS parametrelerinin durumuna gore yeniden tanimlar
+# yeni tanimlar, bu fonksiyonlarin islevsiz versiyonlaridir.
+$(EXEC): $(BENCH_OBJS) $(CRUNTIME_OBJ) $(LIBMIN_OR_WEAKENED_LIBMIN) $(DISABLED_FUNCTIONS_OBJ) $(BUILD)/spike-map-prep.ld
 	$(CXX) $(CFLAGS) $(TRACE_ARG) $(BENCH_OBJS) $(CRUNTIME_OBJ)\
    $(UART_BASE_OWR)\
-   -T $(BUILD)/spike-map-prep.ld -o $@ -lm -lstdc++ $(LIBMIN) -lgcc
+   -T $(BUILD)/spike-map-prep.ld -o $@ -lm -lstdc++ \
+   $(LIBMIN_OR_WEAKENED_LIBMIN) $(DISABLED_FUNCTIONS_OBJ) -lgcc
 
 
 ######################################
