@@ -32,6 +32,11 @@ spike versiyonu (en güncel versiyonda da çalışmalı)
 11fbcb52f4d7ca247cb5f2503552ec653025bf40
 ```
 
+# Libmini Farklı benchmark'larda kullanmak için:
+
+[libmin kullanım talimatları](libmin_kullanim_talimatlari.md)
+
+
 
 # Bringup-Bench Benchmark Suite
 
