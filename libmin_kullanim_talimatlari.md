@@ -299,15 +299,15 @@ TRACE_LIST :=
 COMMA := ,
 TRACE_ARG  := $(patsubst %, -Wl$(COMMA)--trace-symbol=%, $(TRACE_LIST))
 
-ifneq ($(UART_BASE_ADDR),)
-UART_BASE_ADDR_OWR := -Wl,--defsym=uart_base_addr=$(UART_BASE_ADDR)
+ifneq ($(UART_BASE),)
+UART_BASE_OWR := -Wl,--defsym=uart_base=$(UART_BASE)
 else
-UART_BASE_ADDR_OWR :=
+UART_BASE_OWR :=
 endif
 # Rule to link the object files to create the executable
 $(EXEC): $(BENCH_OBJS) $(CRUNTIME_OBJ) $(LIBMIN) $(BUILD)/spike-map-prep.ld
 	$(CXX) $(CFLAGS) $(TRACE_ARG) $(BENCH_OBJS) $(CRUNTIME_OBJ)\
-   $(UART_BASE_ADDR_OWR)\
+   $(UART_BASE_OWR)\
    -T $(BUILD)/spike-map-prep.ld -o $@ -lm -lstdc++ $(LIBMIN) -lgcc
 
 
