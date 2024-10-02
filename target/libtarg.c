@@ -25,17 +25,17 @@ memcpy(void *dest, const void *src, size_t len)
   return libmin_memcpy(dest, src, len);
 }
 
-volatile __attribute__((used)) char uart_base;
-// uart_base_addr, varsayilan olarak .bss'teki uart_base sembolunu gosterir
+// uart_base, varsayilan olarak .bss'teki uart_base sembolunu gosterir
 // uart_base'e yazmanin bir zarari yok, kodda herhangi bir seyin bozulmasina
 // sebep olmayacak. herhangi bir degisken.
 // weak olarak tanimlaniyor, link asamasinda komut satirindan yeniden 
 // tanimlanabilsin diye. bellek haritamizda gecerli bir uart adresi bulundugunda
-// komut satirindan uart_base_addr'i yeniden tanimlayacagiz.
-volatile __attribute__((weak, used)) char *uart_base_addr = &uart_base;
+// komut satirindan uart_base'i yeniden tanimlayacagiz.
+// ld --defsym=uart_base=0x10000000
+volatile __attribute__((weak, used)) char uart_base;
 
 int uart_putchar(char c) {
-  *uart_base_addr = c;
+  uart_base = c;
   return c;
 }
 

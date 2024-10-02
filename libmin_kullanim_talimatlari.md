@@ -30,8 +30,12 @@ PROGRAM_LENGTH         :=0xbd0000
 STACK_LENGTH           :=0x8000
 HEAP_LENGTH            :=0xf000000
 
-# UART_BASE_ADDR tanimliysa uart_putchar'in karakterleri bastigi adres olan uart_base_addr, link asamasinda yeniden tanimlanir ld --defsym=uart_base_addr=xxxx
-UART_BASE_ADDR         :=0x10000000
+# UART_BASE tanimliysa 
+# uart_putchar'in karakterleri bastigi degisken olan uart_base'in adresi
+# link asamasinda yeniden tanimlanir: ld --defsym=uart_base=$(UART_BASE)
+# aksi takdirde kodun icinde weak olarak tanimlanan degisken
+# linker tarafindan otomatik olarak uygun bir yere yerlestirilir. 
+UART_BASE              :=0x10000000
 HARD_FLOAT             :=0
 GDB_DEBUG              :=0
 COMPILE_DEBUG          :=1

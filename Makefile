@@ -139,7 +139,7 @@ LINKER_MACROS = -DPROGRAM_START=$(PROGRAM_START) -DPROGRAM_LENGTH=$(PROGRAM_LENG
 
 
 $(TARGET_EXE): $(OBJS) $(LIBS) ../target/spike-map-prep.ld ../target/spike-crt0.S
-	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map-prep.ld $(OBJS) ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
+	$(TARGET_CC) $(CFLAGS) -T ../target/spike-map-prep.ld -Wl,--defsym=uart_base=0x10000000 $(OBJS) ../target/spike-crt0.S -o $@ $(LIBS) $(TARGET_LIBS)
 
 
 clean:
