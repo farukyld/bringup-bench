@@ -29,6 +29,9 @@ PROGRAM_START          :=0x80000000
 PROGRAM_LENGTH         :=0xbd0000
 STACK_LENGTH           :=0x8000
 HEAP_LENGTH            :=0xf000000
+
+# UART_BASE_ADDR tanimliysa uart_putchar'in karakterleri bastigi adres olan uart_base_addr, link asamasinda yeniden tanimlanir ld --defsym=uart_base_addr=xxxx
+UART_BASE_ADDR         :=0x10000000
 HARD_FLOAT             :=0
 GDB_DEBUG              :=0
 COMPILE_DEBUG          :=1
@@ -292,9 +295,15 @@ TRACE_LIST :=
 COMMA := ,
 TRACE_ARG  := $(patsubst %, -Wl$(COMMA)--trace-symbol=%, $(TRACE_LIST))
 
+ifneq ($(UART_BASE_ADDR),)
+UART_BASE_ADDR_OWR := -Wl,--defsym=uart_base_addr=$(UART_BASE_ADDR)
+else
+UART_BASE_ADDR_OWR :=
+endif
 # Rule to link the object files to create the executable
 $(EXEC): $(BENCH_OBJS) $(CRUNTIME_OBJ) $(LIBMIN) $(BUILD)/spike-map-prep.ld
 	$(CXX) $(CFLAGS) $(TRACE_ARG) $(BENCH_OBJS) $(CRUNTIME_OBJ)\
+   $(UART_BASE_ADDR_OWR)\
    -T $(BUILD)/spike-map-prep.ld -o $@ -lm -lstdc++ $(LIBMIN) -lgcc
 
 

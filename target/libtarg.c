@@ -25,16 +25,20 @@ memcpy(void *dest, const void *src, size_t len)
   return libmin_memcpy(dest, src, len);
 }
 
-int uart_putchar(char c)
-{
-  // TODO NS16550_BASE spike'tan alinacak. riscv/platform.h
-  // TODO [NS16550_BASE + UART_LSR][UART_LSR_THRE] == 0 degilse bekle
-  // TODO assembly yerine c ile yaz.
-  __asm__ volatile(
-      "li t0, 0x10000000\n"
-      "sb a0, 0(t0)\n");
+volatile __attribute__((used)) char uart_base;
+// uart_base_addr, varsayilan olarak .bss'teki uart_base sembolunu gosterir
+// uart_base'e yazmanin bir zarari yok, kodda herhangi bir seyin bozulmasina
+// sebep olmayacak. herhangi bir degisken.
+// weak olarak tanimlaniyor, link asamasinda komut satirindan yeniden 
+// tanimlanabilsin diye. bellek haritamizda gecerli bir uart adresi bulundugunda
+// komut satirindan uart_base_addr'i yeniden tanimlayacagiz.
+volatile __attribute__((weak, used)) char *uart_base_addr = &uart_base;
+
+int uart_putchar(char c) {
+  *uart_base_addr = c;
   return c;
 }
+
 
 volatile static long long int magic_mem[8]; // ismi onemli degil.
 
