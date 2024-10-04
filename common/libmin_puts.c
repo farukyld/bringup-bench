@@ -8,3 +8,5 @@ libmin_puts(char *s)
     libtarg_putc(*s);
   libtarg_putc('\n');
 }
+
+strong_alias(libmin_puts, puts)
