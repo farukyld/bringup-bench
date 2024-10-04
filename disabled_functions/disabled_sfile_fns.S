@@ -1,72 +1,82 @@
-
 .section .text
 
-libmin_fputc:
-fputc:
-libmin_sfputc:
-sfputc:
-# birinci argumanini dondurecek (a0)
+
+#ifdef ALIAS_RM_LIBMIN
+#define ALIAS_ADD_LIBMIN
+#else
+#define ADD_LIBMIN
+#endif
+
+#include "assembly_function_macros.h"
+
+
+ASM_FUNCTION_LABEL(fputc)
+ASM_FUNCTION_LABEL(sfputc)
+  # birinci argumanini dondurecek (a0)
   ret
 
-libmin_fputs:
-fputs:
-libmin_sfputs:
-sfputs:
+ASM_FUNCTION_LABEL(fputs)
+ASM_FUNCTION_LABEL(sfputs)
   li a0,0
   ret
 
-libmin_fwrite:
-fwrite:
-libmin_sfwrite:
-sfwrite:
+ASM_FUNCTION_LABEL(fwrite)
+ASM_FUNCTION_LABEL(sfwrite)
   mv a0,a2
   ret
 
-libmin_fprintf:
-fprintf:
-libmin_vfprintf:
-vfprintf:
+ASM_FUNCTION_LABEL(fprintf)
+ASM_FUNCTION_LABEL(sfprintf)
   li a0,0
   ret
 
-libmin_fflush:
-fflush:
-libmin_sfflush:
-sfflush:
+ASM_FUNCTION_LABEL(vfprintf)
+ASM_FUNCTION_LABEL(vsfprintf)
   li a0,0
   ret
 
-create_sfile:
+ASM_FUNCTION_LABEL(fflush)
+ASM_FUNCTION_LABEL(sfflush)
   li a0,0
   ret
 
-request_escape_sequence:
+ASM_FUNCTION_LABEL(sfopen)
   li a0,0
   ret
 
-find_file:
+ASM_FUNCTION_LABEL(sfclose)
   li a0,0
   ret
 
-sflush_safe:
-  ret
+#undef ASM_FUNCTION_LABEL
+#undef ALIAS_ADD_LIBMIN
+#undef ADD_LIBMIN
+#undef ASSEMBLY_FUNCTION_MACROS_H
+#include "assembly_function_macros.h"
 
-libmin_sfopen:
-sfopen:
+# bu asagidakiler icin alias tanimlamiyoruz. onlar sadece kendi isimleriyle mevcut
+ASM_FUNCTION_LABEL(create_sfile)
   li a0,0
   ret
 
-str_to_file_mode:
+ASM_FUNCTION_LABEL(request_escape_sequence)
   li a0,0
   ret
 
-serial_output_init:
-  ret
-
-libmin_sfclose:
-sfclose:
+ASM_FUNCTION_LABEL(find_file)
   li a0,0
   ret
 
-release_escape_sequence:
+ASM_FUNCTION_LABEL(sflush_safe)
+  ret
+
+
+ASM_FUNCTION_LABEL(str_to_file_mode)
+  li a0,0
+  ret
+
+ASM_FUNCTION_LABEL(serial_output_init)
+  ret
+
+ASM_FUNCTION_LABEL(release_escape_sequence)
   ret
