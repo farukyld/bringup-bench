@@ -45,8 +45,36 @@ PREPROCESS_TARGET      :=
 PRINT_MAX_HEAP_ON_EXIT :=1
 SPIKE_OUT_FILE         :=
 
+# serial output file system'i aktiflestir. 
+# bir dosyaya yapilan yazma islemlerini uart uzerinden 
+# gonderir. dosyalar birbirinden renk ifade eden 
+# karakter dizileriyle ayirt edilir
+# bkz: common/libmin_sfile.c
 ENABLE_SFILE_SYSTEM    :=1
+# sfile sistemi kullanmayan print'leri iptal et.
 DISABLE_PRINTS         :=0
+
+# NOT: ENABLE_SFILE_SYSTEM=1 ve DISABLE_PRINTS=0
+# butun print'ler aktif
+
+# NOT: ENABLE_SFILE_SYSTEM=0 ve DISABLE_PRINTS=0
+# sfile sistem uzerindne yapilan print'ler devre disi. 
+# (fputs, fputs, fwrite, fprintf)
+
+# NOT: ENABLE_SFILE_SYSTEM=0 ve DISABLE_PRINTS=1
+# butun print'ler devre disi.
+
+# NOT: ENABLE_SFILE_SYSTEM=1 ve DISABLE_PRINTS=1 ise
+# sfile sistem'in fonksiyonlari calismaya devam edecek 
+# ama uart uzerinden bir sey bastiramayacak.
+
+ifeq ($(ENABLE_SFILE_SYSTEM),1)
+  ifeq ($(DISABLE_PRINTS),1)
+	$(warning "SFILE sistem aktif, fakat print'ler devre disi.\
+sfile sistem fonksiyonlari calisacak ama ciktilari gorunur olmayacak")
+  endif
+endif
+
 
 # yardimci kutuphane olarak
 # libmin kullanilmak istenen benchmark proje dizini
@@ -61,7 +89,6 @@ SRC                    :=$(ROOT)/src
 EXT_QSORT_LOCATION     :=$(SRC)/qsort
 
 BUILD                  :=.
-RUN_DIR                :=$(ROOT)/run_spike
 
 ########################################################
 #        BENCHMARK OBJECT DOSYALARI DERLENMESI         #
@@ -159,10 +186,6 @@ help:
 #         DIZINLER        #
 ###########################
 # NOT: su an bu Makefile dosyasi, build dizininin icinde bulunmasi gerekiyor.
-
-
-$(RUN_DIR):
-	mkdir -p $(RUN_DIR)
 
 #bringup-bench
 BRINGUP_BENCH_DIR :=
@@ -403,7 +426,7 @@ endif
 RUN_COMMAND := $(SPIKE_ORIG)/build/spike $(DEBUG_FLAG) $(RBB_PORT)\
  -m$(MEM_START):$(MEM_LENGTH) $(EXEC)
 
-run: $(EXEC) $(RUN_DIR)
+run: $(EXEC)
 	$(RUN_COMMAND) $(SPIKE_REDIRECT)
 
 
@@ -429,7 +452,7 @@ endif
 
 OPENOCD_COMMAND := openocd -f $(ROOT)/openocd.cfg
 
-openocd: $(RUN_DIR)
+openocd:
 	$(OPENOCD_COMMAND)
 
 
