@@ -218,7 +218,7 @@ REGISTER_FILE(file2.txt, file2_txt)
 ```
 
 
-file1.txt and file2.txt are file names, the paths are relative to where you lauch the assembler. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
+file1.txt and file2.txt are file names, the paths are relative to the assembly file you use the REGISTER_FILE macro inside. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
 
 compile and link that assembly file into your elf file. 
 
