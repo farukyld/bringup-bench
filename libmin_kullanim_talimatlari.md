@@ -45,7 +45,8 @@ PREPROCESS_TARGET      :=
 PRINT_MAX_HEAP_ON_EXIT :=1
 SPIKE_OUT_FILE         :=
 
-ENABLE_SFILE_SYSTEM    :=0
+ENABLE_SFILE_SYSTEM    :=1
+DISABLE_PRINTS         :=0
 
 # yardimci kutuphane olarak
 # libmin kullanilmak istenen benchmark proje dizini
@@ -59,6 +60,8 @@ SRC                    :=$(ROOT)/src
 # LIBMIN bolumunde mevcuttur.
 EXT_QSORT_LOCATION     :=$(SRC)/qsort
 
+BUILD                  :=.
+RUN_DIR                :=$(ROOT)/run_spike
 
 ########################################################
 #        BENCHMARK OBJECT DOSYALARI DERLENMESI         #
