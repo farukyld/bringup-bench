@@ -65,9 +65,9 @@ EXT_QSORT_LOCATION     :=$(SRC)/qsort
 ########################################################
 # bu kisim kullanici tarafindan degistirilebilir
 
-$(BENCHMARK_INC)       :=-I$(SRC)
+BENCHMARK_INC       :=-I$(SRC)
 ifeq ($(USE_EXTERNAL_QSORT),1)
-$(BENCHMARK_INC)       += -I$(SRC)/qsort
+BENCHMARK_INC       += -I$(SRC)/qsort
 endif
 
 BENCH_FILES_CPP               := $(wildcard $(SRC)/*.cpp)
@@ -76,6 +76,7 @@ BENCH_FILES_S                 := $(wildcard $(SRC)/*.S)
 BENCH_OBJS  := $(patsubst %.cpp, $(BUILD)/%.o, $(notdir $(BENCH_FILES_CPP)))
 BENCH_OBJS  += $(patsubst %.S, $(BUILD)/%.o, $(notdir $(BENCH_FILES_S)))
 BENCH_DEPS  := $(patsubst %.o, $(BUILD)/%.d, $(notdir $(BENCH_OBJS)))
+
 
 -include $(BENCH_DEPS)
 
@@ -156,8 +157,6 @@ help:
 ###########################
 # NOT: su an bu Makefile dosyasi, build dizininin icinde bulunmasi gerekiyor.
 
-BUILD   :=.
-RUN_DIR :=$(ROOT)/run_spike
 
 $(RUN_DIR):
 	mkdir -p $(RUN_DIR)
@@ -210,7 +209,7 @@ MARCH_MABI := -march=rv64imc_zicsr -mabi=lp64
 HARDF_MAC  :=
 endif
 
-INC := -I$(LIBMIN_D) -I$(TARGET_D) $(BENCHMARK_INC)
+INC := -I$(LIBMIN_D) -I$(TARGET_D) -I$(DISABLED_FUNCTIONS_D) $(BENCHMARK_INC)
 
 # -static -ffreestanding -nostartfiles
 # -ffreestanding __int64_t_defined macro'sunun tanimlanmamasina sebep oluyor.
@@ -298,10 +297,18 @@ ifeq ($(DISABLE_PRINTS),0)
 DISABLED_FUNCTION_FILES := $(filter-out $(DISABLED_FUNCTIONS_D)/disabled_print_fns.S, $(DISABLED_FUNCTION_FILES))
 endif
 
-# Extract all function names matching ^(\w+): from each file in DISABLED_FUNCTION_FILES
-DISABLED_FUNCTION_NAMES := $(foreach file,$(DISABLED_FUNCTION_FILES),$(shell grep -o '^\w\+:' $(file) | sed 's/://'))
 
-# If not empty, modify the compilation rule to use weakened_libmin
+# bu dosyalarda yazma kolayligi acisindan 
+# bazi macrolar kullaniyorum. 
+# o yuzden preprocess isleminden gecirilmeliler
+# daha sonra \w+: formatindaki yerleri 
+# (label'lar) grep'liyoruz. ve sondaki :'yi kaldiriyoruz
+DISABLED_FUNCTION_NAMES := $(foreach file,$(DISABLED_FUNCTION_FILES),$(shell $(PP) $(PREPFLAGS) -P $(file) | grep -o '\w\+:' | sed 's/://'))
+
+# $(info DISABLED_FUNCTION_FILES=$(DISABLED_FUNCTION_FILES))
+# $(info DISABLED_FUNCTION_FILES_PREP=$(foreach file,$(DISABLED_FUNCTION_FILES),$(shell $(PP) $(PREPFLAGS) -P $(file))))
+# $(info DISABLED_FUNCTION_NAMES=$(DISABLED_FUNCTION_NAMES))
+
 ifneq ($(strip $(DISABLED_FUNCTION_NAMES)),)
 OBJCPY_WEAKEN_LIST := $(patsubst %,--weaken-symbol=%,$(DISABLED_FUNCTION_NAMES))
 endif
@@ -314,8 +321,8 @@ else
 LIBMIN_OR_WEAKENED_LIBMIN := $(BUILD)/libmin_weakened.a
 endif
 
-$(LIBMIN_OR_WEAKENED_LIBMIN): $(LIBMIN)
-	riscv64-unknown-elf-objcopy $(OBJCPY_WEAKEN_LIST) $(LIBMIN) $(LIBMIN_OR_WEAKENED_LIBMIN)
+$(BUILD)/libmin_weakened.a: $(LIBMIN) $(DISABLED_FUNCTION_FILES)
+	riscv64-unknown-elf-objcopy $(OBJCPY_WEAKEN_LIST) $(LIBMIN) $(BUILD)/libmin_weakened.a
 
 # devre disi birakilmis fonksiyonlarin derlenmesi kurallari
 DISABLED_FUNCTIONS_OBJ  := $(patsubst %.S, $(BUILD)/%.o, $(notdir $(DISABLED_FUNCTION_FILES)))
