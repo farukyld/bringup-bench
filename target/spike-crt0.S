@@ -95,7 +95,7 @@ _start:
   .global _start
 
   /* clear BSS */
-#ifdef ENABLE_BSS_ZERO_LOOP
+#if ENABLE_BSS_ZERO_LOOP
   la x26, _bss_start
   la x27, _bss_end
 
