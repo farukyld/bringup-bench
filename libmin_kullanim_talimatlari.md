@@ -97,7 +97,7 @@ BUILD                  :=.
 
 BENCHMARK_INC       :=-I$(SRC)
 ifeq ($(USE_EXTERNAL_QSORT),1)
-BENCHMARK_INC       += -I$(SRC)/qsort
+BENCHMARK_INC       += -I$(EXT_QSORT_LOCATION)
 endif
 
 BENCH_FILES_CPP               := $(wildcard $(SRC)/*.cpp)
