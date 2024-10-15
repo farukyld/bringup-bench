@@ -7,7 +7,7 @@ export SPIKE_ORIG=$SPIKE_ORIG
 make run-tests
 ```
 
-aşağıda benchmark'ları derlerken kullandığım derleyicinin versiyonu ve konfigürasyonu yer almaktadır: (konfigürasyonda gerekli multilib destekleri olmayınca derlemede hata veriyor. (konfigürasyonun küçültülmesi üzerine)[])
+aşağıda benchmark'ları derlerken kullandığım derleyicinin versiyonu ve konfigürasyonu yer almaktadır: (konfigürasyonda gerekli multilib destekleri olmayınca derlemede hata veriyor. [konfigürasyonun küçültülmesi üzerine]())
 ```shell
 riscv64-unknown-elf-gcc -v
 ```
