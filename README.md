@@ -207,28 +207,40 @@ void *libtarg_sbrk(size_t inc);
 ```
 Once these four interfaces are implemented, all of the Bringup-Bench benchmarks can be built and run. To facilitate testing, the "TARGET=host" target defines the four required system interfaces by passing them on to the Linux OS. In addition, the repo also provides a standalone target "TARGET=sa" which only requires that the target support provbable memory.
 
-## Using the code-based read-only file system
+## File system
+
+### Using the code-based read-only file system
 
  Using the code-based read-only file system, it is possible for a benchmark to access a read-only file that is incorporated into its code. To convert an input file to a read-only code-based file, create an assembly file, containing the below lines:
 ```assembly
+
+#define THREE_ARGUMENT_VERSION
 #include "target/include_input_files.h"
 
-REGISTER_FILE(file1.txt, file1_txt)
-REGISTER_FILE(file2.txt, file2_txt)
+REGISTER_FILE(file1_access_path.txt, file1_actual_path.txt, file1_txt)
+REGISTER_FILE(file2_access_path.txt, file2_actual_path.txt, file2_txt)
+
+#undef INCLUDE_INPUT_FILES_H
+#undef THREE_ARGUMENT_VERSION
+#include "target/include_input_files.h"
+REGISTER_FILE(file3_actual_path.txt, file2_txt)
+REGISTER_FILE(file4_actual_path.txt, file2_txt)
+
+```
+compile and link that assembly file into your elf file. 
+
+file1_actual_path.txt and file2_actual_path.txt are file names, the paths are relative to the assembly file you use the REGISTER_FILE macro inside. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file. file1_access_path.txt and file2_access_path.txt should be same strings you pass to fopen function where you want to open the file:
+```c
+MFILE *mp1 = mopen("file_1_access_path.txt","r");
 ```
 
 
-file1.txt and file2.txt are file names, the paths are relative to the assembly file you use the REGISTER_FILE macro inside. file1_txt and file2_txt are just arbitrary names to be used in naming symbols in the assembly file.
-
-compile and link that assembly file into your elf file. 
 
 The following interfaces are available to access memory files:
 ```c
 /* open an in-memory file */
 MFILE * libmin_mopen(const char *fname, const char *mode);
 ```
-here, fname is the string passed to `REGISTER_FILE` macro. (`file1.txt`)
-
 
 ```c
 /* return in-memory file size */
@@ -241,14 +253,51 @@ int libmin_meof(MFILE *mfile);
 void libmin_mclose(MFILE *mfile);
 
 /* read a buffer from the in-memory file */
-size_t libmin_mread(void *ptr, size_t size, MFILE *mfile);
+size_t libmin_mread_bytes(void *ptr, size_t size, MFILE *mfile);
+
+
+size_t libmin_mread(void *_ptr, size_t size, size_t nmemb, MFILE *mfile);
+
+int libmin_mseek(struct _MFILE *mfile, long offset, int whence);
+
+long libmin_mtell(MFILE *mfile);
 
 /* get a string from the in-memory file */
 char *libmin_mgets(char *s, size_t size, MFILE *mfile);
 
 /* read a character from the in-memory file */
 int libmin_mgetc(MFILE *mfile);
+
+int libmin_mungetc(int c,MFILE *mfile);
+
 ```
+
+### UART based single-end write-only file system
+
+`SFILE` system is added to support multiple output files, differentiated with a sequence of escape characters (ANSI escape colors) at the beginnig and at the end of each file write.
+
+`SFILE`s are only  writeable, and only writeable at the end. (i.e. `seek` is not supported)
+
+you can only open at most 8 different `SFILE` simultaneously.
+
+NOT: `[libmin_]printf`, `[libmin_]putc`, `[libmin_]putchar`, and other functions which are not prefixed with `f` doesn't use `SFILE` system, they rather access UART directly. in the [libmin_kullanim_talimatlari.md](), you can see a section containing an example Makefile explaining how to control this behavior.
+
+following interfaces are supported by `SFILE` system:
+
+```c
+SFILE* libmin_sfopen(char*fname, char* mode);
+int libmin_sfclose(SFILE *file);
+int libmin_sfputc(int c, SFILE *file);
+int libmin_sfputs(const char *str, SFILE *file);
+size_t libmin_sfwrite(const void *ptr, size_t size, size_t nmemb, SFILE *file);
+int libmin_sfprintf(SFILE *file, const char *fmt, ...);
+int libmin_vsfprintf(SFILE *file, const char *fmt, va_list ap);
+int libmin_sfflush(SFILE *file);
+```
+
+***
+
+you can also use the standardized version of those interfaces, `FILE`, a wrapper to `SFILE` and `MFILE`. its APIs are prefixed with `f` as in the standard library fnuctions.
 
 ## Porting the Bringup-Bench to other targets
 
