@@ -32,14 +32,14 @@ static const index_entry_t *find_file(const char *file_name) {
 MFILE *libmin_mopen(const char *file_name, const char *mode) {
   if (libmin_strcmp(mode, "r") != 0) {
     libmin_printf("ERROR: libmin MFILE only supports file reads\n");
-    libmin_fail(1);
+    // libmin_fail(1);
     return NULL;  // Ensure function returns even on error
   }
 
   const index_entry_t *entry = find_file(file_name);
   if (entry == NULL) {
     libmin_printf("ERROR: File %s not found\n", file_name);
-    libmin_fail(1);
+    // libmin_fail(1);
     return NULL;  // Ensure function returns even on error
   }
 

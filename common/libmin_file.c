@@ -24,6 +24,10 @@ FILE *libmin_fopen(const char *fname, const char *mode_str)
     file->type = FILE_TYPE_SFILE;
     file->file = libmin_sfopen(fname, mode_str);
   }
+  if (file->file == NULL){
+    free(file);
+    return NULL;
+  }
   return file;
 }
 
