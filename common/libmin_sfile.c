@@ -217,6 +217,8 @@ int libmin_sfflush(SFILE *file)
   return 0;
 }
 
+strong_alias(libmin_sfflush, sfflush)
+
 SFILE *libmin_sfopen(const char *fname, const char *mode_str)
 {
   sfile_mode_e mode = str_to_file_mode(mode_str);
