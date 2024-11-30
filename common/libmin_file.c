@@ -6,7 +6,6 @@
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
 
-
 // MFILE SFILE ortak arayuzleri
 
 FILE *libmin_fopen(const char *fname, const char *mode_str)
@@ -14,7 +13,7 @@ FILE *libmin_fopen(const char *fname, const char *mode_str)
   FILE *file = (FILE *)malloc(sizeof(FILE));
   if (unlikely(file == NULL))
     return NULL;
-  if (libmin_strncmp(mode_str, "r",2)==0 || libmin_strncmp(mode_str, "rb",3)==0)
+  if (libmin_strncmp(mode_str, "r", 2) == 0 || libmin_strncmp(mode_str, "rb", 3) == 0)
   {
     file->type = FILE_TYPE_MFILE;
     file->file = libmin_mopen(fname, "r");
@@ -24,7 +23,8 @@ FILE *libmin_fopen(const char *fname, const char *mode_str)
     file->type = FILE_TYPE_SFILE;
     file->file = libmin_sfopen(fname, mode_str);
   }
-  if (file->file == NULL){
+  if (file->file == NULL)
+  {
     free(file);
     return NULL;
   }
@@ -127,7 +127,7 @@ size_t libmin_fread(void *ptr, size_t size, size_t nmemb, FILE *file)
     return 0;
   if (likely(file->type == FILE_TYPE_MFILE))
   {
-    return libmin_mread(ptr, size,nmemb, (MFILE *)file->file);
+    return libmin_mread(ptr, size, nmemb, (MFILE *)file->file);
   }
   else
   {
@@ -277,12 +277,11 @@ int libmin_vfprintf(FILE *file, const char *fmt, va_list ap)
 
 strong_alias(libmin_vfprintf, vfprintf);
 
-
 // int libmin_sfflush(SFILE *file); // aslinda ortak olabilir. ama simdilik sadece sfile icin tanimlanacak.
 int libmin_fflush(FILE *file)
 {
   if (unlikely(file == NULL))
-    return -1;
+    return libmin_sfflush(NULL);
   if (unlikely(file->type == FILE_TYPE_MFILE))
   {
     libmin_printf("libmin_fflush only supports SFILE\n");
