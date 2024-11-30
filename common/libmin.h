@@ -47,6 +47,9 @@ declare_alias(libmin_strtol, strtol)
 unsigned long libmin_strtoul(const char* s, char**endptr, int base);
 declare_alias(libmin_strtoul, strtoul)
 
+double libmin_strtod(const char *str, char **endptr);
+
+
 /* getopt() hooks */
 extern char *optarg;
 extern int optind, opterr, optopt, optpos, optreset;
