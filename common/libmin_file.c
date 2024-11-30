@@ -14,7 +14,7 @@ FILE *libmin_fopen(const char *fname, const char *mode_str)
   FILE *file = (FILE *)malloc(sizeof(FILE));
   if (unlikely(file == NULL))
     return NULL;
-  if (libmin_strncmp(mode_str, "r",2)==0)
+  if (libmin_strncmp(mode_str, "r",2)==0 || libmin_strncmp(mode_str, "rb",3)==0)
   {
     file->type = FILE_TYPE_MFILE;
     file->file = libmin_mopen(fname, "r");
