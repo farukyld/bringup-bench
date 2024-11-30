@@ -123,8 +123,6 @@ main_entry:
 
   jal x1, main
   /* Halt simulation */
-  li a0, 0 # sfflush null arguman ile cagrildiginda butun dosyalari flush'lar.
-  call libmin_sfflush
   call libmin_success
 
   /* If execution ends up here just put the core to sleep */

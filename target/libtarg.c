@@ -62,6 +62,8 @@ void baremetal_exit(long long int exit_code)
 #ifdef PRINT_MAX_HEAP_ON_EXIT
   libmin_printf("\nmax heap_ptr: %llu\n", max_heap_pointer);
 #endif
+  libmin_sfflush(NULL);
+  
   magic_mem[1] = exit_code;
   magic_mem[0] = 93; // 93: exit
   // see riscv-isa-sim/fesvr/syscall.cc }}
